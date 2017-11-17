@@ -1,2 +1,2 @@
-docs/*
-sphinx/*
+docs/* linguist-vendored
+sphinx/* linguist-vendored
