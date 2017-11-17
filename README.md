@@ -20,7 +20,12 @@ git clone https://github.com/slsdetectorgroup/sls_detector.git
 #Build and install
 conda-build sls_detector
 conda install --use-local sls_detector
+
 ```
+**Prerequisites**
+ * Pyton 3
+ * gcc 4.8+
+ * slsDetectorsPackage 3+ 
 
 ### Download conda package ###
 This might work one day
