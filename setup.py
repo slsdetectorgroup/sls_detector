@@ -1,12 +1,20 @@
+"""
+Setup file for sls_detector
+Build upon the pybind11 example found here: https://github.com/pybind/python_example
+"""
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 import sys
 import setuptools
+import os
 
 __version__ = '0.0.1'
 
 def get_sls_path():
-        return '/home/l_frojdh/slsDetectorsPackage/'
+    """
+    Keep this a function if we need some fancier logic later
+    """
+    return os.environ['SLS_DETECTOR_SOURCE']
 
 class get_pybind_include(object):
     """Helper class to determine the pybind11 include path
@@ -30,12 +38,12 @@ ext_modules = [
             # Path to pybind11 headers
             get_pybind_include(),
             get_pybind_include(user=True),
-            get_sls_path()+'slsDetectorSoftware/multiSlsDetector',
-            get_sls_path()+'slsReceiverSoftware/include/',
-            get_sls_path()+'slsDetectorSoftware/commonFiles/',
-            get_sls_path()+'slsDetectorSoftware/slsDetector',
-            get_sls_path()+'slsDetectorSoftware/slsDetectorAnalysis',
-            get_sls_path()+'slsDetectorSoftware/slsReceiverInterface/',
+            get_sls_path() + 'slsDetectorSoftware/multiSlsDetector',
+            get_sls_path() + 'slsReceiverSoftware/include/',
+            get_sls_path() + 'slsDetectorSoftware/commonFiles/',
+            get_sls_path() + 'slsDetectorSoftware/slsDetector',
+            get_sls_path() + 'slsDetectorSoftware/slsDetectorAnalysis',
+            get_sls_path() + 'slsDetectorSoftware/slsReceiverInterface/',
 
         ],
         libraries = ['SlsDetector', 'zmq'],
