@@ -1,0 +1,353 @@
+#ifndef DETECTOR_H
+#define DETECTOR_H
+#include <iostream>
+#include <cstdint>
+#include <string>
+#include <vector>
+
+#include "sls_receiver_defs.h"
+#include "sls_detector_defs.h"
+#include "slsDetectorUtils.h"
+#include "multiSlsDetector.h"
+#include "slsDetector.h"
+
+class Detector{
+public:
+    Detector():det(){
+        det.setOnline(slsDetectorDefs::ONLINE_FLAG);
+        det.setReceiverOnline(slsDetectorDefs::ONLINE_FLAG);
+
+        //Disable any output from std::cout
+        std::cout.setstate(std::ios_base::failbit);
+
+    }
+//  int setMaxNumberOfChannelsPerDetector(dimension d,int i){thisMultiDetector->maxNumberOfChannelsPerDetector[d]=i; return thisMultiDetector->maxNumberOfChannelsPerDetector[d];};
+//int getMaxNumberOfChannelsPerDetector(dimension d){return thisMultiDetector->maxNumberOfChannelsPerDetector[d];};
+
+    std::pair<int, int> getImageSize(){
+        //image size in [rows, cols]
+        std::pair<int, int> image_size{0,0};
+        image_size.first = det.getMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::Y);
+        image_size.second = det.getMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::X);
+        return image_size;
+    }
+
+    void acquire(){ det.acquire(); }
+
+    std::string checkOnline(){
+       std::string r = det.checkOnline();
+       return r;
+    }
+
+    bool getAcquiringFlag(){
+        return det.getAcquiringFlag();
+    }
+
+    bool getCounterBit(){
+        return det.setCounterBit();
+    }
+    void setCounterBit(bool b){
+        det.setCounterBit(b);
+    }
+
+    slsDetectorDefs::dacIndex dacNameToEnum(std::string dac_name);
+
+    std::pair<int, int> getDetectorGeometry(){
+        std::pair<int, int> g;
+        det.getNumberOfDetectors(g.first, g.second);
+        return g;
+    }
+
+    int getNumberOfDetectors(){
+        return det.getNumberOfDetectors();
+    }
+
+    std::string getRunStatus(){
+        auto s = det.getRunStatus();
+        return det.runStatusType(s);
+    }
+
+
+    void startAcquisition(){ det.startAcquisition(); }
+    void stopAcquisition(){ det.stopAcquisition(); }
+
+    std::string getHostname(){
+        return det.getHostname();
+    }
+    int getDynamicRange(){
+        return det.setDynamicRange(-1);
+    }
+    int setDynamicRange(int dr){
+        return det.setDynamicRange(dr);
+    }
+
+    void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
+    void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
+    int getReadoutClockSpeed(){ return det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, -1); }
+
+    int getFirmwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_FIRMWARE_VERSION); }
+    int getSoftwareVersion(){  return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
+
+    void setReadoutClockSpeed(int speed){
+        det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, speed);
+    }
+
+    void setRateCorrection(std::vector<double> tau){
+        slsDetector* _d;
+        for (int i=0; i<det.getNumberOfDetectors(); ++i){
+            _d = det.getSlsDetector(i);
+            _d->setRateCorrection(tau[i]);
+        }
+
+    }
+
+    std::vector<double>getRateCorrection(){
+        std::vector<double> rate_corr;
+        slsDetector* _d;
+        for (int i=0; i<det.getNumberOfDetectors(); ++i){
+            _d = det.getSlsDetector(i);
+            std::pair<int, double> r = {0,0};
+            r.first = _d->getRateCorrection(r.second);
+            rate_corr.push_back(r.second);
+        }
+        return rate_corr;
+    }
+
+
+    //----------------------------------------------------File
+    std::string setFileName(std::string fname){
+        return det.setFileName(fname);
+    }
+    std::string getFileName(){
+        return det.getFileName();
+    }
+
+    std::string setFilePath(std::string path){
+        return det.setFilePath(path);
+    }
+    std::string getFilePath(){
+        return det.getFilePath();
+    }
+
+
+    //name to enum translation on the c++ side
+    //should we instead expose the enum to Python?
+    dacs_t getDac(std::string dac_name, int mod_id){
+        dacs_t val = -1;
+//        std::cout << "getting: " << dac_name << " from " << mod_id << std::endl;
+        auto dac = dacNameToEnum(dac_name);
+        return det.setDAC(val, dac, 0, mod_id);
+
+    }
+
+    dacs_t setDac(std::string dac_name, int mod_id, dacs_t val){
+
+//        std::cout << "getting: " << dac_name << " from " << mod_id << std::endl;
+        auto dac = dacNameToEnum(dac_name);
+        det.setDAC(val, dac, 0, mod_id);
+
+    }
+
+
+
+    dacs_t getAdc(std::string adc_name, int mod_id){
+        auto adc = dacNameToEnum(adc_name);
+        return det.getADC(adc, mod_id);
+
+    }
+
+    //name to enum transltion of dac
+    dacs_t getDacVthreshold(){
+        dacs_t val = -1;
+        auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
+        return det.setDAC(val, dac, 0, -1);
+    }
+    void setDacVthreshold(dacs_t val){
+        auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
+        det.setDAC(val, dac, 0, -1);
+    }
+
+    //dacs_t multiSlsDetector::setDAC(dacs_t val, dacIndex idac, int mV, int imod)
+
+    void setFileIndex(int i){
+        det.setFileIndex(i);
+    }
+    int getFileIndex(){
+        return det.setFileIndex(-1);
+    }
+
+
+    void setExposureTime(int64_t t){
+        //time in ns
+        auto timer = slsReceiverDefs::timerIndex::ACQUISITION_TIME;
+        det.setTimer(timer, t);
+    }
+    int64_t getExposureTime(){
+        //time in ns
+        auto timer = slsReceiverDefs::timerIndex::ACQUISITION_TIME;
+        return det.setTimer(timer, -1);
+    }
+
+    void setSubExposureTime(int64_t t){
+        auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
+        det.setTimer(timer, t);
+    }
+    int64_t getSubExposureTime(){
+        //time in ns
+        auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
+        return det.setTimer(timer, -1);
+    }
+
+    std::string getTimingMode(){
+        return det.externalCommunicationType(det.setExternalCommunicationMode());
+    }
+    void setTimingMode(std::string mode){
+        det.setExternalCommunicationMode(det.externalCommunicationType(mode));
+    }
+
+    void freeSharedMemory(){ det.freeSharedMemory(); }
+
+    std::string getDetectorType(){
+        return det.ssetDetectorsType();
+    }
+
+    int64_t getPeriod(){
+        //time in ns
+        auto timer = slsReceiverDefs::timerIndex::FRAME_PERIOD;
+        return det.setTimer(timer, -1);
+    }
+    void setPeriod(int64_t t){
+        //time in ns
+        auto timer = slsReceiverDefs::timerIndex::FRAME_PERIOD;
+        det.setTimer(timer, t);
+    }
+    int64_t getNumberOfFrames(){
+        //time in ns
+        auto timer = slsReceiverDefs::timerIndex::FRAME_NUMBER;
+        return det.setTimer(timer, -1);
+    }
+    void setNumberOfFrames(int64_t nframes){
+        //time in ns
+        auto timer = slsReceiverDefs::timerIndex::FRAME_NUMBER;
+        det.setTimer(timer, nframes);
+    }
+
+    void setFileWrite(bool value){
+        if (value == true)
+            det.enableWriteToFile(1);
+        else
+            det.enableWriteToFile(0);
+    }
+
+    bool getFileWrite(){
+        auto r = det.enableWriteToFile(-1);
+        if (r==1)
+            return true;
+        else
+            return false;
+    }
+
+
+    void setAllTrimbits(int tb){
+        det.setAllTrimbits(tb);
+    }
+
+    int getAllTrimbits(){
+        return det.setAllTrimbits(-1);
+    }
+
+
+private:
+    multiSlsDetector det;
+};
+
+
+slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
+    //to avoid unitialised
+    slsDetectorDefs::dacIndex dac = slsDetectorDefs::dacIndex::E_SvP;
+    if(dac_name == std::string("vsvp")){
+        dac = slsDetectorDefs::dacIndex::E_SvP;
+    }
+    else if(dac_name == "vtr"){
+        dac = slsDetectorDefs::dacIndex::E_Vtr;
+    }
+    else if(dac_name == "vrf"){
+        dac = slsDetectorDefs::dacIndex::E_Vrf;
+    }
+    else if(dac_name == "vrs"){
+        dac = slsDetectorDefs::dacIndex::E_Vrs;
+    }
+    else if(dac_name == "vsvn"){
+        dac = slsDetectorDefs::dacIndex::E_SvN;
+    }
+    else if(dac_name == "vtgstv"){
+        dac = slsDetectorDefs::dacIndex::E_Vtgstv;
+    }
+    else if(dac_name == "vcmp_ll"){
+        dac = slsDetectorDefs::dacIndex::E_Vcmp_ll;
+    }
+    else if(dac_name == "vcmp_lr"){
+        dac = slsDetectorDefs::dacIndex::E_Vcmp_lr;
+    }
+    else if(dac_name == "vcall"){
+        dac = slsDetectorDefs::dacIndex::E_cal;
+    }
+    else if(dac_name == "vcmp_rl"){
+        dac = slsDetectorDefs::dacIndex::E_Vcmp_rl;
+    }
+    else if(dac_name == "rxb_rb"){
+        dac = slsDetectorDefs::dacIndex::E_rxb_rb;
+    }
+    else if(dac_name == "rxb_lb"){
+        dac = slsDetectorDefs::dacIndex::E_rxb_lb;
+    }
+    else if(dac_name == "vcmp_rr"){
+        dac = slsDetectorDefs::dacIndex::E_Vcmp_rr;
+    }
+    else if(dac_name == "vcp"){
+        dac = slsDetectorDefs::dacIndex::E_Vcp;
+    }
+    else if(dac_name == "vcn"){
+        dac = slsDetectorDefs::dacIndex::E_Vcn;
+    }
+    else if(dac_name == "vis"){
+        dac = slsDetectorDefs::dacIndex::E_Vis;
+    }
+    else if(dac_name == "iodelay"){
+        dac = slsDetectorDefs::dacIndex::IO_DELAY;
+    }
+    else if(dac_name == "temp_fpga"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_FPGA;
+    }
+    else if(dac_name == "temp_fpgaext"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_FPGAEXT;
+    }
+    else if(dac_name == "temp_10gr"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_10GE;
+    }
+    else if(dac_name == "temp_dcdc"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_DCDC;
+    }
+    else if(dac_name == "temp_sodl"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_SODL;
+    }
+    else if(dac_name == "temp_sodr"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_SODR;
+    }
+    else if(dac_name == "temp_fpgafl"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_FPGA2;
+    }
+    else if(dac_name == "temp_fpgafr"){
+        dac = slsDetectorDefs::dacIndex::TEMPERATURE_FPGA3;
+    }
+
+    return dac;
+
+}
+
+
+
+
+
+
+#endif // DETECTOR_H

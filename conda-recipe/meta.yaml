@@ -1,0 +1,27 @@
+package:
+    name: sls_detector
+    version: 0.0.1
+
+build:
+  number: 0
+
+source:
+    path: ..
+
+requirements:
+    build:
+        - python
+        - setuptools
+        - pybind11
+    run:
+        - python
+        - numpy 
+
+
+test:
+      imports:
+         - sls_detector
+
+
+about:
+    summary: "Interacting with detectors"
