@@ -1,6 +1,9 @@
 # sls_detector
 Python interface to the sls detector software.
 
+### Documentation ###
+Sphinx build documentation is available here:
+[https://slsdetectorgroup.github.io/sls_detector/](https://slsdetectorgroup.github.io/sls_detector/)
 
 ### Building using conda-build ###
 
