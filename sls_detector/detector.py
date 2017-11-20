@@ -6,11 +6,14 @@ Python - sls
 
 """
 import os
+import time
 from collections import namedtuple, Iterable
 from functools import partial
 import numpy as np
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
+#Configuration to activate measurements? Or just a bare scan.
+from sls_detector_tools import config as cfg
 
 class Dac:
     """
@@ -808,5 +811,7 @@ class Detector:
     @timing_mode.setter
     def timing_mode(self, mode):
         self._api.setTimingMode(mode)
+        
+        
 
         
