@@ -2,7 +2,7 @@
 Python interface to the sls detector software.
 
 ### Documentation ###
-Sphinx build documentation is available here:
+Sphinx built documentation is available here:
 [https://slsdetectorgroup.github.io/sls_detector/](https://slsdetectorgroup.github.io/sls_detector/)
 
 ### Building using conda-build ###
@@ -22,6 +22,23 @@ conda-build sls_detector
 conda install --use-local sls_detector
 
 ```
+### Developer build ###
+
+IF you if you are developing and are making constant changes to the code it's a bit cumbersome to build with conda and install. Then an easirer way is to build the C/C++ parts in the package directory and temporary add this to the path
+
+```bash
+#in path/to/sls_detector  
+python setup.py build_ext --inplace
+```
+Then in your Python script
+```python
+
+import sys
+sys.path.append('/path/to/sls_detector')
+from sls_detector import Detector
+```
+
+
 **Prerequisites**
  * Pyton 3
  * gcc 4.8+
