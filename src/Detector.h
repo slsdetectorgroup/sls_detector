@@ -21,8 +21,6 @@ public:
         std::cout.setstate(std::ios_base::failbit);
 
     }
-//  int setMaxNumberOfChannelsPerDetector(dimension d,int i){thisMultiDetector->maxNumberOfChannelsPerDetector[d]=i; return thisMultiDetector->maxNumberOfChannelsPerDetector[d];};
-//int getMaxNumberOfChannelsPerDetector(dimension d){return thisMultiDetector->maxNumberOfChannelsPerDetector[d];};
 
     std::pair<int, int> getImageSize(){
         //image size in [rows, cols]
@@ -74,11 +72,12 @@ public:
     std::string getHostname(){
         return det.getHostname();
     }
+    
     int getDynamicRange(){
         return det.setDynamicRange(-1);
     }
-    int setDynamicRange(int dr){
-        return det.setDynamicRange(dr);
+    void setDynamicRange(int dr){
+        det.setDynamicRange(dr);
     }
 
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
@@ -115,16 +114,14 @@ public:
 
 
     //----------------------------------------------------File
-    std::string setFileName(std::string fname){
-        return det.setFileName(fname);
-    }
+    void setFileName(std::string fname){ det.setFileName(fname); }
+   
     std::string getFileName(){
         return det.getFileName();
     }
 
-    std::string setFilePath(std::string path){
-        return det.setFilePath(path);
-    }
+    void setFilePath(std::string path){ det.setFilePath(path); }
+    
     std::string getFilePath(){
         return det.getFilePath();
     }
@@ -134,19 +131,15 @@ public:
     //should we instead expose the enum to Python?
     dacs_t getDac(std::string dac_name, int mod_id){
         dacs_t val = -1;
-//        std::cout << "getting: " << dac_name << " from " << mod_id << std::endl;
         auto dac = dacNameToEnum(dac_name);
         return det.setDAC(val, dac, 0, mod_id);
-
     }
 
-    dacs_t setDac(std::string dac_name, int mod_id, dacs_t val){
-
-//        std::cout << "getting: " << dac_name << " from " << mod_id << std::endl;
+    void setDac(std::string dac_name, int mod_id, dacs_t val){
         auto dac = dacNameToEnum(dac_name);
         det.setDAC(val, dac, 0, mod_id);
-
     }
+
 
 
 
@@ -162,6 +155,7 @@ public:
         auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
         return det.setDAC(val, dac, 0, -1);
     }
+    
     void setDacVthreshold(dacs_t val){
         auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
         det.setDAC(val, dac, 0, -1);
@@ -169,9 +163,7 @@ public:
 
     //dacs_t multiSlsDetector::setDAC(dacs_t val, dacIndex idac, int mV, int imod)
 
-    void setFileIndex(int i){
-        det.setFileIndex(i);
-    }
+    void setFileIndex(int i){ det.setFileIndex(i); }
     int getFileIndex(){
         return det.setFileIndex(-1);
     }
@@ -340,7 +332,9 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
     else if(dac_name == "temp_fpgafr"){
         dac = slsDetectorDefs::dacIndex::TEMPERATURE_FPGA3;
     }
-
+    else if(dac_name == "vhighvoltage"){
+        dac = slsDetectorDefs::dacIndex::HV_NEW;
+    }
     return dac;
 
 }

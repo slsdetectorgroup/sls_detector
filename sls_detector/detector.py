@@ -398,6 +398,16 @@ class Detector:
         """
         self._api.freeSharedMemory()
 
+    @property
+    def high_voltage(self):
+        """
+        High voltage applied to the sensor
+        """
+        return self._api.getDac('vhighvoltage', -1)
+    
+    @high_voltage.setter
+    def high_voltage(self, voltage):
+        self._api.setDac('vhighvoltage', -1, int(voltage))
 
     @property 
     def software_version(self):

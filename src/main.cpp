@@ -32,6 +32,7 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getDac", &Detector::getDac)
             .def("setDac", &Detector::setDac)
 
+
             .def("getRunStatus", &Detector::getRunStatus)
             .def("readConfigurationFile", &Detector::readConfigurationFile)
             .def("readParametersFile", &Detector::readParametersFile)
