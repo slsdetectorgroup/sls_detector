@@ -54,3 +54,9 @@ def test_len_det_with_mock_api(d, monkeypatch):
     
 def test_hasattr_dacs(d):
     assert True == hasattr(d, 'dacs')
+    
+def test_hasattr_file_index(d):
+    assert True == hasattr(d, 'file_index')
+    
+def test_file_index_uninitialized(d):
+    assert d.file_index == -100
