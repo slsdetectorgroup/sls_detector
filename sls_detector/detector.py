@@ -12,8 +12,7 @@ from functools import partial
 import numpy as np
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
-#Configuration to activate measurements? Or just a bare scan.
-from sls_detector_tools import config as cfg
+
 
 class Dac:
     """
@@ -184,7 +183,7 @@ class DetectorDacs:
         r_str += [repr(dac) for dac in self]
         return '\n'.join(r_str)
     
-    def to_array(self):
+    def get_asarray(self):
         """
         Read the dacs into a numpy array with dimensions [ndacs, nmodules]
         """
@@ -193,7 +192,7 @@ class DetectorDacs:
             dac_array[i,:] = _d[:]
         return dac_array
     
-    def from_array(self, dac_array):
+    def set_from_array(self, dac_array):
         """
         Set the dacs from an numpy array with dac values. [ndacs, nmodules]
         """
@@ -411,6 +410,9 @@ class Detector:
     @high_voltage.setter
     def high_voltage(self, voltage):
         self._api.setDac('vhighvoltage', -1, int(voltage))
+
+    def pulse_chip(self, n):
+        self._api.pulseChip(n)
 
     @property 
     def software_version(self):

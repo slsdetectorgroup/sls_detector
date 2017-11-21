@@ -7,3 +7,6 @@ build/
 config.py
 datasets/
 docs/_build/
+.cache/
+.coverage
+

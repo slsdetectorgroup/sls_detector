@@ -80,6 +80,8 @@ public:
         det.setDynamicRange(dr);
     }
 
+    void pulseChip(int n){ det.pulseChip(n); }
+
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
     void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
     int getReadoutClockSpeed(){ return det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, -1); }
