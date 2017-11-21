@@ -60,3 +60,29 @@ def test_hasattr_file_index(d):
     
 def test_file_index_uninitialized(d):
     assert d.file_index == -100
+    
+def test_file_index_with_mock_api(d, monkeypatch):
+    def mockreturn(int):
+        return 52
+    monkeypatch.setattr(_sls_detector.DetectorApi, 'getFileIndex', mockreturn)
+    
+    assert d.file_index == 52
+    
+    
+def test_hasattr_file_write(d):
+    assert True == hasattr(d, 'file_write')
+    
+def test_file_write_uninitialized(d):
+    assert False == d.file_write
+    
+def test_fw_version(d):
+    assert -1 == d.firmware_version
+    
+def test_high_voltage(d):
+    assert -1 == d.high_voltage
+    
+    
+    
+def test_status(d):
+    assert 'idle' == d.status
+    
