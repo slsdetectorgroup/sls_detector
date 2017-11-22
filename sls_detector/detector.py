@@ -817,7 +817,7 @@ class Detector:
         Return the receiver zmq ports
         """
         _s = self._api.getNetworkParameter('rx_zmqport')
-        return [int(_p)+i for _p in _s.split('+') for i in range(2)]
+        return [int(_p)+i for _p in _s.strip('+').split('+') for i in range(2)]
 
     @property
     def rx_zmqip(self):
