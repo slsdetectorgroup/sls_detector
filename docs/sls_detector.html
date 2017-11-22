@@ -418,6 +418,12 @@ reconfigured</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.high_voltage">
+<code class="descname">high_voltage</code><a class="headerlink" href="#sls_detector.Detector.high_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>High voltage applied to the sensor</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.hostname">
 <code class="descname">hostname</code><a class="headerlink" href="#sls_detector.Detector.hostname" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – hostnames of all connected detectors</p>
@@ -523,6 +529,11 @@ of the detector modules.</p>
 to choose the shortest possible</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="sls_detector.Detector.pulse_chip">
+<code class="descname">pulse_chip</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.pulse_chip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.pulse_chip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="sls_detector.Detector.rate_correction">
 <code class="descname">rate_correction</code><a class="headerlink" href="#sls_detector.Detector.rate_correction" title="Permalink to this definition">¶</a></dt>
@@ -550,6 +561,23 @@ detectors</td>
 <dt id="sls_detector.Detector.readout_clock">
 <code class="descname">readout_clock</code><a class="headerlink" href="#sls_detector.Detector.readout_clock" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.rx_datastream">
+<code class="descname">rx_datastream</code><a class="headerlink" href="#sls_detector.Detector.rx_datastream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zmq datastream from receiver</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.rx_zmqip">
+<code class="descname">rx_zmqip</code><a class="headerlink" href="#sls_detector.Detector.rx_zmqip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.rx_zmqport">
+<code class="descname">rx_zmqport</code><a class="headerlink" href="#sls_detector.Detector.rx_zmqport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the receiver zmq ports</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.software_version">
@@ -714,6 +742,11 @@ with receiver start.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="sls_detector.DetectorApi.getNetworkParameter">
+<code class="descname">getNetworkParameter</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#sls_detector.DetectorApi.getNetworkParameter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="sls_detector.DetectorApi.getNumberOfDetectors">
 <code class="descname">getNumberOfDetectors</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#sls_detector.DetectorApi.getNumberOfDetectors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -744,6 +777,11 @@ with receiver start.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="sls_detector.DetectorApi.getRxDataStreamStatus">
+<code class="descname">getRxDataStreamStatus</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sls_detector.DetectorApi.getRxDataStreamStatus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="sls_detector.DetectorApi.getSoftwareVersion">
 <code class="descname">getSoftwareVersion</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#sls_detector.DetectorApi.getSoftwareVersion" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -756,6 +794,11 @@ with receiver start.</p>
 <dl class="method">
 <dt id="sls_detector.DetectorApi.getTimingMode">
 <code class="descname">getTimingMode</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#sls_detector.DetectorApi.getTimingMode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sls_detector.DetectorApi.pulseChip">
+<code class="descname">pulseChip</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sls_detector.DetectorApi.pulseChip" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -780,7 +823,7 @@ with receiver start.</p>
 
 <dl class="method">
 <dt id="sls_detector.DetectorApi.setDac">
-<code class="descname">setDac</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: str</em>, <em>arg1: int</em>, <em>arg2: int</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#sls_detector.DetectorApi.setDac" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setDac</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: str</em>, <em>arg1: int</em>, <em>arg2: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sls_detector.DetectorApi.setDac" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -790,7 +833,7 @@ with receiver start.</p>
 
 <dl class="method">
 <dt id="sls_detector.DetectorApi.setDynamicRange">
-<code class="descname">setDynamicRange</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: int</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#sls_detector.DetectorApi.setDynamicRange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setDynamicRange</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sls_detector.DetectorApi.setDynamicRange" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -805,12 +848,12 @@ with receiver start.</p>
 
 <dl class="method">
 <dt id="sls_detector.DetectorApi.setFileName">
-<code class="descname">setFileName</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#sls_detector.DetectorApi.setFileName" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setFileName</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sls_detector.DetectorApi.setFileName" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="sls_detector.DetectorApi.setFilePath">
-<code class="descname">setFilePath</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#sls_detector.DetectorApi.setFilePath" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setFilePath</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sls_detector.DetectorApi.setFilePath" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -836,6 +879,11 @@ with receiver start.</p>
 <dl class="method">
 <dt id="sls_detector.DetectorApi.setReadoutClockSpeed">
 <code class="descname">setReadoutClockSpeed</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sls_detector.DetectorApi.setReadoutClockSpeed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sls_detector.DetectorApi.setRxDataStreamStatus">
+<code class="descname">setRxDataStreamStatus</code><span class="sig-paren">(</span><em>self: _sls_detector.DetectorApi</em>, <em>arg0: bool</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sls_detector.DetectorApi.setRxDataStreamStatus" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
