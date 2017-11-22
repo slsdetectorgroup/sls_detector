@@ -799,6 +799,30 @@ class Detector:
         speed = self._speed_int[value]
         self._api.setReadoutClockSpeed(speed)
 
+
+    @property
+    def rx_datastream(self):
+        """
+        Zmq datastream from receiver
+        """
+        return self._api.getRxDataStreamStatus()
+    
+    @rx_datastream.setter
+    def rx_datastream(self, status):
+        self._api.setRxDataStreamStatus(status)
+
+    @property
+    def rx_zmqport(self):
+        """
+        Return the receiver zmq ports
+        """
+        _s = self._api.getNetworkParameter('rx_zmqport')
+        return [int(_p)+i for _p in _s.split('+') for i in range(2)]
+
+    @property
+    def rx_zmqip(self):
+        return self._api.getNetworkParameter('rx_zmqip')
+
     @property
     def timing_mode(self):
         """

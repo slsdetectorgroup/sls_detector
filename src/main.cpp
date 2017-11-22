@@ -70,6 +70,12 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getDetectorType", &Detector::getDetectorType)
 
 
+            .def("getRxDataStreamStatus", &Detector::getRxDataStreamStatus)
+            .def("setRxDataStreamStatus", &Detector::setRxDataStreamStatus)
+            
+            .def("getNetworkParameter", &Detector::getNetworkParameter)
+
+
             .def("setFileWrite", &Detector::setFileWrite)
             .def("getFileWrite", &Detector::getFileWrite)
             .def("getDacVthreshold", &Detector::getDacVthreshold)

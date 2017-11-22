@@ -249,12 +249,97 @@ public:
     int getAllTrimbits(){
         return det.setAllTrimbits(-1);
     }
+    
+    bool getRxDataStreamStatus(){
+        auto i = det.enableDataStreamingFromReceiver();
+        if(i==0)
+            return false;
+        else
+            return true;
+    }
+    
+    void setRxDataStreamStatus(bool state){
+        det.enableDataStreamingFromReceiver(state);
+    }
+    
+    std::string getNetworkParameter(std::string par_name){
+        auto p = networkNameToEnum(par_name);
+        return det.getNetworkParameter(p);  
+    }
 
-
+    slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
 private:
     multiSlsDetector det;
 };
 
+
+//enum networkParameter {
+//  DETECTOR_MAC, 	    	/**< detector MAC */
+//  DETECTOR_IP,	 	    	/**< detector IP */
+//  RECEIVER_HOSTNAME,  		/**< receiver IP/hostname */
+//  RECEIVER_UDP_IP,			/**< receiever UDP IP */
+//  RECEIVER_UDP_PORT,		/**< receiever UDP Port */
+//  RECEIVER_UDP_MAC,			/**< receiever UDP MAC */
+//  RECEIVER_UDP_PORT2,		/**< receiever UDP Port of second half module for eiger */
+//  DETECTOR_TXN_DELAY_LEFT, 	/**< transmission delay on the (left) port for next frame */
+//  DETECTOR_TXN_DELAY_RIGHT,	/**< transmission delay on the right port for next frame  */
+//  DETECTOR_TXN_DELAY_FRAME, /**< transmission delay of a whole frame for all the ports */
+//  FLOW_CONTROL_10G,			/**< flow control for 10GbE */
+//  FLOW_CONTROL_WR_PTR,		/**< memory write pointer for flow control */
+//  FLOW_CONTROL_RD_PTR,		/**< memory read pointer for flow control */
+//  RECEIVER_STREAMING_PORT,	/**< receiever streaming TCP(ZMQ) port */
+//  CLIENT_STREAMING_PORT,	/**< client streaming TCP(ZMQ) port */
+//  RECEIVER_STREAMING_SRC_IP,/**< receiever streaming TCP(ZMQ) ip */
+//  CLIENT_STREAMING_SRC_IP	/**< client streaming TCP(ZMQ) ip */
+//};
+
+slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_name){
+
+    if(par_name == "detector_mac"){
+        return slsDetectorDefs::networkParameter::DETECTOR_MAC;
+    }
+    else if(par_name == "detector_ip"){
+        return slsDetectorDefs::networkParameter::DETECTOR_IP;
+    }
+    else if(par_name == "rx_hostname"){
+        return slsDetectorDefs::networkParameter::RECEIVER_HOSTNAME;
+    }
+    else if(par_name == "rx_udpip"){
+        return slsDetectorDefs::networkParameter::RECEIVER_UDP_IP;
+    }
+    else if(par_name == "rx_updport"){
+        return slsDetectorDefs::networkParameter::RECEIVER_UDP_PORT;
+    }
+    else if(par_name == "rx_udpmac"){
+        return slsDetectorDefs::networkParameter::RECEIVER_UDP_MAC;
+    }
+    else if(par_name == "rx_updport2"){
+        return slsDetectorDefs::networkParameter::RECEIVER_UDP_PORT2;
+    }
+    else if(par_name == "delay_left"){
+        return slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT;
+    }
+    else if(par_name == "delay_right"){
+        return slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT;
+    }
+    else if(par_name == "delay_frame"){
+        return slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_FRAME;
+    }
+    else if(par_name == "flow_control_10g"){
+        return slsDetectorDefs::networkParameter::FLOW_CONTROL_10G;
+    }
+    else if(par_name == "client_zmqport"){
+        return slsDetectorDefs::networkParameter::CLIENT_STREAMING_PORT;
+    }
+    else if(par_name == "rx_zmqport"){
+        return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_PORT;
+    }
+    else if(par_name == "rx_zmqip"){
+        return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_SRC_IP;
+    }
+    
+    return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_PORT;
+};
 
 slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
     //to avoid unitialised
