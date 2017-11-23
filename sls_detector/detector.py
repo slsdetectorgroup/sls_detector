@@ -323,6 +323,55 @@ class Detector:
         """
         return self._dacs
 
+
+    @property
+    def detector_type(self):
+        """
+        :py:obj:`str` Detector type
+        
+        * Eiger
+        * Jungfrau
+        * etc.
+        
+        """
+        return self._api.getDetectorType()
+
+    @property
+    def dynamic_range(self):
+        """
+        :obj:`int`: Dynamic range of the detector.
+
+        +----+-------------+------------------------------+
+        | dr |  max counts |    comments                  |
+        +====+=============+==============================+
+        | 4  |       15    |                              |
+        +----+-------------+------------------------------+
+        | 8  |      255    |                              |
+        +----+-------------+------------------------------+
+        |16  |     4095    | 12 bit internally            |
+        +----+-------------+------------------------------+
+        |32  |  4294967295 | Autosumming of 12 bit frames |
+        +----+-------------+------------------------------+
+
+        Raises
+        -------
+        ValueError
+            If the dynamic range is not available in the detector
+
+
+        """
+        return self._api.getDynamicRange()
+
+    @dynamic_range.setter
+    def dynamic_range(self, dr):
+        if dr in self._detector_dynamic_range:
+            self._api.setDynamicRange(dr)
+            return
+        else:
+            raise ValueError('Cannot set dynamic range to: {:d} availble options: '.format(dr),
+                             self._detector_dynamic_range)
+
+
     @property
     def eiger_matrix_reset(self):
         """
@@ -337,6 +386,21 @@ class Detector:
     @eiger_matrix_reset.setter
     def eiger_matrix_reset(self, value):
         self._api.setCounterBit(value)
+
+    @property
+    def exposure_time(self):
+        """
+        :obj:`double` Exposure time in [s] of a single frame.
+        """
+        return self._api.getExposureTime() /1e9
+
+
+    @exposure_time.setter
+    def exposure_time(self, t):
+        ns_time = int(t * 1e9)
+        if ns_time <= 0:
+            raise ValueError('Exposure time must be larger than 0')
+        self._api.setExposureTime(ns_time)
 
  
     @property
@@ -364,11 +428,72 @@ class Detector:
 
         """
         return self._api.getFileIndex()
+    
     @file_index.setter
     def file_index(self, i):
         if i < 0:
             raise ValueError('Index needs to be positive')
         self._api.setFileIndex(i)
+
+    @property
+    def file_name(self):
+        """
+        :obj:`str`: Base file name for writing images
+
+        Examples
+        ---------
+
+        ::
+
+            detector.file_name
+            >> 'run'
+
+            detector.file_name = 'myrun'
+
+            #For a single acqusition the detector now writes
+            # myrun_master_0.raw
+            # myrun_d0_0.raw
+            # myrun_d1_0.raw
+            # myrun_d2_0.raw
+            # myrun_d3_0.raw
+
+
+        """
+        return self._api.getFileName()
+
+    @file_name.setter
+    def file_name(self, fname):
+        self._api.setFileName(fname)
+
+    @property
+    def file_path(self):
+        """
+        :obj:`str`: Path where images are written
+
+        Raises
+        -------
+        FileNotFoundError
+            If path does not exists
+
+        Examples
+        --------
+
+        ::
+
+            detector.file_path
+            >> '/path/to/files'
+
+            detector.file_path = '/new/path/to/other/files'
+        """
+        return self._api.getFilePath()
+
+    @file_path.setter
+    def file_path(self, path):
+        if os.path.exists(path) is True:
+            self._api.setFilePath(path)
+        else:
+            raise FileNotFoundError('File path does not exists')
+
 
     @property
     def file_write(self):
@@ -409,7 +534,10 @@ class Detector:
     
     @high_voltage.setter
     def high_voltage(self, voltage):
-        self._api.setDac('vhighvoltage', -1, int(voltage))
+        voltage = int(voltage)
+        if voltage < 0:
+            raise ValueError('High voltage needs to be positive')
+        self._api.setDac('vhighvoltage', -1, voltage)
 
     def pulse_chip(self, n):
         self._api.pulseChip(n)
@@ -496,17 +624,7 @@ class Detector:
                              '{:d}-{:d}'.format(value, self._trimbit_limits.min, self._trimbit_limits.max))
 
 
-    @property
-    def detector_type(self):
-        """
-        :py:obj:`str` Detector type
-        
-        * Eiger
-        * Jungfrau
-        * etc.
-        
-        """
-        return self._api.getDetectorType()
+
         
     @property
     def vthreshold(self):
@@ -520,54 +638,10 @@ class Detector:
         self._api.setDacVthreshold(th)
 
 
-    @property
-    def dynamic_range(self):
-        """
-        :obj:`int`: Dynamic range of the detector.
-
-        +----+-------------+------------------------------+
-        | dr |  max counts |    comments                  |
-        +====+=============+==============================+
-        | 4  |       15    |                              |
-        +----+-------------+------------------------------+
-        | 8  |      255    |                              |
-        +----+-------------+------------------------------+
-        |16  |     4095    | 12 bit internally            |
-        +----+-------------+------------------------------+
-        |32  |  4294967295 | Autosumming of 12 bit frames |
-        +----+-------------+------------------------------+
-
-        Raises
-        -------
-        ValueError
-            If the dynamic range is not available in the detector
 
 
-        """
-        return self._api.getDynamicRange()
-
-    @dynamic_range.setter
-    def dynamic_range(self, dr):
-        if dr in self._detector_dynamic_range:
-            self._api.setDynamicRange(dr)
-            return
-        else:
-            raise ValueError('Cannot set dynamic range to: {:d} availble options: '.format(dr),
-                             self._detector_dynamic_range)
 
 
-    @property
-    def exposure_time(self):
-        """
-        :obj:`double` Exposure time in [s] of a single frame.
-        """
-        return self._api.getExposureTime() /1e9
-
-
-    @exposure_time.setter
-    def exposure_time(self, t):
-        ns_time = int(t * 1e9)
-        self._api.setExposureTime(ns_time)
 
     @property
     def sub_exposure_time(self):
@@ -578,64 +652,9 @@ class Detector:
         ns_time = int(t * 1e9)
         self._api.setSubExposureTime(ns_time)
 
-    @property
-    def file_path(self):
-        """
-        :obj:`str`: Path where images are written
-
-        Raises
-        -------
-        FileNotFoundError
-            If path does not exists
-
-        Examples
-        --------
-
-        ::
-
-            detector.file_path
-            >> '/path/to/files'
-
-            detector.file_path = '/new/path/to/other/files'
-        """
-        return self._api.getFilePath()
-
-    @file_path.setter
-    def file_path(self, path):
-        if os.path.exists(path) is True:
-            self._api.setFilePath(path)
-        else:
-            raise FileNotFoundError('File path does not exists')
-
-    @property
-    def file_name(self):
-        """
-        :obj:`str`: Base file name for writing images
-
-        Examples
-        ---------
-
-        ::
-
-            detector.file_name
-            >> 'run'
-
-            detector.file_name = 'myrun'
-
-            #For a single acqusition the detector now writes
-            # myrun_master_0.raw
-            # myrun_d0_0.raw
-            # myrun_d1_0.raw
-            # myrun_d2_0.raw
-            # myrun_d3_0.raw
 
 
-        """
-        return self._api.getFileName()
 
-    @file_name.setter
-    def file_name(self, fname):
-        self._api.setFileName(fname)
 
 
     @property
@@ -653,22 +672,9 @@ class Detector:
 
         """
         _hm = self._api.getHostname()
+        if _hm == '':
+            return []
         return _hm.strip('+').split('+')
-
-
-    @property
-    def period(self):
-        """
-        :obj:`double` Period between start of frames. Set to 0 for the detector
-        to choose the shortest possible
-        """
-        _t = self._api.getPeriod()
-        return _t / 1e9
-
-    @period.setter
-    def period(self, t):
-        ns_time = int(t * 1e9)
-        self._api.setPeriod(ns_time)
 
     @property
     def image_size(self):
@@ -694,8 +700,7 @@ class Detector:
         """
         size = namedtuple('ImageSize', ['rows', 'cols'])
         return size(*self._api.getImageSize())
-
-
+    
     def load_config(self, fname):
         """
         Load detector configuration from a configuration file
@@ -710,6 +715,50 @@ class Detector:
             self._api.readConfigurationFile(fname)
         else:
             raise FileNotFoundError('Cannot find settings file')
+
+
+    @n_frames.setter
+    def n_frames(self, n):
+        if n >= 1:
+            self._api.setNumberOfFrames(n)
+        else:
+            raise ValueError('Invalid value for n_frames: {:d}. Number of'\
+                             ' frames should be an integer greater than 0'.format(n))
+
+    @property
+    def n_modules(self):
+        """
+        :obj:`int` Number of (half)modules in the detector
+
+        Examples
+        ---------
+
+        ::
+
+            detector.n_modules
+            >> 2
+
+        """
+        return self._api.getNumberOfDetectors()
+
+    @property
+    def period(self):
+        """
+        :obj:`double` Period between start of frames. Set to 0 for the detector
+        to choose the shortest possible
+        """
+        _t = self._api.getPeriod()
+        return _t / 1e9
+
+    @period.setter
+    def period(self, t):
+        ns_time = int(t * 1e9)
+        self._api.setPeriod(ns_time)
+
+
+
+
+
         
     def load_parameters(self, fname):
         """
@@ -740,29 +789,7 @@ class Detector:
         """
         return self._api.getNumberOfFrames()
 
-    @n_frames.setter
-    def n_frames(self, n):
-        if n >= 1:
-            self._api.setNumberOfFrames(n)
-        else:
-            raise ValueError('Invalid value for n_frames: {:d}. Number of'\
-                             ' frames should be an integer greater than 0'.format(n))
 
-    @property
-    def n_modules(self):
-        """
-        :obj:`int` Number of (half)modules in the detector
-
-        Examples
-        ---------
-
-        ::
-
-            detector.n_modules
-            >> 2
-
-        """
-        return self._api.getNumberOfDetectors()
 
     @property
     def module_geometry(self):
