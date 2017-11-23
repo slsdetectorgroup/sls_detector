@@ -98,7 +98,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#look-read-and-feel-like-python">Look, read and feel like Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#have-documentation">Have documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pass-static-analysis-with-pylint">Pass static analysis with pylint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tested-with-a-detector">Tested with a detector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tested-code">Tested code</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="command_line.html">Command line to Python</a></li>
@@ -236,65 +236,32 @@ add an exception.</p>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="tested-with-a-detector">
-<h2>Tested with a detector<a class="headerlink" href="#tested-with-a-detector" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tested-code">
+<h2>Tested code<a class="headerlink" href="#tested-code" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least… <em>actually last just because of the long list included.</em>
 All code that goes in should have adequate tests. If a new function does not
-have a minimum of one test it does not get added. Focus is on tests with a
-detector connected instead of using a mock.</p>
-<p><strong>Current status</strong></p>
+have a minimum of one test it does not get added.</p>
+<p><strong>Unit-tests with pytest and mocker</strong></p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#2017-11-14</span>
-<span class="n">test_not_busy</span> <span class="p">(</span><span class="n">test_acq</span><span class="o">.</span><span class="n">TestAcquire</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_eiger_resmat_false</span> <span class="p">(</span><span class="n">test_acq</span><span class="o">.</span><span class="n">TestAcquire</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_eiger_resmat_true</span> <span class="p">(</span><span class="n">test_acq</span><span class="o">.</span><span class="n">TestAcquire</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_full_speed</span> <span class="p">(</span><span class="n">test_acq</span><span class="o">.</span><span class="n">TestAcquire</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_half_speed</span> <span class="p">(</span><span class="n">test_acq</span><span class="o">.</span><span class="n">TestAcquire</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_quarter_speed</span> <span class="p">(</span><span class="n">test_acq</span><span class="o">.</span><span class="n">TestAcquire</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_super_slow_speed</span> <span class="p">(</span><span class="n">test_acq</span><span class="o">.</span><span class="n">TestAcquire</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_if_raising_on_wrong_value</span> <span class="p">(</span><span class="n">test_dynamic_range</span><span class="o">.</span><span class="n">TestDynamicRange</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_setting_to_16</span> <span class="p">(</span><span class="n">test_dynamic_range</span><span class="o">.</span><span class="n">TestDynamicRange</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_setting_to_32</span> <span class="p">(</span><span class="n">test_dynamic_range</span><span class="o">.</span><span class="n">TestDynamicRange</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_setting_to_4</span> <span class="p">(</span><span class="n">test_dynamic_range</span><span class="o">.</span><span class="n">TestDynamicRange</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_setting_to_8</span> <span class="p">(</span><span class="n">test_dynamic_range</span><span class="o">.</span><span class="n">TestDynamicRange</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_file_path_type</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_get_number_of_modules</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_if_raising_on_negative</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_if_raising_on_non_existing_path</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_module_geometry_horizontal</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_module_geometry_vertical</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_file_path</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_file_index</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_file_name</span> <span class="p">(</span><span class="n">test_file_index_and_names</span><span class="o">.</span><span class="n">TestFileIndexAndNames</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_first_hostname_is_correct</span> <span class="p">(</span><span class="n">test_hostname</span><span class="o">.</span><span class="n">TestHostname</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_hostname_has_same_length_as_n_modules</span> <span class="p">(</span><span class="n">test_hostname</span><span class="o">.</span><span class="n">TestHostname</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_return_type_is_list</span> <span class="p">(</span><span class="n">test_hostname</span><span class="o">.</span><span class="n">TestHostname</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_second_hostname_is_correct</span> <span class="p">(</span><span class="n">test_hostname</span><span class="o">.</span><span class="n">TestHostname</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_hasattr_exposure_time</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_hasattr_n_frames</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_hasattr_period</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_hasattr_sub_exposure_time</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_if_n_frames_raise_on_float</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_if_n_frames_raise_on_neg_values</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_exp_time_random</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_exposure_time</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_nframes</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_period</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_sub_exposure_time</span> <span class="p">(</span><span class="n">test_timers</span><span class="o">.</span><span class="n">TestTimers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_raises_when_tb_is_too_large</span> <span class="p">(</span><span class="n">test_trimbits_and_dacs</span><span class="o">.</span><span class="n">TestTrimbitsAndDacs</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_raises_when_tb_is_too_small</span> <span class="p">(</span><span class="n">test_trimbits_and_dacs</span><span class="o">.</span><span class="n">TestTrimbitsAndDacs</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_trimbits_17</span> <span class="p">(</span><span class="n">test_trimbits_and_dacs</span><span class="o">.</span><span class="n">TestTrimbitsAndDacs</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_set_and_get_trimbits_32</span> <span class="p">(</span><span class="n">test_trimbits_and_dacs</span><span class="o">.</span><span class="n">TestTrimbitsAndDacs</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_firmware_version</span> <span class="p">(</span><span class="n">test_version_numbers</span><span class="o">.</span><span class="n">TestVersionNumbers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
-<span class="n">test_hasattr_firmware_version</span> <span class="p">(</span><span class="n">test_version_numbers</span><span class="o">.</span><span class="n">TestVersionNumbers</span><span class="p">)</span> <span class="o">...</span> <span class="n">ok</span>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">3</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
+<span class="n">Name</span>                       <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
+<span class="o">----------------------------------------------</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>       <span class="mi">2</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">detector</span><span class="o">.</span><span class="n">py</span>     <span class="mi">272</span>     <span class="mi">28</span>    <span class="mi">90</span><span class="o">%</span>
+<span class="o">----------------------------------------------</span>
+<span class="n">TOTAL</span>                        <span class="mi">274</span>     <span class="mi">28</span>    <span class="mi">90</span><span class="o">%</span>
 
-<span class="o">----------------------------------------------------------------------</span>
-<span class="n">Ran</span> <span class="mi">42</span> <span class="n">tests</span> <span class="ow">in</span> <span class="mf">5.081</span><span class="n">s</span>
 
-<span class="n">OK</span>
+<span class="o">=====================</span> <span class="mi">92</span> <span class="n">passed</span> <span class="ow">in</span> <span class="mf">0.59</span> <span class="n">seconds</span> <span class="o">=====================</span>
 </pre></div>
 </div>
 </div></blockquote>
+<p><strong>Simple integration tests</strong></p>
+<p>These tests require a detector connected. Performs simple tasks like setting
+exposure time and reading back to double check the value</p>
+<p><strong>Complex integration test</strong></p>
+<p>Typical measurements. Might require X-rays. Tests are usually evaluated from
+plots</p>
 </div>
 </div>
 

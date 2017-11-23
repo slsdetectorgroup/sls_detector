@@ -6,7 +6,6 @@ Python - sls
 
 """
 import os
-import time
 from collections import namedtuple, Iterable
 from functools import partial
 import numpy as np
@@ -18,29 +17,29 @@ class Dac:
     """
     This class represents a dac on the detector. One instance handles all
     dacs with the same name for a multi detector instance.
-    
-    .. note :: 
-        
-        This class is used to build up DetectorDacs and is in general 
-        not directly accessed to the user. 
-        
-        
+
+    .. note ::
+
+        This class is used to build up DetectorDacs and is in general
+        not directly accessed to the user.
+
+
     """
     def __init__(self, name, low, high, default, detector):
         self.name = name
         self._detector = detector
-        
+
         self.min_value = low
         self.max_value = high
         self.default = default
-        
+
         #Local copy to avoid calling the detector class every time
-        self._n_modules = self._detector.n_modules 
-        
+        self._n_modules = self._detector.n_modules
+
         #Bind functions to get and set the dac
         self.get = partial(self._detector._api.getDac, self.name)
         self.set = partial(self._detector._api.setDac, self.name)
-        
+
     def __getitem__(self, key):
         """
         Get dacs either by slice, key or list
@@ -54,10 +53,10 @@ class Dac:
 
     def __setitem__(self, key, value):
         """
-        Set dacs either by slice, key or list. Supports values that can 
+        Set dacs either by slice, key or list. Supports values that can
         be iterated over.
         """
-        
+
         if key == slice(None, None, None):
             if isinstance(value, int):
                 for i in range(self._n_modules):
@@ -65,26 +64,26 @@ class Dac:
             elif isinstance(value, Iterable):
                 for i in range(self._n_modules):
                     self.set(i, value[i])
-                    
+
         elif isinstance(key, Iterable):
             if isinstance(value, Iterable):
                 for k,v in zip(key, value):
                     self.set(k,v)
-                
+
             elif isinstance(value, int):
                 for k in key:
                     self.set(k, value)
 
-                    
+
         elif isinstance(key, int):
             self.set(key, value)
-            
+
     def __repr__(self):
         """String representation for a single dac in all modules"""
         r_str = ['{:10s}: '.format(self.name)]
         r_str += [ '{:5d}, '.format(self.get(i)) for i in range(self._n_modules)]
         return ''.join(r_str).strip(', ')
-  
+
 class Adc:
     def __init__(self, name, detector):
         self.name = name
@@ -93,7 +92,7 @@ class Adc:
         #Bind functions to get and set the dac
         self.get = partial(self._detector._api.getAdc, self.name)
 
-        
+
     def __getitem__(self, key):
         """
         Get dacs either by slice, key or list
@@ -104,16 +103,16 @@ class Adc:
             return [self.get(k) / 1000 for k in key]
         else:
             return self.get(key) / 1000
- 
+
     def __repr__(self):
         """String representation for a single adc in all modules"""
         degree_sign= u'\N{DEGREE SIGN}'
         r_str = ['{:14s}: '.format(self.name)]
         r_str += [ '{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self._n_modules)]
         return ''.join(r_str).strip(', ')
-     
 
-        
+
+
 class DetectorAdcs:
     """
     Interface to the ADCs on the readout board
@@ -121,11 +120,11 @@ class DetectorAdcs:
     def __iter__(self):
         for attr, value in self.__dict__.items():
             yield value
-            
+
     def __repr__(self):
         return '\n'.join([str(t) for t in self])
 
-            
+
 class DetectorDacs:
     _dacs = [('vsvp',    0, 4000,    0),
              ('vtr',     0, 4000, 2500),
@@ -149,14 +148,14 @@ class DetectorDacs:
     def __init__(self, detector):
         #We need to at least initially know which detector we are connected to
         self._detector = detector
-        
+
         #Index to support iteration
         self._current = 0
-        
+
         #Popolate the dacs
         for _d in self._dacs:
             setattr(self, '_'+_d[0], Dac(*_d, detector))
-     
+
     def __getattr__(self, name):
         return self.__getattribute__('_' + name)
 
@@ -166,7 +165,7 @@ class DetectorDacs:
             return self.__getattribute__('_' + name).__setitem__(slice(None, None, None), value)
         else:
             super().__setattr__(name, value)
-   
+
     def __next__(self):
         if self._current >= len(self._dacs):
             self._current = 0
@@ -174,7 +173,7 @@ class DetectorDacs:
         else:
             self._current += 1
             return self.__getattr__(self._dacnames[self._current-1])
-        
+
     def __iter__(self):
         return self
 
@@ -182,7 +181,7 @@ class DetectorDacs:
         r_str = ['========== DACS =========']
         r_str += [repr(dac) for dac in self]
         return '\n'.join(r_str)
-    
+
     def get_asarray(self):
         """
         Read the dacs into a numpy array with dimensions [ndacs, nmodules]
@@ -191,7 +190,7 @@ class DetectorDacs:
         for i, _d in enumerate(self):
             dac_array[i,:] = _d[:]
         return dac_array
-    
+
     def set_from_array(self, dac_array):
         """
         Set the dacs from an numpy array with dac values. [ndacs, nmodules]
@@ -199,14 +198,14 @@ class DetectorDacs:
         dac_array = dac_array.astype(np.int)
         for i, _d in enumerate(self):
             _d[:] = dac_array[i]
-            
+
     def set_default(self):
         """
         Set all dacs to their default values
         """
         for _d in self:
             _d[:] = _d.default
-        
+
 
 class Detector:
     """
@@ -218,10 +217,10 @@ class Detector:
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
     def __init__(self):
         self._api = DetectorApi()
-        
+
         self._dacs = DetectorDacs(self)
         """dacs = :py:sls`DetectorDacs`"""
-        
+
         self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
 
 
@@ -251,13 +250,13 @@ class Detector:
     def busy(self):
         """
         Checks the acquire flag of the detector.
-        
+
         Returns
         --------
         bool
-            :py:obj:`True` if the detector is acqiring otherwise :py:obj:`False` 
-            
-            
+            :py:obj:`True` if the detector is acqiring otherwise :py:obj:`False`
+
+
         """
         return self._api.getAcquiringFlag()
 
@@ -265,40 +264,40 @@ class Detector:
     @property
     def dacs(self):
         """
-        
+
         An instance of DetectorDacs used for accessing the dacs of a single
         or multi detector.
-        
+
         Examples
         ---------
-        
+
         ::
-            
+
             d = sls.Detector()
-            
+
             #Set all vrf to 1500
             d.dacs.vrf = 1500
-            
-            #Check vrf 
+
+            #Check vrf
             d.dacs.vrf
             >> vrf       :  1500,  1500
-            
+
             #Set a single vtr
             d.dacs.vtr[0] = 1800
-            
+
             #Set vrf with multiple values
             d.dacs.vrf = [3500,3700]
             d.dacs.vrf
             >> vrf       :  3500,  3700
-            
+
             #read into a variable
             var = d.dacs.vrf[:]
-            
+
             #set multiple with multiple values, mostly used for large systems
             d.dacs.vcall[0,1] = [3500,3600]
             d.dacs.vcall
             >> vcall     :  3500,  3600
-            
+
             d.dacs
             >>
             ========== DACS =========
@@ -319,7 +318,7 @@ class Detector:
             vcn       :  2000,  2000
             vis       :  1550,  1550
             iodelay   :   660,   660
-        
+
         """
         return self._dacs
 
@@ -328,11 +327,11 @@ class Detector:
     def detector_type(self):
         """
         :py:obj:`str` Detector type
-        
+
         * Eiger
         * Jungfrau
         * etc.
-        
+
         """
         return self._api.getDetectorType()
 
@@ -375,14 +374,14 @@ class Detector:
     @property
     def eiger_matrix_reset(self):
         """
-        Matrix reset bit for Eiger. 
-        
+        Matrix reset bit for Eiger.
+
         :py:obj:`True` : Normal operation, the matrix is reset befor each acq.
         :py:obj:`False` : Matrix reset disableld. Used to not reset before
-        reading out analog test pulses. 
+        reading out analog test pulses.
         """
         return self._api.getCounterBit()
-    
+
     @eiger_matrix_reset.setter
     def eiger_matrix_reset(self, value):
         self._api.setCounterBit(value)
@@ -402,7 +401,7 @@ class Detector:
             raise ValueError('Exposure time must be larger than 0')
         self._api.setExposureTime(ns_time)
 
- 
+
     @property
     def file_index(self):
         """
@@ -428,7 +427,7 @@ class Detector:
 
         """
         return self._api.getFileIndex()
-    
+
     @file_index.setter
     def file_index(self, i):
         if i < 0:
@@ -501,11 +500,11 @@ class Detector:
         :obj:`bool` If True write files to disk
         """
         return self._api.getFileWrite()
-    
+
     @file_write.setter
     def file_write(self, fwrite):
         self._api.setFileWrite(fwrite)
-    
+
     @property
     def firmware_version(self):
         """
@@ -516,12 +515,12 @@ class Detector:
     def free_shared_memory(self):
         """
         Free the shared memory that contains the detector settings
-        
-        .. warning :: 
-            
-            After doing this you can't access the detector until it is 
+
+        .. warning ::
+
+            After doing this you can't access the detector until it is
             reconfigured
-        
+
         """
         self._api.freeSharedMemory()
 
@@ -531,130 +530,13 @@ class Detector:
         High voltage applied to the sensor
         """
         return self._api.getDac('vhighvoltage', -1)
-    
+
     @high_voltage.setter
     def high_voltage(self, voltage):
         voltage = int(voltage)
         if voltage < 0:
             raise ValueError('High voltage needs to be positive')
         self._api.setDac('vhighvoltage', -1, voltage)
-
-    def pulse_chip(self, n):
-        self._api.pulseChip(n)
-
-    @property 
-    def software_version(self):
-        return self._api.getSoftwareVersion();
-
-    @property
-    def rate_correction(self):
-        """
-        :obj:`list` of :obj:`double` Rate correction for all modules.
-        Set to 0 for **disabled**
-
-        Raises
-        -------
-        ValueError
-            If the passed list is not of the same lenght as the number of
-            detectors
-
-        Examples
-        ---------
-
-        ::
-
-            detector.rate_correction
-            >> [125.0, 155.0]
-
-            detector.rate_correction = [125, 155]
-
-
-        """
-        return self._api.getRateCorrection()
-
-    @rate_correction.setter
-    def rate_correction(self, tau_list):
-        if len(tau_list) != self.n_modules:
-            raise ValueError('List of tau needs the same length')
-        self._api.setRateCorrection(tau_list)
-
-
-    @property
-    def status(self):
-        """
-        :py:obj`str` Status of the detector: idle, running, 
-        
-        .. todo :: 
-            
-            Check possible values
-            
-        
-        """
-        return self._api.getRunStatus()
-    
-    def start_acq(self):
-        """
-        Non blocking command to star acquisition. Needs to be used in combination
-        with receiver start.
-        """
-        self._api.startAcquisition()
-        
-    def stop_acq(self):
-        """
-        Stop acquisition early or if the detector hangs
-        """
-        self._api.stopAcquisition()
-
-    @property
-    def trimbits(self):
-        """
-        :py:obj`int` trimbits of the detector.  
-        """
-        return self._api.getAllTrimbits()
-    
-    @trimbits.setter
-    def trimbits(self, value):
-        """
-        test
-        """
-        if self._trimbit_limits.min <= value <= self._trimbit_limits.max:
-            self._api.setAllTrimbits(value)
-        else:
-            raise ValueError('Trimbit setting {:d} is  outside of range:'\
-                             '{:d}-{:d}'.format(value, self._trimbit_limits.min, self._trimbit_limits.max))
-
-
-
-        
-    @property
-    def vthreshold(self):
-        """
-        Threshold in DAC units for the detector
-        """
-        return self._api.getDacVthreshold()
-    
-    @vthreshold.setter
-    def vthreshold(self, th):
-        self._api.setDacVthreshold(th)
-
-
-
-
-
-
-
-    @property
-    def sub_exposure_time(self):
-        return self._api.getSubExposureTime() /1e9
-    
-    @sub_exposure_time.setter
-    def sub_exposure_time(self, t):
-        ns_time = int(t * 1e9)
-        self._api.setSubExposureTime(ns_time)
-
-
-
-
 
 
     @property
@@ -679,43 +561,97 @@ class Detector:
     @property
     def image_size(self):
         """
-        :py:obj:`collections.namedtuple` with the image size of the detector 
-        
+        :py:obj:`collections.namedtuple` with the image size of the detector
+
         Examples
         ----------
-        
-        :: 
-            
+
+        ::
+
             #Assuming 512x1024 detector size
-            
+
             d.image_size
             >> ImageSize(rows=512, cols=1024)
-            
+
             d.image_size.rows
             >> 512
-            
+
             d.image_size.cols
             >> 1024
-            
+
         """
         size = namedtuple('ImageSize', ['rows', 'cols'])
         return size(*self._api.getImageSize())
-    
+
     def load_config(self, fname):
         """
         Load detector configuration from a configuration file
-        
+
         Raises
         --------
         FileNotFoundError
             If the file does not exists
-            
+
         """
         if os.path.isfile(fname):
             self._api.readConfigurationFile(fname)
         else:
             raise FileNotFoundError('Cannot find settings file')
 
+    def load_parameters(self, fname):
+        """
+        Setup detector by executing commands in a parameters file
+
+
+        .. note ::
+
+            If you are reling mainly on the Python API it is probably
+            better to track the settings from Python. This function uses
+            parameters stored in a text file and the command line commands.
+
+        Raises
+        --------
+        FileNotFoundError
+            If the file does not exists
+
+        """
+        if os.path.isfile(fname):
+            self._api.readParametersFile(fname)
+        else:
+            raise FileNotFoundError('Cannot find parameters file')
+
+
+    @property
+    def module_geometry(self):
+        """
+        :obj:`namedtuple` Geometry(horizontal=nx, vertical=ny)
+         of the detector modules.
+
+         Examples
+         ---------
+
+         ::
+
+             detector.module_geometry
+             >> Geometry(horizontal=1, vertical=2)
+
+             detector.module_geometry.vertical
+             >> 2
+
+             detector.module_geometry[0]
+             >> 1
+
+        """
+        _t = self._api.getDetectorGeometry()
+        Geometry = namedtuple('Geometry', ['horizontal', 'vertical'])
+        return Geometry(horizontal=_t[0], vertical =_t[1])
+
+    @property
+    def n_frames(self):
+        """
+        :obj:`int` Number of frames per acquisition
+        """
+        return self._api.getNumberOfFrames()
 
     @n_frames.setter
     def n_frames(self, n):
@@ -753,74 +689,60 @@ class Detector:
     @period.setter
     def period(self, t):
         ns_time = int(t * 1e9)
+        if ns_time < 0:
+            raise ValueError('Period must be 0 or positive')
         self._api.setPeriod(ns_time)
 
 
-
-
-
-        
-    def load_parameters(self, fname):
-        """
-        Setup detector by executing commands in a parameters file
-        
-        
-        .. note ::
-            
-            If you are reling mainly on the Python API it is probably
-            better to track the settings from Python. This function uses
-            parameters stored in a text file and the command line commands.
-        
-        Raises
-        --------
-        FileNotFoundError
-            If the file does not exists
-            
-        """
-        if os.path.isfile(fname):
-            self._api.readParametersFile(fname)
+    def pulse_chip(self, n):
+        n = int(n)
+        if n>=-1:
+            self._api.pulseChip(n)
         else:
-            raise FileNotFoundError('Cannot find parameters file')
+            raise ValueError('n must be equal or larger than -1')
 
     @property
-    def n_frames(self):
+    def rate_correction(self):
         """
-        :obj:`int` Number of frames per acquisition
-        """
-        return self._api.getNumberOfFrames()
+        :obj:`list` of :obj:`double` Rate correction for all modules.
+        Set to 0 for **disabled**
 
+        .. todo ::
+
+            Should support individual assignments
+
+        Raises
+        -------
+        ValueError
+            If the passed list is not of the same lenght as the number of
+            detectors
+
+        Examples
+        ---------
+
+        ::
+
+            detector.rate_correction
+            >> [125.0, 155.0]
+
+            detector.rate_correction = [125, 155]
+
+
+        """
+        return self._api.getRateCorrection()
+
+    @rate_correction.setter
+    def rate_correction(self, tau_list):
+        if len(tau_list) != self.n_modules:
+            raise ValueError('List of tau needs the same length')
+        self._api.setRateCorrection(tau_list)
 
 
     @property
-    def module_geometry(self):
-        """
-        :obj:`namedtuple` Geometry(horizontal=nx, vertical=ny)
-         of the detector modules.
-
-         Examples
-         ---------
-
-         ::
-
-             detector.geometry
-             >> Geometry(horizontal=1, vertical=2)
-
-             detector.geometry.vertical
-             >> 2
-
-             detector.geometry[0]
-             >> 1
-
-        """
-        _t = self._api.getDetectorGeometry()
-        Geometry = namedtuple('Geometry', ['horizontal', 'vertical'])
-        return Geometry(horizontal=_t[0], vertical =_t[1])
-
-    @property 
     def readout_clock(self):
         speed = self._api.getReadoutClockSpeed()
         return self._speed_names[speed]
-        
+
     @readout_clock.setter
     def readout_clock(self, value):
         speed = self._speed_int[value]
@@ -833,38 +755,137 @@ class Detector:
         Zmq datastream from receiver
         """
         return self._api.getRxDataStreamStatus()
-    
+
     @rx_datastream.setter
     def rx_datastream(self, status):
         self._api.setRxDataStreamStatus(status)
 
     @property
+    def rx_zmqip(self):
+        """
+        .. todo ::
+
+            also set
+        """
+        return self._api.getNetworkParameter('rx_zmqip')
+
+    @property
     def rx_zmqport(self):
         """
         Return the receiver zmq ports
+
+        .. todo ::
+
+            also set
+
         """
         _s = self._api.getNetworkParameter('rx_zmqport')
+        if _s == '':
+            return []
         return [int(_p)+i for _p in _s.strip('+').split('+') for i in range(2)]
 
+#Add back when versioning is defined
+#    @property
+#    def software_version(self):
+#        return self._api.getSoftwareVersion();
+
+
     @property
-    def rx_zmqip(self):
-        return self._api.getNetworkParameter('rx_zmqip')
+    def status(self):
+        """
+        :py:obj`str` Status of the detector: idle, running,
+
+        .. todo ::
+
+            Check possible values
+
+
+        """
+        return self._api.getRunStatus()
+
+    def start_acq(self):
+        """
+        Non blocking command to star acquisition. Needs to be used in combination
+        with receiver start.
+        """
+        self._api.startAcquisition()
+
+    def stop_acq(self):
+        """
+        Stop acquisition early or if the detector hangs
+        """
+        self._api.stopAcquisition()
+
+    @property
+    def sub_exposure_time(self):
+        """
+        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode
+
+        ::
+
+            d.sub_exposure_time
+            >> 0.0023
+
+            d.sub_exposure_time = 0.002
+
+        """
+        return self._api.getSubExposureTime() /1e9
+
+    @sub_exposure_time.setter
+    def sub_exposure_time(self, t):
+        ns_time = int(t * 1e9)
+        if ns_time > 0:
+            self._api.setSubExposureTime(ns_time)
+        else:
+            raise ValueError('Sub exposure time must be larger than 0')
+
 
     @property
     def timing_mode(self):
         """
-        :py:obj:`str` Timing mode of the detector 
-        
+        :py:obj:`str` Timing mode of the detector
+
         * **auto** Something
         * **trigger** Something else
-        
+
+        .. todo ::
+
+            settinng and reading!
+
         """
         return self._api.getTimingMode()
-    
+
     @timing_mode.setter
     def timing_mode(self, mode):
         self._api.setTimingMode(mode)
-        
-        
 
-        
+
+    @property
+    def vthreshold(self):
+        """
+        Threshold in DAC units for the detector
+        """
+        return self._api.getDac('vthreshold',-1)
+
+    @vthreshold.setter
+    def vthreshold(self, th):
+        self._api.setDac('vthreshold', -1, th)
+
+    @property
+    def trimbits(self):
+        """
+        :py:obj`int` trimbits of the detector.
+        """
+        return self._api.getAllTrimbits()
+
+    @trimbits.setter
+    def trimbits(self, value):
+        """
+        test
+        """
+        if self._trimbit_limits.min <= value <= self._trimbit_limits.max:
+            self._api.setAllTrimbits(value)
+        else:
+            raise ValueError('Trimbit setting {:d} is  outside of range:'\
+                             '{:d}-{:d}'.format(value, self._trimbit_limits.min, self._trimbit_limits.max))
+

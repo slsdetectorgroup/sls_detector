@@ -81,65 +81,36 @@ Currently the following additions are made:
 
 
 -----------------------
-Tested with a detector
+Tested code
 -----------------------
 
 Last but not least... *actually last just because of the long list included.*
 All code that goes in should have adequate tests. If a new function does not
-have a minimum of one test it does not get added. Focus is on tests with a 
-detector connected instead of using a mock. 
-
-**Current status**
+have a minimum of one test it does not get added.
+ 
+**Unit-tests with pytest and mocker**
 
  ::
  
-    #2017-11-14
-    test_not_busy (test_acq.TestAcquire) ... ok
-    test_set_eiger_resmat_false (test_acq.TestAcquire) ... ok
-    test_set_eiger_resmat_true (test_acq.TestAcquire) ... ok
-    test_set_full_speed (test_acq.TestAcquire) ... ok
-    test_set_half_speed (test_acq.TestAcquire) ... ok
-    test_set_quarter_speed (test_acq.TestAcquire) ... ok
-    test_set_super_slow_speed (test_acq.TestAcquire) ... ok
-    test_if_raising_on_wrong_value (test_dynamic_range.TestDynamicRange) ... ok
-    test_setting_to_16 (test_dynamic_range.TestDynamicRange) ... ok
-    test_setting_to_32 (test_dynamic_range.TestDynamicRange) ... ok
-    test_setting_to_4 (test_dynamic_range.TestDynamicRange) ... ok
-    test_setting_to_8 (test_dynamic_range.TestDynamicRange) ... ok
-    test_file_path_type (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_get_number_of_modules (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_if_raising_on_negative (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_if_raising_on_non_existing_path (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_module_geometry_horizontal (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_module_geometry_vertical (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_set_and_get_file_path (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_set_file_index (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_set_file_name (test_file_index_and_names.TestFileIndexAndNames) ... ok
-    test_first_hostname_is_correct (test_hostname.TestHostname) ... ok
-    test_hostname_has_same_length_as_n_modules (test_hostname.TestHostname) ... ok
-    test_return_type_is_list (test_hostname.TestHostname) ... ok
-    test_second_hostname_is_correct (test_hostname.TestHostname) ... ok
-    test_hasattr_exposure_time (test_timers.TestTimers) ... ok
-    test_hasattr_n_frames (test_timers.TestTimers) ... ok
-    test_hasattr_period (test_timers.TestTimers) ... ok
-    test_hasattr_sub_exposure_time (test_timers.TestTimers) ... ok
-    test_if_n_frames_raise_on_float (test_timers.TestTimers) ... ok
-    test_if_n_frames_raise_on_neg_values (test_timers.TestTimers) ... ok
-    test_set_and_get_exp_time_random (test_timers.TestTimers) ... ok
-    test_set_and_get_exposure_time (test_timers.TestTimers) ... ok
-    test_set_and_get_nframes (test_timers.TestTimers) ... ok
-    test_set_and_get_period (test_timers.TestTimers) ... ok
-    test_set_and_get_sub_exposure_time (test_timers.TestTimers) ... ok
-    test_raises_when_tb_is_too_large (test_trimbits_and_dacs.TestTrimbitsAndDacs) ... ok
-    test_raises_when_tb_is_too_small (test_trimbits_and_dacs.TestTrimbitsAndDacs) ... ok
-    test_set_and_get_trimbits_17 (test_trimbits_and_dacs.TestTrimbitsAndDacs) ... ok
-    test_set_and_get_trimbits_32 (test_trimbits_and_dacs.TestTrimbitsAndDacs) ... ok
-    test_firmware_version (test_version_numbers.TestVersionNumbers) ... ok
-    test_hasattr_firmware_version (test_version_numbers.TestVersionNumbers) ... ok
+    ----------- coverage: platform linux, python 3.6.3-final-0 -----------
+    Name                       Stmts   Miss  Cover
+    ----------------------------------------------
+    sls_detector/__init__.py       2      0   100%
+    sls_detector/detector.py     272     28    90%
+    ----------------------------------------------
+    TOTAL                        274     28    90%
     
-    ----------------------------------------------------------------------
-    Ran 42 tests in 5.081s
     
-    OK
+    ===================== 92 passed in 0.59 seconds =====================
+
 
     
+**Simple integration tests**
+
+These tests require a detector connected. Performs simple tasks like setting 
+exposure time and reading back to double check the value
+
+**Complex integration test**
+
+Typical measurements. Might require X-rays. Tests are usually evaluated from 
+plots

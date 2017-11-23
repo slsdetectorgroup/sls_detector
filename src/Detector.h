@@ -350,6 +350,9 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
     else if(dac_name == "vtr"){
         dac = slsDetectorDefs::dacIndex::E_Vtr;
     }
+    else if(dac_name == "vthreshold"){
+        dac = slsDetectorDefs::dacIndex::THRESHOLD;
+    }
     else if(dac_name == "vrf"){
         dac = slsDetectorDefs::dacIndex::E_Vrf;
     }
