@@ -81,6 +81,7 @@ public:
     }
 
     void pulseChip(int n){ det.pulseChip(n); }
+    void pulseAllPixels(int n);
 
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
     void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
@@ -430,7 +431,18 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
 }
 
 
+void Detector::pulseAllPixels(int n){
+//  int pulsePixelNMove(int n=0,int x=0,int y=0);
+//  int pulsePixel(int n=0,int x=0,int y=0);
 
+    for (int j=0; j<8; ++j){
+        det.pulsePixel(0, -255+j, 0);
+        for (int i=0; i<256; ++i){
+            det.pulsePixelNMove(n, 0, 1);
+        }
+    }
+    return;
+}
 
 
 

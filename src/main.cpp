@@ -32,9 +32,9 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getDac", &Detector::getDac)
             .def("setDac", &Detector::setDac)
             
-            
-            .def("pulseChip", &Detector::pulseChip)
 
+            .def("pulseChip", &Detector::pulseChip)
+            .def("pulseAllPixels", &Detector::pulseAllPixels)
             .def("getRunStatus", &Detector::getRunStatus)
             .def("readConfigurationFile", &Detector::readConfigurationFile)
             .def("readParametersFile", &Detector::readParametersFile)

@@ -694,7 +694,34 @@ class Detector:
         self._api.setPeriod(ns_time)
 
 
+    def pulse_all_pixels(self, n):
+        """
+        Pulse each pixel of the chip **n** times using the analog test pulses.
+        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being
+        the highest pulse.
+        
+        ::
+            
+            #Pulse all pixels ten times
+            d.pulse_all_pixels(10)
+            
+            #Avoid resetting before acq
+            d.eiger_matrix_reset = False
+            
+            d.acq() #take frame
+            
+            #Restore normal behaviour
+            d.eiger_matrix_reset = True
+        
+        
+        """
+        self._api.pulseAllPixels(n)
+
     def pulse_chip(self, n):
+        """
+        Advance the counter by toggeling enable. Gives 2*n+2 int the counter
+        
+        """
         n = int(n)
         if n>=-1:
             self._api.pulseChip(n)
