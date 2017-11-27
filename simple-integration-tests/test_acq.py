@@ -5,7 +5,6 @@ Tests for hostname related functions of the detector
 """
 import unittest
 from sls_detector import Detector
-import random
 #Detector needs to be online
 
 
@@ -47,30 +46,6 @@ class TestAcquire(unittest.TestCase):
         self.assertEqual(self.detector.readout_clock, 'Super Slow Speed')     
 
         
-#    def test_set_and_get_exp_time(self):
-#        t = 3.75
-#        self.detector.exp_time = t
-#        self.assertAlmostEqual(self.detector.exp_time, t,5)
-#        
-#    def test_set_and_get_period(self):
-#        t = 3.75
-#        self.detector.frame_period = t
-#        self.assertAlmostEqual(self.detector.frame_period, t,5)        
-#        
-#    def test_set_and_get_nframes(self):
-#        self.detector.n_frames = 5
-#        self.assertEqual(self.detector.n_frames, 5)
-#
-#    def test_if_n_frames_raise_on_neg_values(self):
-#        with self.assertRaises(Exception) as context:
-#            self.detector.n_frames = -1
-#            self.assertTrue('Invalid value for n_frames' in str(context.exception))
-#
-#    def test_if_n_frames_raise_on_float(self):
-#        with self.assertRaises(Exception) as context:
-#            self.detector.n_frames = -1
-#            self.assertTrue('incompatible function arguments' in str(context.exception))
-
 if __name__ == '__main__':
     unittest.main()
 

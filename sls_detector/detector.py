@@ -364,6 +364,17 @@ class Detector:
         """
         return self._api.getDetectorType()
 
+
+    def default_settings(self):
+        """
+        reset the detector to some type of standard settings
+        """
+        
+        self.n_frames = 1
+        self.exposure_time = 1
+        self.period = 0
+        self.dynamic_range = 16
+
     @property
     def dynamic_range(self):
         """
