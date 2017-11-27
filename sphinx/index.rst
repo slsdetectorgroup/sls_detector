@@ -25,7 +25,8 @@ expose the API and a Python class to offer a more Pythonic interface.
    code_quality
    command_line
    examples
-
+   error-handling
+   
    sls_detector
 
 

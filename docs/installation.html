@@ -100,6 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="code_quality.html">Code quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="command_line.html">Command line to Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="error-handling.html">Error handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sls_detector.html">API Documentation</a></li>
 </ul>
 
@@ -172,25 +173,37 @@ this is of course not needed. For controlling the detector use v3.0+ of the
 <a class="reference external" href="https://www.psi.ch/detectors/users-support">slsDetectorsPackage</a>. Backwards compatibility is possible but in no means
 guaranteed.</p>
 <p><strong>Get the latest code from git:</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@some</span><span class="o">.</span><span class="n">place</span><span class="o">.</span><span class="n">some</span><span class="o">.</span><span class="n">where</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/slsdetectorgroup/sls_detector.git
 </pre></div>
 </div>
-<p><strong>Build using CMAKE</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#in sls_detector</span>
-<span class="n">mkdir</span> <span class="n">build</span>
-<span class="n">cmake</span> <span class="o">..</span>
-<span class="n">build</span>
+<p><strong>Build using conda-build</strong></p>
+<p>The prefered way to build and install is using the conda.
+Since the installation depends on the slsDetectorsPackage download
+and build this first.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1">#Setting variables for source and shared libraries</span>
+<span class="nb">export</span> <span class="nv">SLS_DETECTOR_SOURCE</span><span class="o">=</span>/path/to/slsDetectorsPackage
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/slsDetectorsPackage/build/bin:<span class="nv">$LD_LIBRARY_PATH</span>
+
+<span class="c1">#Clone the rep</span>
+git clone https://github.com/slsdetectorgroup/sls_detector.git
+
+<span class="c1">#Build and install</span>
+conda-build sls_detector
+conda install --use-local sls_detector
 </pre></div>
 </div>
-<p><strong>Add the build  directory to your $PYTHONPATH</strong>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>export PYTHONPATH=/path/to/sls_detector:$PYTHONPATH
+<p><strong>Developer build</strong></p>
+<p>IF you if you are developing and are making constant changes to the code it’s a bit cumbersome to build with conda and install. Then an easirer way is to build the C/C++ parts
+in the package directory and temporary add this to the path</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1">#in path/to/sls_detector</span>
+python setup.py build_ext --inplace
 </pre></div>
 </div>
-<p>To to make it permanent add it to your ~/.bashrc</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">To easier update and modify the code adding py_sls to
-$PYTHONPATH is preferred over installing it in a general location</p>
+<p>Then in your Python script</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/path/to/sls_detector&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sls_detector</span> <span class="kn">import</span> <span class="n">Detector</span>
+</pre></div>
 </div>
 <div class="section" id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>

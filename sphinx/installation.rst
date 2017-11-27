@@ -13,27 +13,51 @@ guaranteed.
 .. _slsDetectorsPackage: https://www.psi.ch/detectors/users-support
 
 
-**Get the latest code from git:** ::
+**Get the latest code from git:** 
 
-    git clone git@some.place.some.where
+.. code-block:: bash
 
-**Build using CMAKE** ::
-
-    #in sls_detector
-    mkdir build
-    cmake ..
-    build
-
-**Add the build  directory to your $PYTHONPATH**:: 
-
-     export PYTHONPATH=/path/to/sls_detector:$PYTHONPATH
-
-To to make it permanent add it to your ~/.bashrc  
+   git clone https://github.com/slsdetectorgroup/sls_detector.git
 
 
-.. note::
-     To easier update and modify the code adding py_sls to
-     $PYTHONPATH is preferred over installing it in a general location    
+**Build using conda-build**
+
+The prefered way to build and install is using the conda. 
+Since the installation depends on the slsDetectorsPackage download 
+and build this first.
+
+.. code-block:: bash
+
+    #Setting variables for source and shared libraries
+    export SLS_DETECTOR_SOURCE=/path/to/slsDetectorsPackage
+    export LD_LIBRARY_PATH=/path/to/slsDetectorsPackage/build/bin:$LD_LIBRARY_PATH
+    
+    #Clone the rep
+    git clone https://github.com/slsdetectorgroup/sls_detector.git
+    
+    #Build and install
+    conda-build sls_detector
+    conda install --use-local sls_detector
+
+
+**Developer build**
+
+IF you if you are developing and are making constant changes to the code it's a bit cumbersome to build with conda and install. Then an easirer way is to build the C/C++ parts 
+in the package directory and temporary add this to the path
+
+
+.. code-block:: bash
+
+    #in path/to/sls_detector  
+    python setup.py build_ext --inplace
+    
+Then in your Python script
+    
+.. code-block:: python
+
+    import sys
+    sys.path.append('/path/to/sls_detector')
+    from sls_detector import Detector
 
 
 --------------
