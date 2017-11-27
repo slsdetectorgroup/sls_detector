@@ -31,7 +31,18 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getAdc", &Detector::getAdc)
             .def("getDac", &Detector::getDac)
             .def("setDac", &Detector::setDac)
-            
+
+            .def("setThresholdEnergy", &Detector::setThresholdEnergy)
+            .def("getThresholdEnergy", &Detector::getThresholdEnergy)
+
+            .def("getSettings", &Detector::getSettings)
+            .def("setSettings", &Detector::setSettings)
+            .def("getSettingsDir", &Detector::getSettingsDir)
+            .def("setSettingsDir", &Detector::setSettingsDir)
+
+            .def("loadTrimbitFile", &Detector::loadTrimbitFile)
+            .def("setTrimEnergies", &Detector::setTrimEnergies)
+            .def("getTrimEnergies", &Detector::getTrimEnergies)
 
             .def("pulseChip", &Detector::pulseChip)
             .def("pulseAllPixels", &Detector::pulseAllPixels)

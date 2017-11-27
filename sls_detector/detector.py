@@ -224,15 +224,15 @@ class Detector:
         self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
 
 
-        self.temp = DetectorAdcs()
-        self.temp.fpga = Adc('temp_fpga', self)
-        self.temp.fpgaext = Adc('temp_fpgaext', self)
-        self.temp.t10ge = Adc('temp_10ge', self)
-        self.temp.dcdc = Adc('temp_dcdc', self)
-        self.temp.sodl = Adc('temp_sodl', self)
-        self.temp.sodr = Adc('temp_sodr', self)
-        self.temp.fpgafl = Adc('temp_fpgafl', self)
-        self.temp.fpgafr = Adc('temp_fpgafr', self)
+        self._temp = DetectorAdcs()
+        self._temp.fpga = Adc('temp_fpga', self)
+        self._temp.fpgaext = Adc('temp_fpgaext', self)
+        self._temp.t10ge = Adc('temp_10ge', self)
+        self._temp.dcdc = Adc('temp_dcdc', self)
+        self._temp.sodl = Adc('temp_sodl', self)
+        self._temp.sodr = Adc('temp_sodr', self)
+        self._temp.fpgafl = Adc('temp_fpgafl', self)
+        self._temp.fpgafr = Adc('temp_fpgafr', self)
 
     def __len__(self):
         return self._api.getNumberOfDetectors()
@@ -260,6 +260,35 @@ class Detector:
         """
         return self._api.getAcquiringFlag()
 
+    @property
+    def temp(self):
+        """
+        An instance of DetectorAdcs used to read the temperature
+        of different components
+        
+        Examples
+        -----------
+        
+        :: 
+            
+            detector.temp
+            >>
+            temp_fpga     :  36.90°C,  45.60°C
+            temp_fpgaext  :  31.50°C,  32.50°C
+            temp_10ge     :   0.00°C,   0.00°C
+            temp_dcdc     :  36.00°C,  36.00°C
+            temp_sodl     :  33.00°C,  34.50°C
+            temp_sodr     :  33.50°C,  34.00°C
+            temp_fpgafl   :  33.81°C,  30.93°C
+            temp_fpgafr   :  27.88°C,  29.15°C
+        
+            a = detector.temp_fpga[:]
+            a
+            >> [36.568, 45.542]
+            
+        
+        """
+        return self._temp
 
     @property
     def dacs(self):
@@ -621,6 +650,36 @@ class Detector:
             raise FileNotFoundError('Cannot find parameters file')
 
 
+    def load_trimbits(self, fname, idet=-1):
+        """
+        Load trimbit file or files. Either called with detector number or -1
+        to try to load detector specific trimbit files
+        
+        Parameters
+        -----------
+        fname:
+            :py:obj:`str` Filename (including path) to the trimbit files
+            
+        idet 
+            :py:obj:`int` Detector to load trimbits to, -1 for all
+        
+        
+        ::
+            
+            #Assuming 500k consisting of beb049 and beb048
+            # 0 is beb049
+            # 1 is beb048
+            
+            #Load name.sn049 to beb049 and name.sn048 to beb048
+            detector.load_trimbits('/path/to/dir/name')
+            
+            #Load one file to a specific detector
+            detector.load_trimbits('/path/to/dir/name.sn049', 0)
+        
+        """
+        self._api.loadTrimbitFile(fname, idet)
+
+
     @property
     def module_geometry(self):
         """
@@ -779,7 +838,18 @@ class Detector:
     @property
     def rx_datastream(self):
         """
-        Zmq datastream from receiver
+        Zmq datastream from receiver. :py:obj:`True` if enabled and :py:obj:`False`
+        otherwise
+        
+        ::
+            
+            #Enable data streaming from receiver
+            detector.rx_datastream = True
+            
+            #Check data streaming
+            detector.rx_datastream
+            >> True
+            
         """
         return self._api.getRxDataStreamStatus()
 
@@ -800,6 +870,12 @@ class Detector:
     def rx_zmqport(self):
         """
         Return the receiver zmq ports
+        
+        ::
+            
+            detector.rx_zmqport
+            >> [30001, 30002, 30003, 30004]
+            
 
         .. todo ::
 
@@ -816,6 +892,53 @@ class Detector:
 #    def software_version(self):
 #        return self._api.getSoftwareVersion();
 
+#    case STANDARD:      return string("standard");		\
+#    case FAST:      	return string("fast");			\
+#    case HIGHGAIN:      return string("highgain");		\
+#    case DYNAMICGAIN:   return string("dynamicgain");	\
+#    case LOWGAIN:    	return string("lowgain");		\
+#    case MEDIUMGAIN:    return string("mediumgain");	\
+#    case VERYHIGHGAIN:  return string("veryhighgain");	\
+#    case LOWNOISE:      return  string("lownoise");		\
+#    case DYNAMICHG0:    return  string("dynamichg0");	\
+#    case FIXGAIN1:      return  string("fixgain1");		\
+#    case FIXGAIN2:      return  string("fixgain2");		\
+#    case FORCESWITCHG1: return  string("forceswitchg1");\
+#    case FORCESWITCHG2: return  string("forceswitchg2");\
+#    case VERYLOWGAIN: return  string("verylowgain");\
+#    default:    		return string("undefined");
+
+    @property
+    def settings(self):
+        """
+        Detector settings used to control for example calibration or gain
+        switching. For EIGER almost always standard
+        
+        .. todo::
+            
+            check input depending on detector
+        
+        """
+        return self._api.getSettings()
+        
+    @settings.setter
+    def settings(self, s):
+        #check input!
+        self._api.setSettings(s)
+        
+    @property
+    def settings_path(self):
+        """
+        The path where the slsDetectorSoftware looks for settings/trimbit files            
+        """
+        return self._api.getSettingsDir()
+    
+    @settings_path.setter
+    def settings_path(self, path):
+        if os.path.isdir(path):
+            self._api.setSettingsDir(path)
+        else:
+            raise FileNotFoundError('Settings path does not exist')
 
     @property
     def status(self):
@@ -868,6 +991,17 @@ class Detector:
 
 
     @property
+    def threshold(self):
+        """
+        Detector threshold in eV
+        """
+        return self._api.getThresholdEnergy()
+        
+    @threshold.setter
+    def threshold(self, eV):
+        self._api.setThresholdEnergy(eV)
+
+    @property
     def timing_mode(self):
         """
         :py:obj:`str` Timing mode of the detector
@@ -886,6 +1020,28 @@ class Detector:
     def timing_mode(self, mode):
         self._api.setTimingMode(mode)
 
+
+    @property
+    def trimmed_energies(self):
+        """
+        EIGER: the energies at which the detector was trimmed. This also sets
+        the range for which the calibration of the detector is valid.
+        
+            
+        ::
+            
+            detector.trimmed_energies = [5400, 6400, 8000]
+            
+            detector.trimmed_energies
+            >> [5400, 6400, 8000]
+        
+        """
+        
+        return self._api.getTrimEnergies()
+    
+    @trimmed_energies.setter
+    def trimmed_energies(self, energy_list):
+        self._api.setTrimEnergies(energy_list)
 
     @property
     def vthreshold(self):

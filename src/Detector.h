@@ -5,11 +5,14 @@
 #include <string>
 #include <vector>
 
+#include <stdexcept>
+
 #include "sls_receiver_defs.h"
 #include "sls_detector_defs.h"
 #include "slsDetectorUtils.h"
 #include "multiSlsDetector.h"
 #include "slsDetector.h"
+#include "error_defs.h"
 
 class Detector{
 public:
@@ -18,7 +21,7 @@ public:
         det.setReceiverOnline(slsDetectorDefs::ONLINE_FLAG);
 
         //Disable any output from std::cout
-        std::cout.setstate(std::ios_base::failbit);
+//        std::cout.setstate(std::ios_base::failbit);
 
     }
 
@@ -129,6 +132,64 @@ public:
         return det.getFilePath();
     }
 
+
+    void loadTrimbitFile(std::string fname, int idet){
+        det.loadSettingsFile(fname, idet);
+    }
+
+    void setTrimEnergies(std::vector<int> energy){
+        //int multiSlsDetector::setTrimEn(int ne, int *ene)
+        det.setTrimEn(energy.size(), energy.data());
+
+    }
+    std::vector<int> getTrimEnergies(){
+        //int multiSlsDetector::getTrimEn(int *ene)
+
+        //initial call to get legth, energies defaults to NULL
+        auto n_trimen = det.getTrimEn();
+        std::vector<int> trim_energies(n_trimen);
+
+        //second call to get the eneries
+        det.getTrimEn(trim_energies.data());
+        return trim_energies;
+
+    }
+
+    void setThresholdEnergy(int eV){
+        //example of checking errors
+        det.clearAllErrorMask();
+        det.setThresholdEnergy(eV);
+
+        if (det.getErrorMask()){
+            int tmp=0;
+            auto msg = det.getErrorMessage(tmp);
+            det.clearAllErrorMask();
+            throw std::runtime_error(msg);
+        }
+
+    }
+
+    std::string getSettingsDir(){ return det.getSettingsDir(); }
+    void setSettingsDir(std::string dir){ det.setSettingsDir(dir); }
+
+    int getThresholdEnergy(){
+        return det.getThresholdEnergy();
+    }
+
+    std::string getSettings(){
+        return det.getDetectorSettings(det.getSettings());
+    }
+
+    void setSettings(std::string s){
+        det.clearAllErrorMask();
+        det.setSettings(det.getDetectorSettings(s));
+        if (det.getErrorMask()){
+            int tmp=0;
+            auto msg = det.getErrorMessage(tmp);
+            det.clearAllErrorMask();
+            throw std::runtime_error(msg);
+        }
+    }
 
     //name to enum translation on the c++ side
     //should we instead expose the enum to Python?

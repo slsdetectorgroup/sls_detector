@@ -1,0 +1,1303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sls_detector.detector &mdash; sls_detector pre-alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="sls_detector pre-alpha documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> sls_detector
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                pre-alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_quality.html">Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command line to Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sls_detector.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sls_detector</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>sls_detector.detector</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sls_detector.detector</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Python - sls</span>
+<span class="sd">=============</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">_sls_detector</span> <span class="k">import</span> <span class="n">DetectorApi</span> <span class="c1"># c++ api wrapping multiSlsDetector</span>
+
+
+
+<span class="k">class</span> <span class="nc">Dac</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents a dac on the detector. One instance handles all</span>
+<span class="sd">    dacs with the same name for a multi detector instance.</span>
+
+<span class="sd">    .. note ::</span>
+
+<span class="sd">        This class is used to build up DetectorDacs and is in general</span>
+<span class="sd">        not directly accessed to the user.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">low</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="n">high</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span>
+
+        <span class="c1">#Local copy to avoid calling the detector class every time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">n_modules</span>
+
+        <span class="c1">#Bind functions to get and set the dac</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDac</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get dacs either by slice, key or list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set dacs either by slice, key or list. Supports values that can</span>
+<span class="sd">        be iterated over.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;String representation for a single dac in all modules&quot;&quot;&quot;</span>
+        <span class="n">r_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:10s}</span><span class="s1">: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
+        <span class="n">r_str</span> <span class="o">+=</span> <span class="p">[</span> <span class="s1">&#39;</span><span class="si">{:5d}</span><span class="s1">, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r_str</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Adc</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">n_modules</span>
+        <span class="c1">#Bind functions to get and set the dac</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getAdc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get dacs either by slice, key or list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;String representation for a single adc in all modules&quot;&quot;&quot;</span>
+        <span class="n">degree_sign</span><span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\N{DEGREE SIGN}</span><span class="s1">&#39;</span>
+        <span class="n">r_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:14s}</span><span class="s1">: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
+        <span class="n">r_str</span> <span class="o">+=</span> <span class="p">[</span> <span class="s1">&#39;</span><span class="si">{:6.2f}{:s}</span><span class="s1">C, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">degree_sign</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_modules</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r_str</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
+
+
+
+<span class="k">class</span> <span class="nc">DetectorAdcs</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface to the ADCs on the readout board</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">DetectorDacs</span><span class="p">:</span>
+    <span class="n">_dacs</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;vsvp&#39;</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span>    <span class="mi">0</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vtr&#39;</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">2500</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vrf&#39;</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">3300</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vrs&#39;</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1400</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vsvn&#39;</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vtgstv&#39;</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">2556</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vcmp_ll&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1500</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vcmp_lr&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1500</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vcall&#39;</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vcmp_rl&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1500</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;rxb_rb&#39;</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1100</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;rxb_lb&#39;</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1100</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vcmp_rr&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1500</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vcp&#39;</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span>  <span class="mi">200</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vcn&#39;</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;vis&#39;</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">1550</span><span class="p">),</span>
+             <span class="p">(</span><span class="s1">&#39;iodelay&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span>  <span class="mi">660</span><span class="p">)]</span>
+    <span class="n">_dacnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">_d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_d</span> <span class="ow">in</span> <span class="n">_dacs</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
+        <span class="c1">#We need to at least initially know which detector we are connected to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
+
+        <span class="c1">#Index to support iteration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#Popolate the dacs</span>
+        <span class="k">for</span> <span class="n">_d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">_d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Dac</span><span class="p">(</span><span class="o">*</span><span class="n">_d</span><span class="p">,</span> <span class="n">detector</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dacnames</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dacnames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_current</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">r_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;========== DACS =========&#39;</span><span class="p">]</span>
+        <span class="n">r_str</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">dac</span><span class="p">)</span> <span class="k">for</span> <span class="n">dac</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_asarray</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the dacs into a numpy array with dimensions [ndacs, nmodules]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dac_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">n_modules</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">dac_array</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">_d</span><span class="p">[:]</span>
+        <span class="k">return</span> <span class="n">dac_array</span>
+
+    <span class="k">def</span> <span class="nf">set_from_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dac_array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the dacs from an numpy array with dac values. [ndacs, nmodules]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dac_array</span> <span class="o">=</span> <span class="n">dac_array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">_d</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">dac_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">set_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set all dacs to their default values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">_d</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">_d</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">_d</span><span class="o">.</span><span class="n">default</span>
+
+
+<div class="viewcode-block" id="Detector"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector">[docs]</a><span class="k">class</span> <span class="nc">Detector</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Python class that is used for controlling an sls detector.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_detector_dynamic_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+    <span class="n">_speed_names</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;Full Speed&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">}</span>
+    <span class="n">_speed_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Full Speed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span> <span class="o">=</span> <span class="n">DetectorDacs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;dacs = :py:sls`DetectorDacs`&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;trimbit_limits&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])(</span><span class="mi">0</span><span class="p">,</span><span class="mi">63</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span> <span class="o">=</span> <span class="n">DetectorAdcs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpga</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpga&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgaext</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgaext&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">t10ge</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_10ge&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">dcdc</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_dcdc&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">sodl</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_sodl&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">sodr</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_sodr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgafl</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgafl&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgafr</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgafr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">()</span>
+
+
+
+<div class="viewcode-block" id="Detector.acq"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.acq">[docs]</a>    <span class="k">def</span> <span class="nf">acq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Issue an aquire command to start the measurement</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">busy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks the acquire flag of the detector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        bool</span>
+<span class="sd">            :py:obj:`True` if the detector is acqiring otherwise :py:obj:`False`</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getAcquiringFlag</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An instance of DetectorAdcs used to read the temperature</span>
+<span class="sd">        of different components</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -----------</span>
+<span class="sd">        </span>
+<span class="sd">        :: </span>
+<span class="sd">            </span>
+<span class="sd">            detector.temp</span>
+<span class="sd">            &gt;&gt;</span>
+<span class="sd">            temp_fpga     :  36.90°C,  45.60°C</span>
+<span class="sd">            temp_fpgaext  :  31.50°C,  32.50°C</span>
+<span class="sd">            temp_10ge     :   0.00°C,   0.00°C</span>
+<span class="sd">            temp_dcdc     :  36.00°C,  36.00°C</span>
+<span class="sd">            temp_sodl     :  33.00°C,  34.50°C</span>
+<span class="sd">            temp_sodr     :  33.50°C,  34.00°C</span>
+<span class="sd">            temp_fpgafl   :  33.81°C,  30.93°C</span>
+<span class="sd">            temp_fpgafr   :  27.88°C,  29.15°C</span>
+<span class="sd">        </span>
+<span class="sd">            a = detector.temp_fpga[:]</span>
+<span class="sd">            a</span>
+<span class="sd">            &gt;&gt; [36.568, 45.542]</span>
+<span class="sd">            </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dacs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        An instance of DetectorDacs used for accessing the dacs of a single</span>
+<span class="sd">        or multi detector.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d = sls.Detector()</span>
+
+<span class="sd">            #Set all vrf to 1500</span>
+<span class="sd">            d.dacs.vrf = 1500</span>
+
+<span class="sd">            #Check vrf</span>
+<span class="sd">            d.dacs.vrf</span>
+<span class="sd">            &gt;&gt; vrf       :  1500,  1500</span>
+
+<span class="sd">            #Set a single vtr</span>
+<span class="sd">            d.dacs.vtr[0] = 1800</span>
+
+<span class="sd">            #Set vrf with multiple values</span>
+<span class="sd">            d.dacs.vrf = [3500,3700]</span>
+<span class="sd">            d.dacs.vrf</span>
+<span class="sd">            &gt;&gt; vrf       :  3500,  3700</span>
+
+<span class="sd">            #read into a variable</span>
+<span class="sd">            var = d.dacs.vrf[:]</span>
+
+<span class="sd">            #set multiple with multiple values, mostly used for large systems</span>
+<span class="sd">            d.dacs.vcall[0,1] = [3500,3600]</span>
+<span class="sd">            d.dacs.vcall</span>
+<span class="sd">            &gt;&gt; vcall     :  3500,  3600</span>
+
+<span class="sd">            d.dacs</span>
+<span class="sd">            &gt;&gt;</span>
+<span class="sd">            ========== DACS =========</span>
+<span class="sd">            vsvp      :     0,     0</span>
+<span class="sd">            vtr       :  4000,  4000</span>
+<span class="sd">            vrf       :  1900,  1900</span>
+<span class="sd">            vrs       :  1400,  1400</span>
+<span class="sd">            vsvn      :  4000,  4000</span>
+<span class="sd">            vtgstv    :  2556,  2556</span>
+<span class="sd">            vcmp_ll   :  1500,  1500</span>
+<span class="sd">            vcmp_lr   :  1500,  1500</span>
+<span class="sd">            vcall     :  4000,  4000</span>
+<span class="sd">            vcmp_rl   :  1500,  1500</span>
+<span class="sd">            rxb_rb    :  1100,  1100</span>
+<span class="sd">            rxb_lb    :  1100,  1100</span>
+<span class="sd">            vcmp_rr   :  1500,  1500</span>
+<span class="sd">            vcp       :  1500,  1500</span>
+<span class="sd">            vcn       :  2000,  2000</span>
+<span class="sd">            vis       :  1550,  1550</span>
+<span class="sd">            iodelay   :   660,   660</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">detector_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:obj:`str` Detector type</span>
+
+<span class="sd">        * Eiger</span>
+<span class="sd">        * Jungfrau</span>
+<span class="sd">        * etc.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorType</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dynamic_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`int`: Dynamic range of the detector.</span>
+
+<span class="sd">        +----+-------------+------------------------------+</span>
+<span class="sd">        | dr |  max counts |    comments                  |</span>
+<span class="sd">        +====+=============+==============================+</span>
+<span class="sd">        | 4  |       15    |                              |</span>
+<span class="sd">        +----+-------------+------------------------------+</span>
+<span class="sd">        | 8  |      255    |                              |</span>
+<span class="sd">        +----+-------------+------------------------------+</span>
+<span class="sd">        |16  |     4095    | 12 bit internally            |</span>
+<span class="sd">        +----+-------------+------------------------------+</span>
+<span class="sd">        |32  |  4294967295 | Autosumming of 12 bit frames |</span>
+<span class="sd">        +----+-------------+------------------------------+</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        -------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the dynamic range is not available in the detector</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDynamicRange</span><span class="p">()</span>
+
+    <span class="nd">@dynamic_range</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">dynamic_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector_dynamic_range</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDynamicRange</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot set dynamic range to: </span><span class="si">{:d}</span><span class="s1"> availble options: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dr</span><span class="p">),</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">_detector_dynamic_range</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">eiger_matrix_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Matrix reset bit for Eiger.</span>
+
+<span class="sd">        :py:obj:`True` : Normal operation, the matrix is reset befor each acq.</span>
+<span class="sd">        :py:obj:`False` : Matrix reset disableld. Used to not reset before</span>
+<span class="sd">        reading out analog test pulses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getCounterBit</span><span class="p">()</span>
+
+    <span class="nd">@eiger_matrix_reset</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">eiger_matrix_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setCounterBit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`double` Exposure time in [s] of a single frame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getExposureTime</span><span class="p">()</span> <span class="o">/</span><span class="mf">1e9</span>
+
+
+    <span class="nd">@exposure_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Exposure time must be larger than 0&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setExposureTime</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`int` Index for frames and filenames</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        -------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the user tries to set an index less than zero</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.file_index</span>
+<span class="sd">            &gt;&gt; 0</span>
+
+<span class="sd">            detector.file_index = 10</span>
+<span class="sd">            detector.file_index</span>
+<span class="sd">            &gt;&gt; 10</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileIndex</span><span class="p">()</span>
+
+    <span class="nd">@file_index</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Index needs to be positive&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFileIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`str`: Base file name for writing images</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.file_name</span>
+<span class="sd">            &gt;&gt; &#39;run&#39;</span>
+
+<span class="sd">            detector.file_name = &#39;myrun&#39;</span>
+
+<span class="sd">            #For a single acqusition the detector now writes</span>
+<span class="sd">            # myrun_master_0.raw</span>
+<span class="sd">            # myrun_d0_0.raw</span>
+<span class="sd">            # myrun_d1_0.raw</span>
+<span class="sd">            # myrun_d2_0.raw</span>
+<span class="sd">            # myrun_d3_0.raw</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileName</span><span class="p">()</span>
+
+    <span class="nd">@file_name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFileName</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`str`: Path where images are written</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        -------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If path does not exists</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.file_path</span>
+<span class="sd">            &gt;&gt; &#39;/path/to/files&#39;</span>
+
+<span class="sd">            detector.file_path = &#39;/new/path/to/other/files&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFilePath</span><span class="p">()</span>
+
+    <span class="nd">@file_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFilePath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;File path does not exists&#39;</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">file_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`bool` If True write files to disk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileWrite</span><span class="p">()</span>
+
+    <span class="nd">@file_write</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">file_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fwrite</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFileWrite</span><span class="p">(</span><span class="n">fwrite</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">firmware_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:obj:`int` Firmware version of the detector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFirmwareVersion</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Detector.free_shared_memory"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.free_shared_memory">[docs]</a>    <span class="k">def</span> <span class="nf">free_shared_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Free the shared memory that contains the detector settings</span>
+
+<span class="sd">        .. warning ::</span>
+
+<span class="sd">            After doing this you can&#39;t access the detector until it is</span>
+<span class="sd">            reconfigured</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">freeSharedMemory</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">high_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        High voltage applied to the sensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDac</span><span class="p">(</span><span class="s1">&#39;vhighvoltage&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@high_voltage</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">high_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voltage</span><span class="p">):</span>
+        <span class="n">voltage</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">voltage</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">voltage</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;High voltage needs to be positive&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDac</span><span class="p">(</span><span class="s1">&#39;vhighvoltage&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">voltage</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`list` of :obj:`str`: hostnames of all connected detectors</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.hostname</span>
+<span class="sd">            &gt;&gt; [&#39;beb059&#39;, &#39;beb058&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_hm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getHostname</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">_hm</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">_hm</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">image_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:obj:`collections.namedtuple` with the image size of the detector</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            #Assuming 512x1024 detector size</span>
+
+<span class="sd">            d.image_size</span>
+<span class="sd">            &gt;&gt; ImageSize(rows=512, cols=1024)</span>
+
+<span class="sd">            d.image_size.rows</span>
+<span class="sd">            &gt;&gt; 512</span>
+
+<span class="sd">            d.image_size.cols</span>
+<span class="sd">            &gt;&gt; 1024</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ImageSize&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">size</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getImageSize</span><span class="p">())</span>
+
+<div class="viewcode-block" id="Detector.load_config"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.load_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load detector configuration from a configuration file</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        --------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If the file does not exists</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readConfigurationFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find settings file&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Detector.load_parameters"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.load_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">load_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setup detector by executing commands in a parameters file</span>
+
+
+<span class="sd">        .. note ::</span>
+
+<span class="sd">            If you are reling mainly on the Python API it is probably</span>
+<span class="sd">            better to track the settings from Python. This function uses</span>
+<span class="sd">            parameters stored in a text file and the command line commands.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        --------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If the file does not exists</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readParametersFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find parameters file&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Detector.load_trimbits"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.load_trimbits">[docs]</a>    <span class="k">def</span> <span class="nf">load_trimbits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load trimbit file or files. Either called with detector number or -1</span>
+<span class="sd">        to try to load detector specific trimbit files</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        fname:</span>
+<span class="sd">            :py:obj:`str` Filename (including path) to the trimbit files</span>
+<span class="sd">            </span>
+<span class="sd">        idet </span>
+<span class="sd">            :py:obj:`int` Detector to load trimbits to, -1 for all</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            #Assuming 500k consisting of beb049 and beb048</span>
+<span class="sd">            # 0 is beb049</span>
+<span class="sd">            # 1 is beb048</span>
+<span class="sd">            </span>
+<span class="sd">            #Load name.sn049 to beb049 and name.sn048 to beb048</span>
+<span class="sd">            detector.load_trimbits(&#39;/path/to/dir/name&#39;)</span>
+<span class="sd">            </span>
+<span class="sd">            #Load one file to a specific detector</span>
+<span class="sd">            detector.load_trimbits(&#39;/path/to/dir/name.sn049&#39;, 0)</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">loadTrimbitFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">module_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`namedtuple` Geometry(horizontal=nx, vertical=ny)</span>
+<span class="sd">         of the detector modules.</span>
+
+<span class="sd">         Examples</span>
+<span class="sd">         ---------</span>
+
+<span class="sd">         ::</span>
+
+<span class="sd">             detector.module_geometry</span>
+<span class="sd">             &gt;&gt; Geometry(horizontal=1, vertical=2)</span>
+
+<span class="sd">             detector.module_geometry.vertical</span>
+<span class="sd">             &gt;&gt; 2</span>
+
+<span class="sd">             detector.module_geometry[0]</span>
+<span class="sd">             &gt;&gt; 1</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorGeometry</span><span class="p">()</span>
+        <span class="n">Geometry</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Geometry&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">Geometry</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="n">_t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vertical</span> <span class="o">=</span><span class="n">_t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`int` Number of frames per acquisition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfFrames</span><span class="p">()</span>
+
+    <span class="nd">@n_frames</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">n_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNumberOfFrames</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid value for n_frames: </span><span class="si">{:d}</span><span class="s1">. Number of&#39;</span>\
+                             <span class="s1">&#39; frames should be an integer greater than 0&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`int` Number of (half)modules in the detector</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.n_modules</span>
+<span class="sd">            &gt;&gt; 2</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">period</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`double` Period between start of frames. Set to 0 for the detector</span>
+<span class="sd">        to choose the shortest possible</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getPeriod</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">_t</span> <span class="o">/</span> <span class="mf">1e9</span>
+
+    <span class="nd">@period</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Period must be 0 or positive&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setPeriod</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Detector.pulse_all_pixels"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.pulse_all_pixels">[docs]</a>    <span class="k">def</span> <span class="nf">pulse_all_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pulse each pixel of the chip **n** times using the analog test pulses.</span>
+<span class="sd">        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being</span>
+<span class="sd">        the highest pulse.</span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            #Pulse all pixels ten times</span>
+<span class="sd">            d.pulse_all_pixels(10)</span>
+<span class="sd">            </span>
+<span class="sd">            #Avoid resetting before acq</span>
+<span class="sd">            d.eiger_matrix_reset = False</span>
+<span class="sd">            </span>
+<span class="sd">            d.acq() #take frame</span>
+<span class="sd">            </span>
+<span class="sd">            #Restore normal behaviour</span>
+<span class="sd">            d.eiger_matrix_reset = True</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseAllPixels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Detector.pulse_chip"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.pulse_chip">[docs]</a>    <span class="k">def</span> <span class="nf">pulse_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Advance the counter by toggeling enable. Gives 2*n+2 int the counter</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">&gt;=-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseChip</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n must be equal or larger than -1&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rate_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`list` of :obj:`double` Rate correction for all modules.</span>
+<span class="sd">        Set to 0 for **disabled**</span>
+
+<span class="sd">        .. todo ::</span>
+
+<span class="sd">            Should support individual assignments</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        -------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the passed list is not of the same lenght as the number of</span>
+<span class="sd">            detectors</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.rate_correction</span>
+<span class="sd">            &gt;&gt; [125.0, 155.0]</span>
+
+<span class="sd">            detector.rate_correction = [125, 155]</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getRateCorrection</span><span class="p">()</span>
+
+    <span class="nd">@rate_correction</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rate_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tau_list</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_modules</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;List of tau needs the same length&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setRateCorrection</span><span class="p">(</span><span class="n">tau_list</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">readout_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReadoutClockSpeed</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_names</span><span class="p">[</span><span class="n">speed</span><span class="p">]</span>
+
+    <span class="nd">@readout_clock</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">readout_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_int</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReadoutClockSpeed</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rx_datastream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Zmq datastream from receiver. :py:obj:`True` if enabled and :py:obj:`False`</span>
+<span class="sd">        otherwise</span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            #Enable data streaming from receiver</span>
+<span class="sd">            detector.rx_datastream = True</span>
+<span class="sd">            </span>
+<span class="sd">            #Check data streaming</span>
+<span class="sd">            detector.rx_datastream</span>
+<span class="sd">            &gt;&gt; True</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getRxDataStreamStatus</span><span class="p">()</span>
+
+    <span class="nd">@rx_datastream</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rx_datastream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setRxDataStreamStatus</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rx_zmqip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. todo ::</span>
+
+<span class="sd">            also set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqip&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rx_zmqport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the receiver zmq ports</span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            detector.rx_zmqport</span>
+<span class="sd">            &gt;&gt; [30001, 30002, 30003, 30004]</span>
+<span class="sd">            </span>
+
+<span class="sd">        .. todo ::</span>
+
+<span class="sd">            also set</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_s</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">_p</span><span class="p">)</span><span class="o">+</span><span class="n">i</span> <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_s</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+<span class="c1">#Add back when versioning is defined</span>
+<span class="c1">#    @property</span>
+<span class="c1">#    def software_version(self):</span>
+<span class="c1">#        return self._api.getSoftwareVersion();</span>
+
+<span class="c1">#    case STANDARD:      return string(&quot;standard&quot;);		\</span>
+<span class="c1">#    case FAST:      	return string(&quot;fast&quot;);			\</span>
+<span class="c1">#    case HIGHGAIN:      return string(&quot;highgain&quot;);		\</span>
+<span class="c1">#    case DYNAMICGAIN:   return string(&quot;dynamicgain&quot;);	\</span>
+<span class="c1">#    case LOWGAIN:    	return string(&quot;lowgain&quot;);		\</span>
+<span class="c1">#    case MEDIUMGAIN:    return string(&quot;mediumgain&quot;);	\</span>
+<span class="c1">#    case VERYHIGHGAIN:  return string(&quot;veryhighgain&quot;);	\</span>
+<span class="c1">#    case LOWNOISE:      return  string(&quot;lownoise&quot;);		\</span>
+<span class="c1">#    case DYNAMICHG0:    return  string(&quot;dynamichg0&quot;);	\</span>
+<span class="c1">#    case FIXGAIN1:      return  string(&quot;fixgain1&quot;);		\</span>
+<span class="c1">#    case FIXGAIN2:      return  string(&quot;fixgain2&quot;);		\</span>
+<span class="c1">#    case FORCESWITCHG1: return  string(&quot;forceswitchg1&quot;);\</span>
+<span class="c1">#    case FORCESWITCHG2: return  string(&quot;forceswitchg2&quot;);\</span>
+<span class="c1">#    case VERYLOWGAIN: return  string(&quot;verylowgain&quot;);\</span>
+<span class="c1">#    default:    		return string(&quot;undefined&quot;);</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detector settings used to control for example calibration or gain</span>
+<span class="sd">        switching. For EIGER almost always standard</span>
+<span class="sd">        </span>
+<span class="sd">        .. todo::</span>
+<span class="sd">            </span>
+<span class="sd">            check input depending on detector</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSettings</span><span class="p">()</span>
+        
+    <span class="nd">@settings</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="c1">#check input!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setSettings</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">settings_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The path where the slsDetectorSoftware looks for settings/trimbit files            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSettingsDir</span><span class="p">()</span>
+    
+    <span class="nd">@settings_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">settings_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setSettingsDir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Settings path does not exist&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:obj`str` Status of the detector: idle, running,</span>
+
+<span class="sd">        .. todo ::</span>
+
+<span class="sd">            Check possible values</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getRunStatus</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Detector.start_acq"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.start_acq">[docs]</a>    <span class="k">def</span> <span class="nf">start_acq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Non blocking command to star acquisition. Needs to be used in combination</span>
+<span class="sd">        with receiver start.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startAcquisition</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Detector.stop_acq"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_acq">[docs]</a>    <span class="k">def</span> <span class="nf">stop_acq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stop acquisition early or if the detector hangs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopAcquisition</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sub_exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.sub_exposure_time</span>
+<span class="sd">            &gt;&gt; 0.0023</span>
+
+<span class="sd">            d.sub_exposure_time = 0.002</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSubExposureTime</span><span class="p">()</span> <span class="o">/</span><span class="mf">1e9</span>
+
+    <span class="nd">@sub_exposure_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sub_exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setSubExposureTime</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Sub exposure time must be larger than 0&#39;</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detector threshold in eV</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getThresholdEnergy</span><span class="p">()</span>
+        
+    <span class="nd">@threshold</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eV</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setThresholdEnergy</span><span class="p">(</span><span class="n">eV</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">timing_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:obj:`str` Timing mode of the detector</span>
+
+<span class="sd">        * **auto** Something</span>
+<span class="sd">        * **trigger** Something else</span>
+
+<span class="sd">        .. todo ::</span>
+
+<span class="sd">            settinng and reading!</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getTimingMode</span><span class="p">()</span>
+
+    <span class="nd">@timing_mode</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">timing_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setTimingMode</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trimmed_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        EIGER: the energies at which the detector was trimmed. This also sets</span>
+<span class="sd">        the range for which the calibration of the detector is valid.</span>
+<span class="sd">        </span>
+<span class="sd">            </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            detector.trimmed_energies = [5400, 6400, 8000]</span>
+<span class="sd">            </span>
+<span class="sd">            detector.trimmed_energies</span>
+<span class="sd">            &gt;&gt; [5400, 6400, 8000]</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getTrimEnergies</span><span class="p">()</span>
+    
+    <span class="nd">@trimmed_energies</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">trimmed_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy_list</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setTrimEnergies</span><span class="p">(</span><span class="n">energy_list</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">vthreshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Threshold in DAC units for the detector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDac</span><span class="p">(</span><span class="s1">&#39;vthreshold&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@vthreshold</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">vthreshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">th</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDac</span><span class="p">(</span><span class="s1">&#39;vthreshold&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">th</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trimbits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :py:obj`int` trimbits of the detector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getAllTrimbits</span><span class="p">()</span>
+
+    <span class="nd">@trimbits</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">trimbits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        test</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">min</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setAllTrimbits</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Trimbit setting </span><span class="si">{:d}</span><span class="s1"> is  outside of range:&#39;</span>\
+                             <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">-</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">max</span><span class="p">))</span></div>
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Sls Detector Group.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'pre-alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

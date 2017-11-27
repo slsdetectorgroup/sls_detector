@@ -32,6 +32,9 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |dr| replace::  :py:attr:`Detector.dynamic_range` 
 .. |j| replace:: Jungfrau onlu
 .. |rate| replace:: :py:attr:`Detector.rate_correction`
+.. |te| replace:: :py:attr:`Detector.trimmed_energies`
+.. |rxd| replace:: :py:attr:`Detector.rx_datastream`
+.. |temp_fpgaext| replace:: :py:attr:`Detector.temp`.fpgaext
 
 ------------------------
 Commands
@@ -67,7 +70,6 @@ frame                 |m|
 readctr               |g|                 
 resetctr              |g|               
 resmat                |resmat|                                OK               OK
-externalgui
 free                  |free|
 add
 remove
@@ -87,6 +89,7 @@ detsizechan           :py:attr:`Detector.image_size`           OK
 roimask                ??
 flippeddatax
 tengiga
+gappixels
 flags
 extsig                 |mg|
 programfpga            |j|
@@ -155,17 +158,17 @@ samplex
 sampley
 threaded
 darkimage
-gainimage
-settingsdir
+gainimage 
+settingsdir           :py:attr:`Detector.settings_path`
 trimdir
 caldir
-trimen
-settings
-threshold
+trimen                |te|
+settings              :py:attr:`Detector.settings`
+threshold             :py:attr:`Detector.threshold`
 thresholdnotb
-trimbits
+trimbits              :py:func:`Detector.load_trimbits`
 trim
-trimval               |tb|                               O  K                 OK
+trimval               |tb|                               OK                 OK
 pedestal
 vthreshold
 vcalibration
@@ -221,15 +224,15 @@ v_io
 v_chip
 v_limit
 temp_adc
-temp_fpga
-temp_fpgaext
-temp_10ge
-temp_dcdc
-temp_sodl
-temp_sodr
+temp_fpga               :py:attr:`Detector.temp`.fpga          OK
+temp_fpgaext             |temp_fpgaext|                        OK
+temp_10ge               :py:attr:`Detector.temp`.t10ge         OK
+temp_dcdc               :py:attr:`Detector.temp`.dcdc          OK
+temp_sodl               :py:attr:`Detector.temp`.sodl          OK
+temp_sodr               :py:attr:`Detector.temp`.sodr          OK
 adc
-temp_fpgafl
-temp_fpgafr
+temp_fpgafl             :py:attr:`Detector.temp`.fpgafl        OK
+temp_fpgafr             :py:attr:`Detector.temp`.fpgafr        OK
 i_a
 i_b
 i_c
@@ -284,6 +287,10 @@ txndelay_right
 txndelay_frame
 flowcontrol_10g
 zmqport
+rx_zmqport              :py:attr:`Detector.rx_port`             Read
+rx_datastream           |rxd|                                   OK
+zmqip
+rx_zmqip                :py:attr:`Detector.rx_zmqip`            Read
 configuremac
 rx_tcpport
 port
@@ -322,3 +329,4 @@ patwait2              |chiptest|
 patwaittime2          |chiptest|
 dut_clk               |chiptest|
 ===================== ================================= ================== =========
+
