@@ -56,14 +56,16 @@ class Dac:
         Set dacs either by slice, key or list. Supports values that can
         be iterated over.
         """
-
+        
         if key == slice(None, None, None):
-            if isinstance(value, int):
+            if isinstance(value, (np.integer, int)):
                 for i in range(self._n_modules):
                     self.set(i, value)
             elif isinstance(value, Iterable):
                 for i in range(self._n_modules):
                     self.set(i, value[i])
+            else:
+                raise ValueError('Value should be int or np.integer not', type(value))
 
         elif isinstance(key, Iterable):
             if isinstance(value, Iterable):

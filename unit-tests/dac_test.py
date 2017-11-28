@@ -6,7 +6,7 @@ Testing setting and getting dacs from the detector
 from unittest.mock import Mock, call
 import pytest
 from pytest_mock import mocker
-
+import numpy as np
 import sys
 sys.path.append('/home/l_frojdh/slsdetectorgrup/sls_detector')
 from sls_detector import Detector
@@ -83,6 +83,32 @@ def test_iterate_on_index_call_vcn(mocker):
              call('vcn', 8, 1532)]
     m.assert_has_calls(calls)
     assert m.call_count == 3
+
+def test_set_dac_from_element_in_numpy_array(mocker):
+    m2= mocker.patch.object(DetectorApi, 'getNumberOfDetectors', autospec=True)
+    m2.return_value = 2
+    m = mocker.patch.object(DetectorApi, 'setDac', autospec=True)  
+    d = Detector()
+    
+    vrf = np.array((1600,1700,1800))
+    d.dacs.vrf = vrf[0]
+    calls = [call('vrf', 0, 1600),
+             call('vrf', 1, 1600),]
+    m.assert_has_calls(calls)
+    assert m.call_count == 2
+
+def test_set_dac_from_element_in_numpy_array_using_slice(mocker):
+    m2= mocker.patch.object(DetectorApi, 'getNumberOfDetectors', autospec=True)
+    m2.return_value = 2
+    m = mocker.patch.object(DetectorApi, 'setDac', autospec=True)  
+    d = Detector()
+    
+    vrf = np.array((1600,1700,1800))
+    d.dacs.vrf[:] = vrf[0]
+    calls = [call('vrf', 0, 1600),
+             call('vrf', 1, 1600),]
+    m.assert_has_calls(calls)
+    assert m.call_count == 2
     
 def test_set_eiger_default(mocker):
     m2= mocker.patch.object(DetectorApi, 'getNumberOfDetectors', autospec=True)
