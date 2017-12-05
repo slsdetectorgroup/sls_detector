@@ -208,6 +208,41 @@ class DetectorDacs:
         for _d in self:
             _d[:] = _d.default
 
+class EigerVcmp:
+    """
+    Convenience class to be able to loop over vcmp for eiger
+    
+    
+    .. todo::
+        
+        Support single assignment and perhaps unify with Dac class
+    
+    """
+    
+    def __init__(self, detector):
+        _names = ['vcmp_ll',
+              'vcmp_lr',
+              'vcmp_rl',
+              'vcmp_rr']
+        self.set = []
+        self.get = []
+        for i in range(detector.n_modules):
+            if i%2 == 0:
+                name = _names
+            else:
+                name = _names[::-1]
+            for n in name:
+                self.set.append( partial(detector._api.setDac, n, i ))
+                self.get.append( partial(detector._api.getDac, n, i ))
+    
+    def __getitem__(self, key):
+        if key == slice(None, None, None):
+            return [_d() for _d in self.get]
+        return self.get[key]()
+    
+    def __setitem__(self, i, value):
+        self.set[i](value)
+
 
 class Detector:
     """
@@ -219,9 +254,11 @@ class Detector:
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
     def __init__(self):
         self._api = DetectorApi()
-
+        
         self._dacs = DetectorDacs(self)
         """dacs = :py:sls`DetectorDacs`"""
+        
+        self._vcmp = EigerVcmp(self)
 
         self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
 
@@ -235,11 +272,22 @@ class Detector:
         self._temp.sodr = Adc('temp_sodr', self)
         self._temp.fpgafl = Adc('temp_fpgafl', self)
         self._temp.fpgafr = Adc('temp_fpgafr', self)
+        
 
     def __len__(self):
         return self._api.getNumberOfDetectors()
 
-
+    @property
+    def vcmp(self):
+        return self._vcmp
+    
+    @vcmp.setter
+    def vcmp(self, values):
+        if len(values)==len(self._vcmp.set):
+            for i,v in enumerate(values):
+                self._vcmp.set[i](v)
+        else:
+            raise ValueError('vcmp only compatible with setting all')
 
     def acq(self):
         """
