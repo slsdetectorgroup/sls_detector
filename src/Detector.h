@@ -25,19 +25,57 @@ public:
 
     }
 
+    //get image size as [nrow, ncols]
     std::pair<int, int> getImageSize(){
-        //image size in [rows, cols]
         std::pair<int, int> image_size{0,0};
         image_size.first = det.getMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::Y);
         image_size.second = det.getMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::X);
         return image_size;
     }
 
+    void setImageSize(int rows, int cols){
+        det.setMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::Y, rows);
+        det.setMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::X, cols);
+    }
+
+    //blocking command, acquire set number of frames
     void acquire(){ det.acquire(); }
 
+
     std::string checkOnline(){
-       std::string r = det.checkOnline();
-       return r;
+       return det.checkOnline();
+    }
+
+    bool getReceiverOnline(){
+        return det.setReceiverOnline();
+    }
+    void setReceiverOnline(bool status){
+        det.setReceiverOnline(status);
+    }
+
+    bool getOnline(){
+        return det.setOnline();
+    }
+    void setOnline(bool status){
+        det.setOnline(status);
+    }
+
+
+    bool isChipPowered(){
+        return det.powerChip();
+    }
+    void powerChip(bool value){
+        det.powerChip(value);
+    }
+
+    //read register from readout system, used for low level control
+    int readRegister(int addr){
+        return det.readRegister(addr);
+    }
+
+    //directly write to register in readout system
+    void writeRegister(int addr, int value){
+        det.writeRegister(addr, value);
     }
 
     bool getAcquiringFlag(){
@@ -75,6 +113,10 @@ public:
     std::string getHostname(){
         return det.getHostname();
     }
+
+    void setHostname(std::string hostname){
+        det.setHostname(hostname.c_str());
+    }
     
     int getDynamicRange(){
         return det.setDynamicRange(-1);
@@ -95,6 +137,30 @@ public:
 
     void setReadoutClockSpeed(int speed){
         det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, speed);
+    }
+
+    int getRxTcpport(int i){
+
+        int port = -1;
+        auto index = slsDetectorDefs::portType::DATA_PORT;
+
+        slsDetector* _d;
+        _d = det.getSlsDetector(i);
+
+        //protect from accesing a nullptr
+        if (_d)
+            port = _d->setPort(index);
+
+        return port;
+    }
+    void setRxTcpport(int i, int value){
+        auto index = slsDetectorDefs::portType::DATA_PORT;
+        slsDetector* _d;
+        _d = det.getSlsDetector(i);
+        //protect from accesing a nullptr
+        if (_d)
+            _d->setPort(index, value);
+
     }
 
     void setRateCorrection(std::vector<double> tau){
@@ -487,6 +553,32 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
     else if(dac_name == "vhighvoltage"){
         dac = slsDetectorDefs::dacIndex::HV_NEW;
     }
+    else if(dac_name == "vb_comp"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(0);
+    }
+    else if(dac_name == "vdd_prot"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(1);
+    }
+    else if(dac_name == "vin_com"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(2);
+    }
+    else if(dac_name == "vref_prech"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(3);
+    }
+    else if(dac_name == "vb_pixbuff"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(4);
+    }
+    else if(dac_name == "vb_ds"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(5);
+    }
+    else if(dac_name == "vref_ds"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(6);
+    }
+    else if(dac_name == "vref_comp"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(7);
+    }
+
+
     return dac;
 
 }

@@ -11,45 +11,29 @@ from functools import partial
 import numpy as np
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
+class DetectorError(Exception):
+    pass
 
 
-class Dac:
+class DetectorProperty:
     """
-    This class represents a dac on the detector. One instance handles all
-    dacs with the same name for a multi detector instance.
-
-    .. note ::
-
-        This class is used to build up DetectorDacs and is in general
-        not directly accessed to the user.
-
-
+    Class to access detector properties that should be indexed per item
+    Used as base class for dacs etc.
     """
-    def __init__(self, name, low, high, default, detector):
-        self.name = name
-        self._detector = detector
-
-        self.min_value = low
-        self.max_value = high
-        self.default = default
-
-        #Local copy to avoid calling the detector class every time
-        self._n_modules = self._detector.n_modules
-
-        #Bind functions to get and set the dac
-        self.get = partial(self._detector._api.getDac, self.name)
-        self.set = partial(self._detector._api.setDac, self.name)
-
+    def __init__(self, get_func, set_func, n_modules):
+        
+        #functions to get and set the parameter
+        self.get = get_func
+        self.set = set_func
+        
+        self.n_modules = n_modules
     def __getitem__(self, key):
-        """
-        Get dacs either by slice, key or list
-        """
         if key == slice(None, None, None):
-            return [self.get(i) for i in range(self._n_modules)]
+            return [self.get(i) for i in range(self.n_modules)]
         elif isinstance(key, Iterable):
             return [self.get(k) for k in key]
         else:
-            return self.get(key)
+            return self.get(key)        
 
     def __setitem__(self, key, value):
         """
@@ -79,6 +63,75 @@ class Dac:
 
         elif isinstance(key, int):
             self.set(key, value)
+
+
+        
+class Dac(DetectorProperty):
+    """
+    This class represents a dac on the detector. One instance handles all
+    dacs with the same name for a multi detector instance.
+
+    .. note ::
+
+        This class is used to build up DetectorDacs and is in general
+        not directly accessed to the user.
+
+
+    """
+    def __init__(self, name, low, high, default, detector):
+        self.name = name
+        self._detector = detector
+
+        self.min_value = low
+        self.max_value = high
+        self.default = default
+
+        #Local copy to avoid calling the detector class every time
+        self._n_modules = self._detector.n_modules
+
+        #Bind functions to get and set the dac
+        self.get = partial(self._detector._api.getDac, self.name)
+        self.set = partial(self._detector._api.setDac, self.name)
+
+#    def __getitem__(self, key):
+#        """
+#        Get dacs either by slice, key or list
+#        """
+#        if key == slice(None, None, None):
+#            return [self.get(i) for i in range(self._n_modules)]
+#        elif isinstance(key, Iterable):
+#            return [self.get(k) for k in key]
+#        else:
+#            return self.get(key)
+
+#    def __setitem__(self, key, value):
+#        """
+#        Set dacs either by slice, key or list. Supports values that can
+#        be iterated over.
+#        """
+#        
+#        if key == slice(None, None, None):
+#            if isinstance(value, (np.integer, int)):
+#                for i in range(self._n_modules):
+#                    self.set(i, value)
+#            elif isinstance(value, Iterable):
+#                for i in range(self._n_modules):
+#                    self.set(i, value[i])
+#            else:
+#                raise ValueError('Value should be int or np.integer not', type(value))
+#
+#        elif isinstance(key, Iterable):
+#            if isinstance(value, Iterable):
+#                for k,v in zip(key, value):
+#                    self.set(k,v)
+#
+#            elif isinstance(value, int):
+#                for k in key:
+#                    self.set(k, value)
+#
+#
+#        elif isinstance(key, int):
+#            self.set(key, value)
 
     def __repr__(self):
         """String representation for a single dac in all modules"""
@@ -207,41 +260,15 @@ class DetectorDacs:
         """
         for _d in self:
             _d[:] = _d.default
+            
+    def update_nmod(self):
+        """
+        Update the cached value of nmod, needs to be run after adding or 
+        removing detectors
+        """
+        for _d in self:
+            _d._n_modules = self._detector.n_modules
 
-class EigerVcmp:
-    """
-    Convenience class to be able to loop over vcmp for eiger
-    
-    
-    .. todo::
-        
-        Support single assignment and perhaps unify with Dac class
-    
-    """
-    
-    def __init__(self, detector):
-        _names = ['vcmp_ll',
-              'vcmp_lr',
-              'vcmp_rl',
-              'vcmp_rr']
-        self.set = []
-        self.get = []
-        for i in range(detector.n_modules):
-            if i%2 == 0:
-                name = _names
-            else:
-                name = _names[::-1]
-            for n in name:
-                self.set.append( partial(detector._api.setDac, n, i ))
-                self.get.append( partial(detector._api.getDac, n, i ))
-    
-    def __getitem__(self, key):
-        if key == slice(None, None, None):
-            return [_d() for _d in self.get]
-        return self.get[key]()
-    
-    def __setitem__(self, i, value):
-        self.set[i](value)
 
 
 class Detector:
@@ -255,27 +282,33 @@ class Detector:
     def __init__(self):
         self._api = DetectorApi()
         
-        self._dacs = DetectorDacs(self)
-        """dacs = :py:sls`DetectorDacs`"""
+        self._rx_tcpport = DetectorProperty(self._api.getRxTcpport,
+                                            self._api.setRxTcpport, 
+                                            self.n_modules)
+#        self._dacs = DetectorDacs(self)
+#        """dacs = :py:sls`DetectorDacs`"""
         
-        self._vcmp = EigerVcmp(self)
+#        self._vcmp = EigerVcmp(self)
 
-        self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
+#        self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
 
 
-        self._temp = DetectorAdcs()
-        self._temp.fpga = Adc('temp_fpga', self)
-        self._temp.fpgaext = Adc('temp_fpgaext', self)
-        self._temp.t10ge = Adc('temp_10ge', self)
-        self._temp.dcdc = Adc('temp_dcdc', self)
-        self._temp.sodl = Adc('temp_sodl', self)
-        self._temp.sodr = Adc('temp_sodr', self)
-        self._temp.fpgafl = Adc('temp_fpgafl', self)
-        self._temp.fpgafr = Adc('temp_fpgafr', self)
+#        self._temp = DetectorAdcs()
+#        self._temp.fpga = Adc('temp_fpga', self)
+#        self._temp.fpgaext = Adc('temp_fpgaext', self)
+#        self._temp.t10ge = Adc('temp_10ge', self)
+#        self._temp.dcdc = Adc('temp_dcdc', self)
+#        self._temp.sodl = Adc('temp_sodl', self)
+#        self._temp.sodr = Adc('temp_sodr', self)
+#        self._temp.fpgafl = Adc('temp_fpgafl', self)
+#        self._temp.fpgafr = Adc('temp_fpgafr', self)
         
 
     def __len__(self):
         return self._api.getNumberOfDetectors()
+    
+    def __repr__(self):
+        return '{}()'.format(self.__class__.__name__)
 
     @property
     def vcmp(self):
@@ -648,6 +681,15 @@ class Detector:
             return []
         return _hm.strip('+').split('+')
 
+
+    @hostname.setter
+    def hostname(self, hn):
+        if isinstance(hn, str):
+            self._api.setHostname(hn)
+        else:
+            name = ''.join([''.join((h, '+')) for h in hn])
+            self._api.setHostname(name)
+
     @property
     def image_size(self):
         """
@@ -672,6 +714,10 @@ class Detector:
         """
         size = namedtuple('ImageSize', ['rows', 'cols'])
         return size(*self._api.getImageSize())
+
+    @image_size.setter
+    def image_size(self, size):
+        self._api.setImageSize(*size)
 
     def load_config(self, fname):
         """
@@ -798,6 +844,23 @@ class Detector:
         return self._api.getNumberOfDetectors()
 
     @property
+    def online(self):
+        return self._api.getOnline()
+    
+    @online.setter
+    def online(self, value):
+        self._api.setOnline(value)
+
+    @property
+    def receiver_online(self):
+        return self._api.getReceiverOnline()
+    
+    @receiver_online.setter
+    def receiver_online(self, value):
+        self._api.setReceiverOnline(value)
+
+
+    @property
     def period(self):
         """
         :obj:`double` Period between start of frames. Set to 0 for the detector
@@ -917,6 +980,11 @@ class Detector:
     @rx_datastream.setter
     def rx_datastream(self, status):
         self._api.setRxDataStreamStatus(status)
+
+
+    @property
+    def rx_tcpport(self):
+        return [self._api.getRxTcpport(i) for i in range(self.n_modules)]
 
     @property
     def rx_zmqip(self):

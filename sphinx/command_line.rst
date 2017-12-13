@@ -30,7 +30,7 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |new_chiptest| replace:: New chip test board only
 .. |chiptest| replace:: Chip test board only
 .. |dr| replace::  :py:attr:`Detector.dynamic_range` 
-.. |j| replace:: Jungfrau onlu
+.. |j| replace:: Jungfrau only
 .. |rate| replace:: :py:attr:`Detector.rate_correction`
 .. |te| replace:: :py:attr:`Detector.trimmed_energies`
 .. |rxd| replace:: :py:attr:`Detector.rx_datastream`

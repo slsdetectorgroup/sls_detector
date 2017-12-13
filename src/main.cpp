@@ -53,6 +53,22 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setReadoutClockSpeed", &Detector::setReadoutClockSpeed)
             .def("getReadoutClockSpeed", &Detector::getReadoutClockSpeed)
             .def("getHostname", &Detector::getHostname)
+            .def("setHostname", &Detector::setHostname)
+
+            .def("getOnline", &Detector::getOnline)
+            .def("setOnline", &Detector::setOnline)
+            .def("getReceiverOnline", &Detector::getReceiverOnline)
+            .def("setReceiverOnline", &Detector::setReceiverOnline)
+
+            .def("getRxTcpport", &Detector::getRxTcpport)
+            .def("setRxTcpport", &Detector::setRxTcpport)
+
+            .def("isChipPowered", &Detector::isChipPowered)
+            .def("powerChip", &Detector::powerChip)
+
+            .def("readRegister", &Detector::readRegister)
+            .def("writeRegister", &Detector::writeRegister)
+
             .def("setDynamicRange", &Detector::setDynamicRange)
             .def("getDynamicRange", &Detector::getDynamicRange)
             .def("getFirmwareVersion", &Detector::getFirmwareVersion)
@@ -93,7 +109,9 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setDacVthreshold", &Detector::setDacVthreshold)
             .def("setNumberOfFrames", &Detector::setNumberOfFrames)
             .def("getNumberOfFrames", &Detector::getNumberOfFrames)
+
             .def("getImageSize", &Detector::getImageSize)
+            .def("setImageSize", &Detector::setImageSize)
             .def("getNumberOfDetectors", &Detector::getNumberOfDetectors)
             .def("getDetectorGeometry", &Detector::getDetectorGeometry);
 
