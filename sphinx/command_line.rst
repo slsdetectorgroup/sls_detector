@@ -54,7 +54,7 @@ flippeddatay
 digitest
 bustest
 digibittest
-reg
+reg                   :py:attr:`Jungfrau.register`          OK
 adcreg
 setbit
 clearbit

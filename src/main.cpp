@@ -91,6 +91,9 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setPeriod", &Detector::setPeriod)
             .def("getPeriod", &Detector::getPeriod)
 
+            .def("getCycles", &Detector::getCycles)
+            .def("setCycles", &Detector::setCycles)
+
             .def("getTimingMode", &Detector::getTimingMode)
             .def("setTimingMode", &Detector::setTimingMode)
 
@@ -101,7 +104,7 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setRxDataStreamStatus", &Detector::setRxDataStreamStatus)
             
             .def("getNetworkParameter", &Detector::getNetworkParameter)
-
+            .def("setNetworkParameter", &Detector::setNetworkParameter)
 
             .def("setFileWrite", &Detector::setFileWrite)
             .def("getFileWrite", &Detector::getFileWrite)

@@ -11,8 +11,18 @@ from functools import partial
 import numpy as np
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
+def all_equal(mylist):
+    return all(x == mylist[0] for x in mylist)
+
+def element_if_equal(mylist):
+    if all_equal(mylist):
+        return mylist[0]
+    else:
+        return mylist
+
 class DetectorError(Exception):
     pass
+
 
 
 class DetectorProperty:
@@ -20,16 +30,17 @@ class DetectorProperty:
     Class to access detector properties that should be indexed per item
     Used as base class for dacs etc.
     """
-    def __init__(self, get_func, set_func, n_modules):
+    def __init__(self, get_func, set_func, nmod_func, name):
         
         #functions to get and set the parameter
         self.get = get_func
         self.set = set_func
+        self.get_nmod = nmod_func
+        self.__name__ = name
         
-        self.n_modules = n_modules
     def __getitem__(self, key):
         if key == slice(None, None, None):
-            return [self.get(i) for i in range(self.n_modules)]
+            return [self.get(i) for i in range(self.get_nmod())]
         elif isinstance(key, Iterable):
             return [self.get(k) for k in key]
         else:
@@ -43,10 +54,10 @@ class DetectorProperty:
         
         if key == slice(None, None, None):
             if isinstance(value, (np.integer, int)):
-                for i in range(self._n_modules):
+                for i in range(self.get_nmod()):
                     self.set(i, value)
             elif isinstance(value, Iterable):
-                for i in range(self._n_modules):
+                for i in range(self.get_nmod()):
                     self.set(i, value[i])
             else:
                 raise ValueError('Value should be int or np.integer not', type(value))
@@ -63,7 +74,9 @@ class DetectorProperty:
 
         elif isinstance(key, int):
             self.set(key, value)
-
+    def __repr__(self):
+       s = ', '.join(str(v) for v in self[:])
+       return '{}: [{}]'.format(self.__name__, s)
 
         
 class Dac(DetectorProperty):
@@ -87,7 +100,7 @@ class Dac(DetectorProperty):
         self.default = default
 
         #Local copy to avoid calling the detector class every time
-        self._n_modules = self._detector.n_modules
+        self.get_nmod = self._detector._api.getNumberOfDetectors
 
         #Bind functions to get and set the dac
         self.get = partial(self._detector._api.getDac, self.name)
@@ -136,7 +149,7 @@ class Dac(DetectorProperty):
     def __repr__(self):
         """String representation for a single dac in all modules"""
         r_str = ['{:10s}: '.format(self.name)]
-        r_str += [ '{:5d}, '.format(self.get(i)) for i in range(self._n_modules)]
+        r_str += [ '{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
 
 class Adc:
@@ -282,9 +295,12 @@ class Detector:
     def __init__(self):
         self._api = DetectorApi()
         
-        self._rx_tcpport = DetectorProperty(self._api.getRxTcpport,
-                                            self._api.setRxTcpport, 
-                                            self.n_modules)
+#        self._rx_tcpport = DetectorProperty(self._api.getRxTcpport,
+#                                            self._api.setRxTcpport, 
+#                                            self._api.getNumberOfDetectors,
+#                                            'rx_tcpport')
+        
+        
 #        self._dacs = DetectorDacs(self)
 #        """dacs = :py:sls`DetectorDacs`"""
         
@@ -372,6 +388,15 @@ class Detector:
         
         """
         return self._temp
+
+
+    @property
+    def cycles(self):
+        return self._api.getCycles()
+    
+    @cycles.setter
+    def cycles(self, n_cycles):
+        self._api.setCycles(n_cycles)
 
     @property
     def dacs(self):
@@ -983,8 +1008,36 @@ class Detector:
 
 
     @property
+    def rx_hostname(self):
+        s = self._api.getNetworkParameter('rx_hostname')
+        return element_if_equal(s)
+            
+    @property
+    def rx_udpip(self):
+        s = self._api.getNetworkParameter('rx_udpip')
+        return element_if_equal(s)
+    
+    
+    @rx_hostname.setter
+    def rx_hostname(self, names):
+        #if we pass a list join the list
+        if isinstance(names, list):
+            names = '+'.join(n for n in names)+'+'
+
+        self._api.setNetworkParameter('rx_hostname', names)
+
+    @property
     def rx_tcpport(self):
         return [self._api.getRxTcpport(i) for i in range(self.n_modules)]
+
+    @rx_tcpport.setter
+    def rx_tcpport(self, ports):
+        if len(ports) != len(self):
+            raise ValueError('Number of ports: {} not equal to number of '
+                             'detectors: {}'.format(len(ports), len(self)))
+        else:
+            for i,p in enumerate(ports):
+                self._api.setRxTcpport(i, p)
 
     @property
     def rx_zmqip(self):
@@ -993,7 +1046,8 @@ class Detector:
 
             also set
         """
-        return self._api.getNetworkParameter('rx_zmqip')
+        ip = self._api.getNetworkParameter('rx_zmqip')
+        return element_if_equal(ip)
 
     @property
     def rx_zmqport(self):
@@ -1014,7 +1068,7 @@ class Detector:
         _s = self._api.getNetworkParameter('rx_zmqport')
         if _s == '':
             return []
-        return [int(_p)+i for _p in _s.strip('+').split('+') for i in range(2)]
+        return [int(_p)+i for _p in _s for i in range(2)]
 
 #Add back when versioning is defined
 #    @property
@@ -1201,3 +1255,7 @@ class Detector:
             raise ValueError('Trimbit setting {:d} is  outside of range:'\
                              '{:d}-{:d}'.format(value, self._trimbit_limits.min, self._trimbit_limits.max))
 
+
+def free_shared_memory():
+    d = Detector()
+    d.free_shared_memory()

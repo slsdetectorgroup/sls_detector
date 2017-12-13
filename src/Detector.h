@@ -314,6 +314,16 @@ public:
         auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
         det.setTimer(timer, t);
     }
+
+    int64_t getCycles(){
+        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
+        return det.setTimer(timer, -1);
+    }
+    void setCycles(int64_t n_cycles){
+        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
+        det.setTimer(timer, n_cycles);
+    }
+
     int64_t getSubExposureTime(){
         //time in ns
         auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
@@ -327,7 +337,9 @@ public:
         det.setExternalCommunicationMode(det.externalCommunicationType(mode));
     }
 
-    void freeSharedMemory(){ det.freeSharedMemory(); }
+    void freeSharedMemory(){
+        det.freeSharedMemory();
+    }
 
     std::string getDetectorType(){
         return det.ssetDetectorsType();
@@ -390,9 +402,23 @@ public:
         det.enableDataStreamingFromReceiver(state);
     }
     
-    std::string getNetworkParameter(std::string par_name){
+    std::vector<std::string> getNetworkParameter(std::string par_name){
         auto p = networkNameToEnum(par_name);
-        return det.getNetworkParameter(p);  
+        std::vector<std::string> par;
+        slsDetector* _d;
+        for (int i=0; i<det.getNumberOfDetectors(); ++i){
+            _d = det.getSlsDetector(i);
+            par.push_back(_d->getNetworkParameter(p));
+        }
+
+
+        return par;
+    }
+
+    //Set network parameter for all detectors by passing a string
+    void setNetworkParameter(std::string par_name, std::string par){
+        auto p = networkNameToEnum(par_name);
+        det.setNetworkParameter(p, par);
     }
 
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
@@ -435,13 +461,13 @@ slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_na
     else if(par_name == "rx_udpip"){
         return slsDetectorDefs::networkParameter::RECEIVER_UDP_IP;
     }
-    else if(par_name == "rx_updport"){
+    else if(par_name == "rx_udpport"){
         return slsDetectorDefs::networkParameter::RECEIVER_UDP_PORT;
     }
     else if(par_name == "rx_udpmac"){
         return slsDetectorDefs::networkParameter::RECEIVER_UDP_MAC;
     }
-    else if(par_name == "rx_updport2"){
+    else if(par_name == "rx_udpport2"){
         return slsDetectorDefs::networkParameter::RECEIVER_UDP_PORT2;
     }
     else if(par_name == "delay_left"){

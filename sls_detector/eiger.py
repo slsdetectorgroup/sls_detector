@@ -8,6 +8,7 @@ Created on Wed Dec  6 11:51:18 2017
 
 from functools import partial
 from collections import namedtuple
+import socket
 
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
 
@@ -70,7 +71,8 @@ class EigerDacs(DetectorDacs):
 
 class Eiger(Detector):
     """
-    Right dacs, etc.
+    Subclass of detector to populte the right dacs and provide detector
+    specific functions
     """
     _detector_dynamic_range = [4, 8, 16, 32]
     
@@ -93,5 +95,53 @@ class Eiger(Detector):
         self._temp.fpgafl = Adc('temp_fpgafl', self)
         self._temp.fpgafr = Adc('temp_fpgafr', self)
         
-
+    @property
+    def rx_udpport(self):
+        """
+        UDP port for the receiver. Each module has two ports refered to 
+        as rx_udpport and rx_udpport2 in the command line interface
+        here they are grouped for each detector
+        
+        ::
+            
+            [0:rx_udpport, 0:rx_udpport2, 1:rx_udpport ...]
+        
+        Examples
+        -----------
+        
+        ::
+        
+            d.rx_udpport
+            >> [50010, 50011, 50004, 50005]
+            
+            d.rx_udpport = [50010, 50011, 50012, 50013]
+        
+        """
+        p0 = self._api.getNetworkParameter('rx_udpport')
+        p1 = self._api.getNetworkParameter('rx_udpport2')
+        return [int(val) for pair in zip(p0,p1) for val in pair]
+    
+    @rx_udpport.setter
+    def rx_udpport(self, ports):
+        #Iterable with port numbers
+        p0 = '+'.join(str(p) for p in ports[0::2])+'+'
+        p1 = '+'.join(str(p) for p in ports[1::2])+'+'
+        print(p0,p1)
+        self._api.setNetworkParameter('rx_udpport', p0)
+        self._api.setNetworkParameter('rx_udpport2', p1)
+        
+    def setup500k(self, hostnames):
+        """
+        Setup the eiger detector to run on the local machine
+        """
+        
+        self.hostname = hostnames
+        self.image_size = (512,1024)
+        self.rx_tcpport = [1954,1955]
+        self.rx_udpport = [50010, 50011, 50004, 50005]
+        self.rx_hostname = socket.gethostname().split('.')[0]
+        self.rx_datastream = False
+        self.file_write = False
+        self.online = True
+        self.receiver_online = True
         

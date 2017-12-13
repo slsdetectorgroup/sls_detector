@@ -62,7 +62,7 @@ class Jungfrau(Detector):
         self._temp.fpgafr = Adc('temp_fpgafr', self)
         
 
-        self.register = Register(self)
+        self._register = Register(self)
         
     @property
     def power_chip(self):
@@ -71,3 +71,19 @@ class Jungfrau(Detector):
     @power_chip.setter
     def power_chip(self, value):
         return self._api.powerChip(value)
+    
+    @property
+    def register(self):
+        """Directly manipulate registers on the readout board
+        
+        Examples
+        ---------
+        
+        ::
+            
+            d.register[0x5d] = 0xf00
+        
+        """
+        
+        
+        return self._register
