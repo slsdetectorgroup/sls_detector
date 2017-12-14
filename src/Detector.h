@@ -42,6 +42,15 @@ public:
     void acquire(){ det.acquire(); }
 
 
+    bool getActive(const int idet){
+
+        auto d = det.getSlsDetector(i);
+        if (d)
+            return d.activate();
+        else
+            throw std::runtime_error("could not get detector");
+    }
+
     int getFileFormat(){
         return det.getFileFormat();
     }

@@ -295,9 +295,11 @@ class Detector:
     _detector_dynamic_range = [4, 8, 16, 32]
     _speed_names = {0: 'Full Speed', 1: 'Half Speed', 2: 'Quarter Speed', 3: 'Super Slow Speed'}
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
+
     def __init__(self):
-        #Start by setting online
         self._api = DetectorApi()
+        
+        #Do we need more of these later?
         self.online = True
         self.receiver_online = True
         
@@ -309,17 +311,6 @@ class Detector:
     def __repr__(self):
         return '{}()'.format(self.__class__.__name__)
 
-    @property
-    def vcmp(self):
-        return self._vcmp
-    
-    @vcmp.setter
-    def vcmp(self, values):
-        if len(values)==len(self._vcmp.set):
-            for i,v in enumerate(values):
-                self._vcmp.set[i](v)
-        else:
-            raise ValueError('vcmp only compatible with setting all')
 
     def acq(self):
         """
@@ -461,17 +452,10 @@ class Detector:
         return self._api.getDetectorType()
 
 
-    def default_settings(self):
-        """
-        reset the detector to some type of standard settings
-        """
-        
-        self.n_frames = 1
-        self.exposure_time = 1
-        self.period = 0
-        self.dynamic_range = 16
+
 
     @property
+    @error_handling
     def dynamic_range(self):
         """
         :obj:`int`: Dynamic range of the detector.
@@ -498,6 +482,7 @@ class Detector:
         return self._api.getDynamicRange()
 
     @dynamic_range.setter
+    @error_handling
     def dynamic_range(self, dr):
         if dr in self._detector_dynamic_range:
             self._api.setDynamicRange(dr)
@@ -505,22 +490,6 @@ class Detector:
         else:
             raise ValueError('Cannot set dynamic range to: {:d} availble options: '.format(dr),
                              self._detector_dynamic_range)
-
-
-    @property
-    def eiger_matrix_reset(self):
-        """
-        Matrix reset bit for Eiger.
-
-        :py:obj:`True` : Normal operation, the matrix is reset befor each acq.
-        :py:obj:`False` : Matrix reset disableld. Used to not reset before
-        reading out analog test pulses.
-        """
-        return self._api.getCounterBit()
-
-    @eiger_matrix_reset.setter
-    def eiger_matrix_reset(self, value):
-        self._api.setCounterBit(value)
 
 
     @property
@@ -647,6 +616,7 @@ class Detector:
 
 
     @property
+    @error_handling
     def file_write(self):
         """
         :obj:`bool` If True write files to disk
@@ -654,10 +624,12 @@ class Detector:
         return self._api.getFileWrite()
 
     @file_write.setter
+    @error_handling
     def file_write(self, fwrite):
         self._api.setFileWrite(fwrite)
 
     @property
+    @error_handling
     def firmware_version(self):
         """
         :py:obj:`int` Firmware version of the detector
@@ -677,6 +649,7 @@ class Detector:
         self._api.freeSharedMemory()
 
     @property
+    @error_handling
     def high_voltage(self):
         """
         High voltage applied to the sensor
@@ -684,6 +657,7 @@ class Detector:
         return self._api.getDac('vhighvoltage', -1)
 
     @high_voltage.setter
+    @error_handling
     def high_voltage(self, voltage):
         voltage = int(voltage)
         if voltage < 0:
@@ -692,6 +666,7 @@ class Detector:
 
 
     @property
+    @error_handling
     def hostname(self):
         """
         :obj:`list` of :obj:`str`: hostnames of all connected detectors
@@ -712,6 +687,7 @@ class Detector:
 
 
     @hostname.setter
+    @error_handling
     def hostname(self, hn):
         if isinstance(hn, str):
             self._api.setHostname(hn)
@@ -750,9 +726,11 @@ class Detector:
         return size(*self._api.getImageSize())
 
     @image_size.setter
+    @error_handling
     def image_size(self, size):
         self._api.setImageSize(*size)
 
+    @error_handling
     def load_config(self, fname):
         """
         Load detector configuration from a configuration file
@@ -768,6 +746,7 @@ class Detector:
         else:
             raise FileNotFoundError('Cannot find settings file')
 
+    @error_handling
     def load_parameters(self, fname):
         """
         Setup detector by executing commands in a parameters file
@@ -790,7 +769,7 @@ class Detector:
         else:
             raise FileNotFoundError('Cannot find parameters file')
 
-
+    @error_handling
     def load_trimbits(self, fname, idet=-1):
         """
         Load trimbit file or files. Either called with detector number or -1
@@ -822,6 +801,7 @@ class Detector:
 
 
     @property
+    @error_handling
     def module_geometry(self):
         """
         :obj:`namedtuple` Geometry(horizontal=nx, vertical=ny)
@@ -847,6 +827,7 @@ class Detector:
         return Geometry(horizontal=_t[0], vertical =_t[1])
 
     @property
+    @error_handling
     def n_frames(self):
         """
         :obj:`int` Number of frames per acquisition
@@ -854,6 +835,7 @@ class Detector:
         return self._api.getNumberOfFrames()
 
     @n_frames.setter
+    @error_handling
     def n_frames(self, n):
         if n >= 1:
             self._api.setNumberOfFrames(n)
@@ -862,6 +844,7 @@ class Detector:
                              ' frames should be an integer greater than 0'.format(n))
 
     @property
+    @error_handling
     def n_modules(self):
         """
         :obj:`int` Number of (half)modules in the detector
@@ -878,6 +861,7 @@ class Detector:
         return self._api.getNumberOfDetectors()
 
     @property
+    @error_handling
     def online(self):
         """Online flag for the detector
         
@@ -895,19 +879,23 @@ class Detector:
         return self._api.getOnline()
     
     @online.setter
+    @error_handling
     def online(self, value):
         self._api.setOnline(value)
 
     @property
+    @error_handling
     def receiver_online(self):
         return self._api.getReceiverOnline()
     
     @receiver_online.setter
+    @error_handling
     def receiver_online(self, value):
         self._api.setReceiverOnline(value)
 
 
     @property
+    @error_handling
     def period(self):
         """
         :obj:`double` Period between start of frames. Set to 0 for the detector
@@ -917,6 +905,7 @@ class Detector:
         return _t / 1e9
 
     @period.setter
+    @error_handling
     def period(self, t):
         ns_time = int(t * 1e9)
         if ns_time < 0:
@@ -929,6 +918,7 @@ class Detector:
 
 
     @property
+    @error_handling
     def rate_correction(self):
         """
         :obj:`list` of :obj:`double` Rate correction for all modules.
@@ -959,6 +949,7 @@ class Detector:
         return self._api.getRateCorrection()
 
     @rate_correction.setter
+    @error_handling
     def rate_correction(self, tau_list):
         if len(tau_list) != self.n_modules:
             raise ValueError('List of tau needs the same length')
@@ -966,17 +957,20 @@ class Detector:
 
 
     @property
+    @error_handling
     def readout_clock(self):
         speed = self._api.getReadoutClockSpeed()
         return self._speed_names[speed]
 
     @readout_clock.setter
+    @error_handling
     def readout_clock(self, value):
         speed = self._speed_int[value]
         self._api.setReadoutClockSpeed(speed)
 
 
     @property
+    @error_handling
     def rx_datastream(self):
         """
         Zmq datastream from receiver. :py:obj:`True` if enabled and :py:obj:`False`
@@ -1000,17 +994,20 @@ class Detector:
 
 
     @property
+    @error_handling
     def rx_hostname(self):
         s = self._api.getNetworkParameter('rx_hostname')
         return element_if_equal(s)
             
     @property
+    @error_handling
     def rx_udpip(self):
         s = self._api.getNetworkParameter('rx_udpip')
         return element_if_equal(s)
     
     
     @rx_hostname.setter
+    @error_handling
     def rx_hostname(self, names):
         #if we pass a list join the list
         if isinstance(names, list):
@@ -1019,10 +1016,12 @@ class Detector:
         self._api.setNetworkParameter('rx_hostname', names)
 
     @property
+    @error_handling
     def rx_tcpport(self):
         return [self._api.getRxTcpport(i) for i in range(self.n_modules)]
 
     @rx_tcpport.setter
+    @error_handling
     def rx_tcpport(self, ports):
         if len(ports) != len(self):
             raise ValueError('Number of ports: {} not equal to number of '
@@ -1032,6 +1031,7 @@ class Detector:
                 self._api.setRxTcpport(i, p)
 
     @property
+    @error_handling
     def rx_zmqip(self):
         """
         .. todo ::
@@ -1042,6 +1042,7 @@ class Detector:
         return element_if_equal(ip)
 
     @property
+    @error_handling
     def rx_zmqport(self):
         """
         Return the receiver zmq ports
@@ -1084,6 +1085,7 @@ class Detector:
 #    default:    		return string("undefined");
 
     @property
+    @error_handling
     def settings(self):
         """
         Detector settings used to control for example calibration or gain
@@ -1097,11 +1099,13 @@ class Detector:
         return self._api.getSettings()
         
     @settings.setter
+    @error_handling
     def settings(self, s):
         #check input!
         self._api.setSettings(s)
         
     @property
+    @error_handling
     def settings_path(self):
         """
         The path where the slsDetectorSoftware looks for settings/trimbit files            
@@ -1109,6 +1113,7 @@ class Detector:
         return self._api.getSettingsDir()
     
     @settings_path.setter
+    @error_handling
     def settings_path(self, path):
         if os.path.isdir(path):
             self._api.setSettingsDir(path)
@@ -1116,6 +1121,7 @@ class Detector:
             raise FileNotFoundError('Settings path does not exist')
 
     @property
+    @error_handling
     def status(self):
         """
         :py:obj`str` Status of the detector: idle, running,

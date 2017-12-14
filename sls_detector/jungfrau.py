@@ -10,7 +10,7 @@ from functools import partial
 from collections import namedtuple
 
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
-
+from .decorators import error_handling
 
 class Register:
     def __init__(self, detector):
@@ -64,14 +64,17 @@ class Jungfrau(Detector):
         self._register = Register(self)
         
     @property
+    @error_handling
     def power_chip(self):
         return self._api.isChipPowered()
     
     @power_chip.setter
+    @error_handling
     def power_chip(self, value):
         return self._api.powerChip(value)
     
     @property
+    @error_handling
     def register(self):
         """Directly manipulate registers on the readout board
         

@@ -120,6 +120,31 @@ class Eiger(Detector):
         self._api.setGapPixels(value)
 
 
+    def default_settings(self):
+        """
+        reset the detector to some type of standard settings
+        """
+        
+        self.n_frames = 1
+        self.exposure_time = 1
+        self.period = 0
+        self.dynamic_range = 16
+
+    @property
+    def eiger_matrix_reset(self):
+        """
+        Matrix reset bit for Eiger.
+
+        :py:obj:`True` : Normal operation, the matrix is reset befor each acq.
+        :py:obj:`False` : Matrix reset disableld. Used to not reset before
+        reading out analog test pulses.
+        """
+        return self._api.getCounterBit()
+
+    @eiger_matrix_reset.setter
+    def eiger_matrix_reset(self, value):
+        self._api.setCounterBit(value)
+
     @error_handling
     def pulse_all_pixels(self, n):
         """
@@ -156,6 +181,22 @@ class Eiger(Detector):
             self._api.pulseChip(n)
         else:
             raise ValueError('n must be equal or larger than -1')
+
+
+    @property
+    def vcmp(self):
+        return self._vcmp
+    
+    @vcmp.setter
+    @error_handling
+    def vcmp(self, values):
+        if len(values)==len(self._vcmp.set):
+            for i,v in enumerate(values):
+                self._vcmp.set[i](v)
+        else:
+            raise ValueError('vcmp only compatible with setting all')
+
+
      
     @property
     @error_handling
@@ -190,7 +231,7 @@ class Eiger(Detector):
         #Iterable with port numbers
         p0 = '+'.join(str(p) for p in ports[0::2])+'+'
         p1 = '+'.join(str(p) for p in ports[1::2])+'+'
-        print(p0,p1)
+#        print(p0,p1)
         self._api.setNetworkParameter('rx_udpport', p0)
         self._api.setNetworkParameter('rx_udpport2', p1)
         
