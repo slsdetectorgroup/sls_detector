@@ -105,7 +105,25 @@ class Eiger(Detector):
 
     @property
     def active(self):
+        """
+        Is the detector active? Can be used to disable
+        
+        Examples
+        ----------
+        
+        ::
+            
+            d.active
+            >> active: [True, True]
+            
+            d.active[1] = False
+            >> active: [True, False]
+        """
         return self._active
+    
+    @active.setter
+    def active(self, value):
+        self._active[:] = value
 
     @property
     @error_handling
