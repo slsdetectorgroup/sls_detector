@@ -258,7 +258,66 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">sodr</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_sodr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgafl</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgafl&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgafr</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgafr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        
+   
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">add_gappixels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enable or disable the (virual) pixels between ASICs</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            d.add_gappixels = True</span>
+<span class="sd">            </span>
+<span class="sd">            d.add_gappixels</span>
+<span class="sd">            &gt;&gt; True</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getGapPixels</span><span class="p">()</span>
+    
+    <span class="nd">@add_gappixels</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">add_gappixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setGapPixels</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Eiger.pulse_all_pixels"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_all_pixels">[docs]</a>    <span class="k">def</span> <span class="nf">pulse_all_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pulse each pixel of the chip **n** times using the analog test pulses.</span>
+<span class="sd">        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being</span>
+<span class="sd">        the highest pulse.</span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            #Pulse all pixels ten times</span>
+<span class="sd">            d.pulse_all_pixels(10)</span>
+<span class="sd">            </span>
+<span class="sd">            #Avoid resetting before acq</span>
+<span class="sd">            d.eiger_matrix_reset = False</span>
+<span class="sd">            </span>
+<span class="sd">            d.acq() #take frame</span>
+<span class="sd">            </span>
+<span class="sd">            #Restore normal behaviour</span>
+<span class="sd">            d.eiger_matrix_reset = True</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseAllPixels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Eiger.pulse_chip"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_chip">[docs]</a>    <span class="k">def</span> <span class="nf">pulse_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Advance the counter by toggeling enable. Gives 2*n+2 int the counter</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">&gt;=-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseChip</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n must be equal or larger than -1&#39;</span><span class="p">)</span></div>
+     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rx_udpport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -68,6 +68,8 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("readRegister", &Detector::readRegister)
             .def("writeRegister", &Detector::writeRegister)
+            .def("writeAdcRegister", &Detector::writeAdcRegister)
+
 
             .def("setDynamicRange", &Detector::setDynamicRange)
             .def("getDynamicRange", &Detector::getDynamicRange)
@@ -112,6 +114,17 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setDacVthreshold", &Detector::setDacVthreshold)
             .def("setNumberOfFrames", &Detector::setNumberOfFrames)
             .def("getNumberOfFrames", &Detector::getNumberOfFrames)
+
+
+            .def("getGapPixels", &Detector::getGapPixels)
+            .def("setGapPixels", &Detector::setGapPixels)
+
+            .def("clearErrorMask", &Detector::clearErrorMask)
+            .def("getErrorMask", &Detector::getErrorMask)
+            .def("getErrorMessage", &Detector::getErrorMessage)
+
+
+            .def("getFileFormat", &Detector::getFileFormat)
 
             .def("getImageSize", &Detector::getImageSize)
             .def("setImageSize", &Detector::setImageSize)

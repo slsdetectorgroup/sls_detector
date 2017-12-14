@@ -11,7 +11,7 @@ from collections import namedtuple
 import socket
 
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
-
+from .decorators import error_handling
 
 class EigerVcmp:
     """
@@ -94,8 +94,71 @@ class Eiger(Detector):
         self._temp.sodr = Adc('temp_sodr', self)
         self._temp.fpgafl = Adc('temp_fpgafl', self)
         self._temp.fpgafr = Adc('temp_fpgafr', self)
-        
+   
+
     @property
+    @error_handling
+    def add_gappixels(self):
+        """Enable or disable the (virual) pixels between ASICs
+        
+        Examples
+        ----------
+        
+        ::
+            
+            d.add_gappixels = True
+            
+            d.add_gappixels
+            >> True
+        
+        """
+        return self._api.getGapPixels()
+    
+    @add_gappixels.setter
+    @error_handling
+    def add_gappixels(self, value):
+        self._api.setGapPixels(value)
+
+
+    @error_handling
+    def pulse_all_pixels(self, n):
+        """
+        Pulse each pixel of the chip **n** times using the analog test pulses.
+        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being
+        the highest pulse.
+        
+        ::
+            
+            #Pulse all pixels ten times
+            d.pulse_all_pixels(10)
+            
+            #Avoid resetting before acq
+            d.eiger_matrix_reset = False
+            
+            d.acq() #take frame
+            
+            #Restore normal behaviour
+            d.eiger_matrix_reset = True
+        
+        
+        """
+        self._api.pulseAllPixels(n)
+
+
+    @error_handling
+    def pulse_chip(self, n):
+        """
+        Advance the counter by toggeling enable. Gives 2*n+2 int the counter
+        
+        """
+        n = int(n)
+        if n>=-1:
+            self._api.pulseChip(n)
+        else:
+            raise ValueError('n must be equal or larger than -1')
+     
+    @property
+    @error_handling
     def rx_udpport(self):
         """
         UDP port for the receiver. Each module has two ports refered to 
@@ -122,6 +185,7 @@ class Eiger(Detector):
         return [int(val) for pair in zip(p0,p1) for val in pair]
     
     @rx_udpport.setter
+    @error_handling
     def rx_udpport(self, ports):
         #Iterable with port numbers
         p0 = '+'.join(str(p) for p in ports[0::2])+'+'

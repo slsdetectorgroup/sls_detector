@@ -37,3 +37,29 @@ call using the error message from slsDetectorsSoftware
     Could not set settings.
     Detector 2:
     Could not set settings.
+    
+    
+Using decorators
+-------------------
+
+Using decorators we can reset the error mask before the command and then 
+check it after the command
+
+.. code-block:: python
+
+    #add decorator to check the error mask
+    @error_handling
+    def some_function():
+        a = 1+1
+        return a
+
+Communication with the detector is usually the biggest overhead so 
+this does not impact performance. 
+
+::
+
+    %timeit d.exposure_time
+    >> 1.52 ms ± 5.42 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+
+    %timeit d.decorated_exposure_time
+    >> 1.53 ms ± 3.18 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)

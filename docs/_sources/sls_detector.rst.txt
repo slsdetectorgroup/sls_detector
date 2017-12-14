@@ -14,6 +14,10 @@ API Documentation
 
 .. autoclass:: Detector
     :members:  
+    :undoc-members:
+    :show-inheritance:
+
+
 
 Eiger
 -------

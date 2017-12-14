@@ -35,6 +35,7 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |te| replace:: :py:attr:`Detector.trimmed_energies`
 .. |rxd| replace:: :py:attr:`Detector.rx_datastream`
 .. |temp_fpgaext| replace:: :py:attr:`Detector.temp`.fpgaext
+.. |epa| replace:: :py:func:`Eiger.pulse_all_pixels` 
 
 ------------------------
 Commands
@@ -44,22 +45,20 @@ Commands
 Command               Python                              Implementation     Tests
 ===================== ================================= ================== =========
 sls_detector_acquire   :py:func:`Detector.acq`               OK               No
-
-
-test
-help
+test                   Also not in the cmdline?
+help                   help(Detector.acq)
 exitserver
 exitreceiver
-flippeddatay
-digitest
-bustest
-digibittest
+flippeddatay           Also not in the cmdline?
+digitet                Which detector?
+bustest                |m|
+digibittest            Which detector?
 reg                   :py:attr:`Jungfrau.register`          OK
 adcreg
 setbit
 clearbit
 getbit
-r_compression
+r_compression          Also not in the cmdline?
 acquire               :py:func:`Detector.acq`
 busy                  :py:attr:`Detector.busy`                OK              Partial
 status                |stat|                                  OK |ro|
@@ -78,7 +77,7 @@ hostname              :py:attr:`Detector.hostname`            OK               O
 id
 master
 sync
-online
+online                :py:attr:`Detector.online`               OK
 checkonline
 activate
 nmod                   |m|
@@ -89,16 +88,16 @@ detsizechan           :py:attr:`Detector.image_size`           OK
 roimask                ??
 flippeddatax
 tengiga
-gappixels
+gappixels             :py:attr:`Eiger.add_gappixels`       OK
 flags
 extsig                 |mg|
 programfpga            |j|
 resetfpga              |j|
 powerchip              |j|
 led                    Moench?
-pulse
-pulsenmove
-pulsechip
+pulse                 Used in |epa|                           OK
+pulsenmove            Used in |epa|                           OK
+pulsechip             :py:func:`Eiger.pulse_chip`             OK
 moduleversion         |m|
 detectornumber
 modulenumber          |m|
@@ -113,7 +112,7 @@ period                :py:attr:`Detector.period`             OK               OK
 delay                 |mg|
 gates                 |mg|
 frames                :py:attr:`Detector.n_frames`           OK               OK
-cycles
+cycles                :py:attr:`Detector.cycles`            OK
 probes                |m|
 measurements
 samples               Chip test board only (new?)
@@ -176,7 +175,7 @@ vtrimbit
 vpreamp
 vshaper1
 vshaper2
-vhighvoltage
+vhighvoltage          :py:attr:`Detector.high_voltage`   OK
 vapower
 vddpower
 vshpower

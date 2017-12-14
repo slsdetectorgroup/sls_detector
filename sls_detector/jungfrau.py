@@ -15,7 +15,6 @@ from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
 class Register:
     def __init__(self, detector):
         self._detector = detector
-        
     def __getitem__(self, key):
         return hex(self._detector._api.readRegister(key))
     def __setitem__(self, key, value):

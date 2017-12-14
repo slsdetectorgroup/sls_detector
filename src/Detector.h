@@ -17,8 +17,8 @@
 class Detector{
 public:
     Detector():det(){
-        det.setOnline(slsDetectorDefs::ONLINE_FLAG);
-        det.setReceiverOnline(slsDetectorDefs::ONLINE_FLAG);
+        //det.setOnline(slsDetectorDefs::ONLINE_FLAG);
+        //det.setReceiverOnline(slsDetectorDefs::ONLINE_FLAG);
 
         //Disable any output from std::cout
 //        std::cout.setstate(std::ios_base::failbit);
@@ -42,8 +42,26 @@ public:
     void acquire(){ det.acquire(); }
 
 
+    int getFileFormat(){
+        return det.getFileFormat();
+    }
+
     std::string checkOnline(){
        return det.checkOnline();
+    }
+
+    void clearErrorMask(){
+        det.clearAllErrorMask();
+    }
+
+    int64_t getErrorMask(){
+        return det.getErrorMask();
+    }
+
+    std::string getErrorMessage(){
+        //tmp would hold the number of critical errors, is and should this be used?
+        int tmp=0;
+        return det.getErrorMessage(tmp);
     }
 
     bool getReceiverOnline(){
@@ -68,6 +86,7 @@ public:
         det.powerChip(value);
     }
 
+
     //read register from readout system, used for low level control
     int readRegister(int addr){
         return det.readRegister(addr);
@@ -76,6 +95,11 @@ public:
     //directly write to register in readout system
     void writeRegister(int addr, int value){
         det.writeRegister(addr, value);
+    }
+
+    //directly write to the ADC register
+    void writeAdcRegister(int addr, int value){
+        det.writeAdcRegister(addr, value);
     }
 
     bool getAcquiringFlag(){
@@ -419,6 +443,14 @@ public:
     void setNetworkParameter(std::string par_name, std::string par){
         auto p = networkNameToEnum(par_name);
         det.setNetworkParameter(p, par);
+    }
+
+
+    bool getGapPixels(){
+        return det.enableGapPixels(-1);
+    }
+    void setGapPixels(bool val){
+        det.enableGapPixels(val);
     }
 
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);

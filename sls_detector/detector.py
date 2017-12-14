@@ -11,6 +11,9 @@ from functools import partial
 import numpy as np
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
+from .decorators import error_handling
+from .errors import DetectorError
+
 def all_equal(mylist):
     return all(x == mylist[0] for x in mylist)
 
@@ -20,8 +23,7 @@ def element_if_equal(mylist):
     else:
         return mylist
 
-class DetectorError(Exception):
-    pass
+
 
 
 
@@ -284,6 +286,7 @@ class DetectorDacs:
 
 
 
+
 class Detector:
     """
     Python class that is used for controlling an sls detector.
@@ -293,32 +296,12 @@ class Detector:
     _speed_names = {0: 'Full Speed', 1: 'Half Speed', 2: 'Quarter Speed', 3: 'Super Slow Speed'}
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
     def __init__(self):
+        #Start by setting online
         self._api = DetectorApi()
+        self.online = True
+        self.receiver_online = True
         
-#        self._rx_tcpport = DetectorProperty(self._api.getRxTcpport,
-#                                            self._api.setRxTcpport, 
-#                                            self._api.getNumberOfDetectors,
-#                                            'rx_tcpport')
-        
-        
-#        self._dacs = DetectorDacs(self)
-#        """dacs = :py:sls`DetectorDacs`"""
-        
-#        self._vcmp = EigerVcmp(self)
-
-#        self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
-
-
-#        self._temp = DetectorAdcs()
-#        self._temp.fpga = Adc('temp_fpga', self)
-#        self._temp.fpgaext = Adc('temp_fpgaext', self)
-#        self._temp.t10ge = Adc('temp_10ge', self)
-#        self._temp.dcdc = Adc('temp_dcdc', self)
-#        self._temp.sodl = Adc('temp_sodl', self)
-#        self._temp.sodr = Adc('temp_sodr', self)
-#        self._temp.fpgafl = Adc('temp_fpgafl', self)
-#        self._temp.fpgafr = Adc('temp_fpgafr', self)
-        
+                
 
     def __len__(self):
         return self._api.getNumberOfDetectors()
@@ -343,6 +326,7 @@ class Detector:
         Issue an aquire command to start the measurement
         """
         self._api.acq()
+
 
 
     @property
@@ -389,6 +373,10 @@ class Detector:
         """
         return self._temp
 
+
+
+    def clear_errors(self):
+        self._api.clearErrorMask()
 
     @property
     def cycles(self):
@@ -534,7 +522,17 @@ class Detector:
     def eiger_matrix_reset(self, value):
         self._api.setCounterBit(value)
 
+
     @property
+    def error_mask(self):
+        return self._api.getErrorMask()
+    
+    @property
+    def error_message(self):
+        return self._api.getErrorMessage()
+
+    @property
+    @error_handling
     def exposure_time(self):
         """
         :obj:`double` Exposure time in [s] of a single frame.
@@ -543,14 +541,15 @@ class Detector:
 
 
     @exposure_time.setter
+    @error_handling
     def exposure_time(self, t):
         ns_time = int(t * 1e9)
         if ns_time <= 0:
             raise ValueError('Exposure time must be larger than 0')
         self._api.setExposureTime(ns_time)
 
-
     @property
+    @error_handling
     def file_index(self):
         """
         :obj:`int` Index for frames and filenames
@@ -577,12 +576,14 @@ class Detector:
         return self._api.getFileIndex()
 
     @file_index.setter
+    @error_handling
     def file_index(self, i):
         if i < 0:
             raise ValueError('Index needs to be positive')
         self._api.setFileIndex(i)
 
     @property
+    @error_handling
     def file_name(self):
         """
         :obj:`str`: Base file name for writing images
@@ -609,10 +610,12 @@ class Detector:
         return self._api.getFileName()
 
     @file_name.setter
+    @error_handling
     def file_name(self, fname):
         self._api.setFileName(fname)
 
     @property
+    @error_handling
     def file_path(self):
         """
         :obj:`str`: Path where images are written
@@ -635,6 +638,7 @@ class Detector:
         return self._api.getFilePath()
 
     @file_path.setter
+    @error_handling
     def file_path(self, path):
         if os.path.exists(path) is True:
             self._api.setFilePath(path)
@@ -719,13 +723,18 @@ class Detector:
     def image_size(self):
         """
         :py:obj:`collections.namedtuple` with the image size of the detector
+        Also works setting using a normal tuple
+        
+        .. note ::
+            
+            Follows the normal convetion in Python of (rows, cols)
 
         Examples
         ----------
 
         ::
 
-            #Assuming 512x1024 detector size
+            d.image_size = (512, 1024)
 
             d.image_size
             >> ImageSize(rows=512, cols=1024)
@@ -870,6 +879,19 @@ class Detector:
 
     @property
     def online(self):
+        """Online flag for the detector
+        
+        Examples
+        ----------
+        
+        ::
+            
+            d.online 
+            >> False
+            
+            d.online = True
+        
+        """
         return self._api.getOnline()
     
     @online.setter
@@ -902,39 +924,9 @@ class Detector:
         self._api.setPeriod(ns_time)
 
 
-    def pulse_all_pixels(self, n):
-        """
-        Pulse each pixel of the chip **n** times using the analog test pulses.
-        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being
-        the highest pulse.
-        
-        ::
-            
-            #Pulse all pixels ten times
-            d.pulse_all_pixels(10)
-            
-            #Avoid resetting before acq
-            d.eiger_matrix_reset = False
-            
-            d.acq() #take frame
-            
-            #Restore normal behaviour
-            d.eiger_matrix_reset = True
-        
-        
-        """
-        self._api.pulseAllPixels(n)
 
-    def pulse_chip(self, n):
-        """
-        Advance the counter by toggeling enable. Gives 2*n+2 int the counter
-        
-        """
-        n = int(n)
-        if n>=-1:
-            self._api.pulseChip(n)
-        else:
-            raise ValueError('n must be equal or larger than -1')
+
+
 
     @property
     def rate_correction(self):

@@ -447,6 +447,25 @@
             <span class="n">_d</span><span class="o">.</span><span class="n">_n_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">n_modules</span>
 
 
+<span class="k">def</span> <span class="nf">error_handling</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    decorator to check for errors in the detector layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#clear error mask to remove old errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">clearErrorMask</span><span class="p">()</span>
+        
+        <span class="c1">#original function call</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="c1">#now check the error mask</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_mask</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">clearErrorMask</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">DetectorError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
 
 <div class="viewcode-block" id="Detector"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector">[docs]</a><span class="k">class</span> <span class="nc">Detector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -458,31 +477,7 @@
     <span class="n">_speed_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Full Speed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">()</span>
-        
-<span class="c1">#        self._rx_tcpport = DetectorProperty(self._api.getRxTcpport,</span>
-<span class="c1">#                                            self._api.setRxTcpport, </span>
-<span class="c1">#                                            self._api.getNumberOfDetectors,</span>
-<span class="c1">#                                            &#39;rx_tcpport&#39;)</span>
-        
-        
-<span class="c1">#        self._dacs = DetectorDacs(self)</span>
-<span class="c1">#        &quot;&quot;&quot;dacs = :py:sls`DetectorDacs`&quot;&quot;&quot;</span>
-        
-<span class="c1">#        self._vcmp = EigerVcmp(self)</span>
-
-<span class="c1">#        self._trimbit_limits = namedtuple(&#39;trimbit_limits&#39;, [&#39;min&#39;, &#39;max&#39;])(0,63)</span>
-
-
-<span class="c1">#        self._temp = DetectorAdcs()</span>
-<span class="c1">#        self._temp.fpga = Adc(&#39;temp_fpga&#39;, self)</span>
-<span class="c1">#        self._temp.fpgaext = Adc(&#39;temp_fpgaext&#39;, self)</span>
-<span class="c1">#        self._temp.t10ge = Adc(&#39;temp_10ge&#39;, self)</span>
-<span class="c1">#        self._temp.dcdc = Adc(&#39;temp_dcdc&#39;, self)</span>
-<span class="c1">#        self._temp.sodl = Adc(&#39;temp_sodl&#39;, self)</span>
-<span class="c1">#        self._temp.sodr = Adc(&#39;temp_sodr&#39;, self)</span>
-<span class="c1">#        self._temp.fpgafl = Adc(&#39;temp_fpgafl&#39;, self)</span>
-<span class="c1">#        self._temp.fpgafr = Adc(&#39;temp_fpgafr&#39;, self)</span>
-        
+                
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">()</span>
@@ -508,6 +503,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Detector.hej"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.hej">[docs]</a>    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">hej</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hej&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">7</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">busy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -698,7 +697,17 @@
     <span class="k">def</span> <span class="nf">eiger_matrix_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setCounterBit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
+
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">error_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getErrorMask</span><span class="p">()</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getErrorMessage</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :obj:`double` Exposure time in [s] of a single frame.</span>
@@ -707,14 +716,15 @@
 
 
     <span class="nd">@exposure_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Exposure time must be larger than 0&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setExposureTime</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
 
-
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :obj:`int` Index for frames and filenames</span>
@@ -741,12 +751,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileIndex</span><span class="p">()</span>
 
     <span class="nd">@file_index</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Index needs to be positive&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFileIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :obj:`str`: Base file name for writing images</span>
@@ -773,10 +785,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileName</span><span class="p">()</span>
 
     <span class="nd">@file_name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFileName</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :obj:`str`: Path where images are written</span>
@@ -799,6 +813,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFilePath</span><span class="p">()</span>
 
     <span class="nd">@file_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFilePath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -883,13 +898,18 @@
     <span class="k">def</span> <span class="nf">image_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :py:obj:`collections.namedtuple` with the image size of the detector</span>
+<span class="sd">        Also works setting using a normal tuple</span>
+<span class="sd">        </span>
+<span class="sd">        .. note ::</span>
+<span class="sd">            </span>
+<span class="sd">            Follows the normal convetion in Python of (rows, cols)</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        ----------</span>
 
 <span class="sd">        ::</span>
 
-<span class="sd">            #Assuming 512x1024 detector size</span>
+<span class="sd">            d.image_size = (512, 1024)</span>
 
 <span class="sd">            d.image_size</span>
 <span class="sd">            &gt;&gt; ImageSize(rows=512, cols=1024)</span>
@@ -1034,6 +1054,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">online</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Online flag for the detector</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            d.online </span>
+<span class="sd">            &gt;&gt; False</span>
+<span class="sd">            </span>
+<span class="sd">            d.online = True</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getOnline</span><span class="p">()</span>
     
     <span class="nd">@online</span><span class="o">.</span><span class="n">setter</span>
@@ -1066,39 +1099,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setPeriod</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Detector.pulse_all_pixels"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.pulse_all_pixels">[docs]</a>    <span class="k">def</span> <span class="nf">pulse_all_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Pulse each pixel of the chip **n** times using the analog test pulses.</span>
-<span class="sd">        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being</span>
-<span class="sd">        the highest pulse.</span>
-<span class="sd">        </span>
-<span class="sd">        ::</span>
-<span class="sd">            </span>
-<span class="sd">            #Pulse all pixels ten times</span>
-<span class="sd">            d.pulse_all_pixels(10)</span>
-<span class="sd">            </span>
-<span class="sd">            #Avoid resetting before acq</span>
-<span class="sd">            d.eiger_matrix_reset = False</span>
-<span class="sd">            </span>
-<span class="sd">            d.acq() #take frame</span>
-<span class="sd">            </span>
-<span class="sd">            #Restore normal behaviour</span>
-<span class="sd">            d.eiger_matrix_reset = True</span>
-<span class="sd">        </span>
-<span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseAllPixels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Detector.pulse_chip"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.pulse_chip">[docs]</a>    <span class="k">def</span> <span class="nf">pulse_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Advance the counter by toggeling enable. Gives 2*n+2 int the counter</span>
-<span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">n</span><span class="o">&gt;=-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseChip</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n must be equal or larger than -1&#39;</span><span class="p">)</span></div>
+
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rate_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

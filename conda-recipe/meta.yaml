@@ -16,9 +16,11 @@ requirements:
         - python
         - setuptools
         - pybind11
+        - libgcc
     run:
         - python
         - numpy 
+        - libgcc
 
 
 test:
