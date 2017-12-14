@@ -10,7 +10,7 @@ from functools import partial
 from collections import namedtuple
 import socket
 
-from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
+from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, DetectorProperty
 from .decorators import error_handling
 
 class EigerVcmp:
@@ -84,6 +84,12 @@ class Eiger(Detector):
         self._dacs = EigerDacs(self)
         self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
         
+        
+        self._active = DetectorProperty(self._api.getActive,
+                                        self._api.setActive,
+                                        self._api.getNumberOfDetectors,
+                                        'active')
+        
         #Eiger specific adcs
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
@@ -95,6 +101,11 @@ class Eiger(Detector):
         self._temp.fpgafl = Adc('temp_fpgafl', self)
         self._temp.fpgafr = Adc('temp_fpgafr', self)
    
+
+
+    @property
+    def active(self):
+        return self._active
 
     @property
     @error_handling

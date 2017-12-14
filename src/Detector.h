@@ -42,11 +42,19 @@ public:
     void acquire(){ det.acquire(); }
 
 
-    bool getActive(const int idet){
+    bool getActive(const int i){
 
         auto d = det.getSlsDetector(i);
         if (d)
-            return d.activate();
+            return d->activate();
+        else
+            throw std::runtime_error("could not get detector");
+    }
+    void setActive(const int i, bool value){
+
+        auto d = det.getSlsDetector(i);
+        if (d)
+            d->activate(value);
         else
             throw std::runtime_error("could not get detector");
     }

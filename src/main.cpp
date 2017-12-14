@@ -126,6 +126,9 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("getFileFormat", &Detector::getFileFormat)
 
+            .def("getActive", &Detector::getActive)
+            .def("setActive", &Detector::setActive)
+
             .def("getImageSize", &Detector::getImageSize)
             .def("setImageSize", &Detector::setImageSize)
             .def("getNumberOfDetectors", &Detector::getNumberOfDetectors)
