@@ -21,8 +21,9 @@ it looked up from the detector.
 
 ::
 
-    from sls_detector import Detector()
-    d = Detector()
+    #Currently Eiger and Jungfrau but Detector should work for all
+    from sls_detector import Eiger()
+    d = Eiger()
     
     d.file_write = True
     d.vthreshold = 1500

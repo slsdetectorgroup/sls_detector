@@ -59,6 +59,39 @@ public:
             throw std::runtime_error("could not get detector");
     }
 
+    int getFramesCaughtByReceiver(){
+        return det.getFramesCaughtByReceiver();
+    }
+
+    void resetFramesCaught(){
+        det.resetFramesCaught();
+    }
+
+    int getReceiverCurrentFrameIndex(){
+        return det.getReceiverCurrentFrameIndex();
+    }
+
+    bool getThreadedProcessing(){
+        return det.setThreadedProcessing();
+    }
+    void setThreadedProcessing(bool value){
+        det.setThreadedProcessing(value);
+    }
+
+    void startReceiver(){
+        det.startReceiver();
+    }
+    void stopReceiver(){
+        det.stopReceiver();
+    }
+
+    bool getTenGigabitEthernet(){
+        return det.enableTenGigabitEthernet();
+    }
+    void setTenGigabitEthernet(bool value){
+        det.enableTenGigabitEthernet(value);
+    }
+
     int getFileFormat(){
         return det.getFileFormat();
     }

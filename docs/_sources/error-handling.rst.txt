@@ -42,6 +42,8 @@ call using the error message from slsDetectorsSoftware
 Using decorators
 -------------------
 
+Using decorators we can reset the error mask before the command and then 
+check it after the command
 
 .. code-block:: python
 

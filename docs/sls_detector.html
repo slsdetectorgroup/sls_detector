@@ -200,6 +200,11 @@
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="sls_detector.Detector.clear_errors">
+<code class="descname">clear_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.clear_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.clear_errors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="sls_detector.Detector.cycles">
 <code class="descname">cycles</code><a class="headerlink" href="#sls_detector.Detector.cycles" title="Permalink to this definition">¶</a></dt>
@@ -260,12 +265,6 @@ or multi detector.</p>
 </div>
 </dd></dl>
 
-<dl class="method">
-<dt id="sls_detector.Detector.default_settings">
-<code class="descname">default_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.default_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.default_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>reset the detector to some type of standard settings</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="sls_detector.Detector.detector_type">
 <code class="descname">detector_type</code><a class="headerlink" href="#sls_detector.Detector.detector_type" title="Permalink to this definition">¶</a></dt>
@@ -323,15 +322,6 @@ or multi detector.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="sls_detector.Detector.eiger_matrix_reset">
-<code class="descname">eiger_matrix_reset</code><a class="headerlink" href="#sls_detector.Detector.eiger_matrix_reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Matrix reset bit for Eiger.</p>
-<p><code class="xref py py-obj docutils literal"><span class="pre">True</span></code> : Normal operation, the matrix is reset befor each acq.
-<code class="xref py py-obj docutils literal"><span class="pre">False</span></code> : Matrix reset disableld. Used to not reset before
-reading out analog test pulses.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="sls_detector.Detector.error_mask">
 <code class="descname">error_mask</code><a class="headerlink" href="#sls_detector.Detector.error_mask" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -344,22 +334,72 @@ reading out analog test pulses.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.exposure_time">
 <code class="descname">exposure_time</code><a class="headerlink" href="#sls_detector.Detector.exposure_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">double</span></code> Exposure time in [s] of a single frame.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_index">
 <code class="descname">file_index</code><a class="headerlink" href="#sls_detector.Detector.file_index" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> Index for frames and filenames</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – If the user tries to set an index less than zero</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_index</span>
+<span class="o">&gt;&gt;</span> <span class="mi">0</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">file_index</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">file_index</span>
+<span class="o">&gt;&gt;</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_name">
 <code class="descname">file_name</code><a class="headerlink" href="#sls_detector.Detector.file_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – Base file name for writing images</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_name</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;run&#39;</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;myrun&#39;</span>
+
+<span class="c1">#For a single acqusition the detector now writes</span>
+<span class="c1"># myrun_master_0.raw</span>
+<span class="c1"># myrun_d0_0.raw</span>
+<span class="c1"># myrun_d1_0.raw</span>
+<span class="c1"># myrun_d2_0.raw</span>
+<span class="c1"># myrun_d3_0.raw</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_path">
 <code class="descname">file_path</code><a class="headerlink" href="#sls_detector.Detector.file_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – Path where images are written</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">FileNotFoundError</span></code> – If path does not exists</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_path</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;/path/to/files&#39;</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;/new/path/to/other/files&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_write">
@@ -373,6 +413,13 @@ reading out analog test pulses.</p>
 <dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> Firmware version of the detector</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="sls_detector.Detector.frames_caught">
+<code class="descname">frames_caught</code><a class="headerlink" href="#sls_detector.Detector.frames_caught" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of frames caught by the receiver. Can be used to check for
+package loss.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="sls_detector.Detector.free_shared_memory">
 <code class="descname">free_shared_memory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.free_shared_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.free_shared_memory" title="Permalink to this definition">¶</a></dt>
@@ -383,11 +430,6 @@ reading out analog test pulses.</p>
 reconfigured</p>
 </div>
 </dd></dl>
-
-<dl class="method">
-<dt id="sls_detector.Detector.hej">
-<code class="descname">hej</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.hej"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.hej" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.high_voltage">
@@ -582,9 +624,24 @@ detectors</td>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.receiver_frame_index">
+<code class="descname">receiver_frame_index</code><a class="headerlink" href="#sls_detector.Detector.receiver_frame_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.receiver_online">
 <code class="descname">receiver_online</code><a class="headerlink" href="#sls_detector.Detector.receiver_online" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="sls_detector.Detector.reset_frames_caught">
+<code class="descname">reset_frames_caught</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.reset_frames_caught"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.reset_frames_caught" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the number of frames caught by the receiver.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Automatically done when using d.acq()</p>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_datastream">
@@ -657,11 +714,16 @@ switching. For EIGER almost always standard</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sls_detector.Detector.start_acq">
-<code class="descname">start_acq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.start_acq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.start_acq" title="Permalink to this definition">¶</a></dt>
+<dt id="sls_detector.Detector.start_detector">
+<code class="descname">start_detector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.start_detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.start_detector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Non blocking command to star acquisition. Needs to be used in combination
 with receiver start.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="sls_detector.Detector.start_receiver">
+<code class="descname">start_receiver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.start_receiver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.start_receiver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.status">
@@ -674,10 +736,15 @@ with receiver start.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sls_detector.Detector.stop_acq">
-<code class="descname">stop_acq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.stop_acq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.stop_acq" title="Permalink to this definition">¶</a></dt>
+<dt id="sls_detector.Detector.stop_detector">
+<code class="descname">stop_detector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.stop_detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.stop_detector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop acquisition early or if the detector hangs</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="sls_detector.Detector.stop_receiver">
+<code class="descname">stop_receiver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.stop_receiver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.stop_receiver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.sub_exposure_time">
@@ -714,6 +781,11 @@ a
 </pre></div>
 </div>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.threaded">
+<code class="descname">threaded</code><a class="headerlink" href="#sls_detector.Detector.threaded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.threshold">
@@ -755,11 +827,6 @@ the range for which the calibration of the detector is valid.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="sls_detector.Detector.vcmp">
-<code class="descname">vcmp</code><a class="headerlink" href="#sls_detector.Detector.vcmp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="sls_detector.Detector.vthreshold">
 <code class="descname">vthreshold</code><a class="headerlink" href="#sls_detector.Detector.vthreshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Threshold in DAC units for the detector</p>
@@ -776,6 +843,20 @@ the range for which the calibration of the detector is valid.</p>
 <p>Subclass of detector to populte the right dacs and provide detector
 specific functions</p>
 <dl class="attribute">
+<dt id="sls_detector.Eiger.active">
+<code class="descname">active</code><a class="headerlink" href="#sls_detector.Eiger.active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the detector active? Can be used to disable</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">active</span>
+<span class="o">&gt;&gt;</span> <span class="n">active</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+
+<span class="n">d</span><span class="o">.</span><span class="n">active</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="o">&gt;&gt;</span> <span class="n">active</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Eiger.add_gappixels">
 <code class="descname">add_gappixels</code><a class="headerlink" href="#sls_detector.Eiger.add_gappixels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable or disable the (virual) pixels between ASICs</p>
@@ -786,6 +867,21 @@ specific functions</p>
 <span class="o">&gt;&gt;</span> <span class="kc">True</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="sls_detector.Eiger.default_settings">
+<code class="descname">default_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.default_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.default_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset the detector to some type of standard settings</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.eiger_matrix_reset">
+<code class="descname">eiger_matrix_reset</code><a class="headerlink" href="#sls_detector.Eiger.eiger_matrix_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix reset bit for Eiger.</p>
+<p><code class="xref py py-obj docutils literal"><span class="pre">True</span></code> : Normal operation, the matrix is reset befor each acq.
+<code class="xref py py-obj docutils literal"><span class="pre">False</span></code> : Matrix reset disableld. Used to not reset before
+reading out analog test pulses.</p>
 </dd></dl>
 
 <dl class="method">
@@ -837,6 +933,16 @@ here they are grouped for each detector</p>
 <code class="descname">setup500k</code><span class="sig-paren">(</span><em>hostnames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.setup500k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.setup500k" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup the eiger detector to run on the local machine</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.tengiga">
+<code class="descname">tengiga</code><a class="headerlink" href="#sls_detector.Eiger.tengiga" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.vcmp">
+<code class="descname">vcmp</code><a class="headerlink" href="#sls_detector.Eiger.vcmp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

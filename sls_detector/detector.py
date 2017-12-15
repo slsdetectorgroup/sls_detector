@@ -108,45 +108,6 @@ class Dac(DetectorProperty):
         self.get = partial(self._detector._api.getDac, self.name)
         self.set = partial(self._detector._api.setDac, self.name)
 
-#    def __getitem__(self, key):
-#        """
-#        Get dacs either by slice, key or list
-#        """
-#        if key == slice(None, None, None):
-#            return [self.get(i) for i in range(self._n_modules)]
-#        elif isinstance(key, Iterable):
-#            return [self.get(k) for k in key]
-#        else:
-#            return self.get(key)
-
-#    def __setitem__(self, key, value):
-#        """
-#        Set dacs either by slice, key or list. Supports values that can
-#        be iterated over.
-#        """
-#        
-#        if key == slice(None, None, None):
-#            if isinstance(value, (np.integer, int)):
-#                for i in range(self._n_modules):
-#                    self.set(i, value)
-#            elif isinstance(value, Iterable):
-#                for i in range(self._n_modules):
-#                    self.set(i, value[i])
-#            else:
-#                raise ValueError('Value should be int or np.integer not', type(value))
-#
-#        elif isinstance(key, Iterable):
-#            if isinstance(value, Iterable):
-#                for k,v in zip(key, value):
-#                    self.set(k,v)
-#
-#            elif isinstance(value, int):
-#                for k in key:
-#                    self.set(k, value)
-#
-#
-#        elif isinstance(key, int):
-#            self.set(key, value)
 
     def __repr__(self):
         """String representation for a single dac in all modules"""
@@ -636,6 +597,15 @@ class Detector:
         """
         return self._api.getFirmwareVersion()
 
+
+    @property
+    def frames_caught(self):
+        """
+        Number of frames caught by the receiver. Can be used to check for
+        package loss.
+        """
+        return self._api.getFramesCaughtByReceiver()
+
     def free_shared_memory(self):
         """
         Free the shared memory that contains the detector settings
@@ -894,6 +864,18 @@ class Detector:
         self._api.setReceiverOnline(value)
 
 
+    def reset_frames_caught(self):
+        """
+        Reset the number of frames caught by the receiver. 
+        
+        .. note ::
+            
+            Automatically done when using d.acq()
+            
+            
+        """
+        self._api.resetFramesCaught()
+
     @property
     @error_handling
     def period(self):
@@ -968,6 +950,10 @@ class Detector:
         speed = self._speed_int[value]
         self._api.setReadoutClockSpeed(speed)
 
+
+    @property
+    def receiver_frame_index(self):
+        return self._api.getReceiverCurrentFrameIndex()
 
     @property
     @error_handling
@@ -1134,18 +1120,25 @@ class Detector:
         """
         return self._api.getRunStatus()
 
-    def start_acq(self):
+    def start_detector(self):
         """
         Non blocking command to star acquisition. Needs to be used in combination
         with receiver start.
         """
         self._api.startAcquisition()
 
-    def stop_acq(self):
+    def stop_detector(self):
         """
         Stop acquisition early or if the detector hangs
         """
         self._api.stopAcquisition()
+
+
+    def start_receiver(self):
+        self._api.startReceiver()
+        
+    def stop_receiver(self):
+        self._api.stopReceiver()
 
     @property
     def sub_exposure_time(self):
@@ -1170,6 +1163,15 @@ class Detector:
         else:
             raise ValueError('Sub exposure time must be larger than 0')
 
+
+
+    @property
+    def threaded(self):
+        return self._api.getThreadedProcessing()
+    
+    @threaded.setter
+    def threaded(self, value):
+        self._api.setThreadedProcessing(value)
 
     @property
     def threshold(self):

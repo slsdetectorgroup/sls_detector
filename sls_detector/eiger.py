@@ -263,6 +263,17 @@ class Eiger(Detector):
 #        print(p0,p1)
         self._api.setNetworkParameter('rx_udpport', p0)
         self._api.setNetworkParameter('rx_udpport2', p1)
+
+    @property
+    @error_handling
+    def tengiga(self):
+        """enable 10Gbit data output"""
+        return self._api.getTenGigabitEthernet()
+    
+    @tengiga.setter
+    @error_handling
+    def tengiga(self, value):
+        self._api.setTenGigabitEthernet(value)
         
     def setup500k(self, hostnames):
         """

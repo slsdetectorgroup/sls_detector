@@ -12,11 +12,11 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 
 .. py:currentmodule:: sls_detector
 
-.. |resmat| replace:: :py:attr:`Detector.eiger_matrix_reset`
+.. |resmat| replace:: :py:attr:`Eiger.eiger_matrix_reset`
 .. |stat| replace:: :py:attr:`Detector.status`
 .. |ro| replace:: *(read only)* 
-.. |start| replace:: :py:func:`Detector.start_acq` 
-.. |stop| replace:: :py:func:`Detector.stop_acq` 
+.. |start| replace:: :py:func:`Detector.start_detector` 
+.. |stop| replace:: :py:func:`Detector.stop_detector` 
 .. |conf| replace:: :py:func:`Detector.load_config` 
 .. |pars| replace:: :py:func:`Detector.load_parameters` 
 .. |free| replace:: :py:func:`Detector.free_shared_memory` 
@@ -36,6 +36,9 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |rxd| replace:: :py:attr:`Detector.rx_datastream`
 .. |temp_fpgaext| replace:: :py:attr:`Detector.temp`.fpgaext
 .. |epa| replace:: :py:func:`Eiger.pulse_all_pixels` 
+.. |rfc| replace:: :py:func:`Detector.reset_frames_caught` 
+.. |rfi| replace:: :py:attr:`Detector.receiver_frame_index` 
+.. |ron| replace:: :py:attr:`Detector.receiver_online`
 
 ------------------------
 Commands
@@ -45,8 +48,8 @@ Commands
 Command               Python                              Implementation     Tests
 ===================== ================================= ================== =========
 sls_detector_acquire   :py:func:`Detector.acq`               OK               No
-test
-help
+test                   Also not in the cmdline?
+help                   help(Detector.acq)
 exitserver
 exitreceiver
 flippeddatay           Also not in the cmdline?
@@ -87,7 +90,7 @@ roi                    |g|
 detsizechan           :py:attr:`Detector.image_size`           OK
 roimask                ??
 flippeddatax
-tengiga
+tengiga               :py:attr:`Eiger.tengiga`
 gappixels             :py:attr:`Eiger.add_gappixels`       OK
 flags
 extsig                 |mg|
@@ -155,7 +158,7 @@ angdir
 moveflag
 samplex
 sampley
-threaded
+threaded              :py:attr:`Detector.threaded`
 darkimage
 gainimage 
 settingsdir           :py:attr:`Detector.settings_path`
@@ -167,81 +170,20 @@ threshold             :py:attr:`Detector.threshold`
 thresholdnotb
 trimbits              :py:func:`Detector.load_trimbits`
 trim
-trimval               |tb|                               OK                 OK
+trimval               |tb|                                    OK             OK
 pedestal
-vthreshold
-vcalibration
-vtrimbit
-vpreamp
-vshaper1
-vshaper2
-vhighvoltage          :py:attr:`Detector.high_voltage`   OK
-vapower
-vddpower
-vshpower
-viopower
-vref_ds
-vcascn_pb
-vcascp_pb
-vout_cm
-vcasc_out
-vin_cm
-vref_comp
-ib_test_c
-dac0
-dac1
-dac2
-dac3
-dac4
-dac5
-dac6
-dac7
-vsvp
-vsvn
-vtr
-vrf
-vrs
-vtgstv
-vcmp_ll
-vcmp_lr
-vcall
-vcmp_rl
-vcmp_rr
-rxb_rb
-rxb_lb
-vcp
-vcn
-vis
-iodelay             
-dac
-adcvpp
-v_a
-v_b
-v_c
-v_d
-v_io
-v_chip
-v_limit
+vthreshold            :py:attr:`Detector.vthreshold`
+vhighvoltage          :py:attr:`Detector.high_voltage`         OK
 temp_adc
-temp_fpga               :py:attr:`Detector.temp`.fpga          OK
-temp_fpgaext             |temp_fpgaext|                        OK
-temp_10ge               :py:attr:`Detector.temp`.t10ge         OK
-temp_dcdc               :py:attr:`Detector.temp`.dcdc          OK
-temp_sodl               :py:attr:`Detector.temp`.sodl          OK
-temp_sodr               :py:attr:`Detector.temp`.sodr          OK
+temp_fpga              :py:attr:`Detector.temp`.fpga           OK
+temp_fpgaext           |temp_fpgaext|                          OK
+temp_10ge              :py:attr:`Detector.temp`.t10ge          OK
+temp_dcdc              :py:attr:`Detector.temp`.dcdc           OK
+temp_sodl              :py:attr:`Detector.temp`.sodl           OK
+temp_sodr              :py:attr:`Detector.temp`.sodr           OK
 adc
-temp_fpgafl             :py:attr:`Detector.temp`.fpgafl        OK
-temp_fpgafr             :py:attr:`Detector.temp`.fpgafr        OK
-i_a
-i_b
-i_c
-i_d
-i_io
-vm_a
-vm_b
-vm_c
-vm_d
-vm_io
+temp_fpgafl            :py:attr:`Detector.temp`.fpgafl         OK
+temp_fpgafr            :py:attr:`Detector.temp`.fpgafr         OK
 outdir                 :py:attr:`Detector.file_path`           OK            OK
 fname                  :py:attr:`Detector.file_name`           OK            OK
 index                  :py:attr:`Detector.file_index`          OK            OK
@@ -274,11 +216,11 @@ scan1par
 scan1prec
 scan1steps
 scan1range
-rx_hostname
-rx_udpip
+rx_hostname           :py:attr:`Detector.rx_hostname`
+rx_udpip              :py:attr:`Detector.rx_udpip`
 rx_udpmac
-rx_udpport
-rx_udpport2
+rx_udpport            :py:attr:`Detector.rx_udpport`
+rx_udpport2           :py:attr:`Detector.rx_udpport`
 detectormac
 detectorip
 txndelay_left
@@ -286,22 +228,22 @@ txndelay_right
 txndelay_frame
 flowcontrol_10g
 zmqport
-rx_zmqport              :py:attr:`Detector.rx_port`             Read
+rx_zmqport              :py:attr:`Detector.rx_zmqport`             Read
 rx_datastream           |rxd|                                   OK
 zmqip
 rx_zmqip                :py:attr:`Detector.rx_zmqip`            Read
 configuremac
-rx_tcpport
+rx_tcpport             :py:attr:`Detector.rx_tcpport`
 port
 stopport
 lock
 lastclient
 receiver
-r_online
+r_online              |ron|
 r_checkonline
-framescaught
-resetframescaught
-frameindex
+framescaught          :py:attr:`Detector.frames_caught`
+resetframescaught     |rfc|
+frameindex            |rfi|
 r_lock
 r_lastclient
 r_readfreq

@@ -6,12 +6,15 @@ Created on Thu Dec 14 17:12:06 2017
 @author: l_frojdh
 """
 from .errors import DetectorError
+import functools
 
 def error_handling(func):
     """
     decorator to check for errors in the detector layer
     """
+    @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
+        
         #clear error mask to remove old errors
         self._api.clearErrorMask()
         

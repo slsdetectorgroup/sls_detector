@@ -77,8 +77,11 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getSoftwareVersion", &Detector::getSoftwareVersion)
             .def("getRateCorrection", &Detector::getRateCorrection)
             .def("setRateCorrection", &Detector::setRateCorrection)
+
             .def("startAcquisition", &Detector::startAcquisition)
             .def("stopAcquisition", &Detector::stopAcquisition)
+            .def("startReceiver", &Detector::startReceiver)
+            .def("stopReceiver", &Detector::stopReceiver)
             .def("getFilePath", &Detector::getFilePath)
             .def("setFilePath", &Detector::setFilePath)
             .def("setFileName", &Detector::setFileName)
@@ -114,8 +117,9 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setDacVthreshold", &Detector::setDacVthreshold)
             .def("setNumberOfFrames", &Detector::setNumberOfFrames)
             .def("getNumberOfFrames", &Detector::getNumberOfFrames)
-
-
+            .def("getFramesCaughtByReceiver", &Detector::getFramesCaughtByReceiver)
+            .def("resetFramesCaught", &Detector::resetFramesCaught)
+            .def("getReceiverCurrentFrameIndex", &Detector::getReceiverCurrentFrameIndex)
             .def("getGapPixels", &Detector::getGapPixels)
             .def("setGapPixels", &Detector::setGapPixels)
 
@@ -128,6 +132,11 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("getActive", &Detector::getActive)
             .def("setActive", &Detector::setActive)
+            .def("getThreadedProcessing", &Detector::getThreadedProcessing)
+            .def("setThreadedProcessing", &Detector::setThreadedProcessing)
+
+            .def("getTenGigabitEthernet", &Detector::getTenGigabitEthernet)
+            .def("setTenGigabitEthernet", &Detector::setTenGigabitEthernet)
 
             .def("getImageSize", &Detector::getImageSize)
             .def("setImageSize", &Detector::setImageSize)

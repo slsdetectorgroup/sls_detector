@@ -199,12 +199,12 @@ Python class. If you need this functionallity please contact the SLS Detector Gr
 <td>No</td>
 </tr>
 <tr class="row-odd"><td>test</td>
-<td>&#160;</td>
+<td>Also not in the cmdline?</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
 <tr class="row-even"><td>help</td>
-<td>&#160;</td>
+<td>help(Detector.acq)</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
@@ -284,12 +284,12 @@ Python class. If you need this functionallity please contact the SLS Detector Gr
 <td>&#160;</td>
 </tr>
 <tr class="row-even"><td>status start</td>
-<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.start_acq" title="sls_detector.Detector.start_acq"><code class="xref py py-func docutils literal"><span class="pre">Detector.start_acq()</span></code></a></td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.start_detector" title="sls_detector.Detector.start_detector"><code class="xref py py-func docutils literal"><span class="pre">Detector.start_detector()</span></code></a></td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
 <tr class="row-odd"><td>status stop</td>
-<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.stop_acq" title="sls_detector.Detector.stop_acq"><code class="xref py py-func docutils literal"><span class="pre">Detector.stop_acq()</span></code></a></td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.stop_detector" title="sls_detector.Detector.stop_detector"><code class="xref py py-func docutils literal"><span class="pre">Detector.stop_detector()</span></code></a></td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
@@ -314,7 +314,7 @@ Python class. If you need this functionallity please contact the SLS Detector Gr
 <td>&#160;</td>
 </tr>
 <tr class="row-even"><td>resmat</td>
-<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.eiger_matrix_reset" title="sls_detector.Detector.eiger_matrix_reset"><code class="xref py py-attr docutils literal"><span class="pre">Detector.eiger_matrix_reset</span></code></a></td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Eiger.eiger_matrix_reset" title="sls_detector.Eiger.eiger_matrix_reset"><code class="xref py py-attr docutils literal"><span class="pre">Eiger.eiger_matrix_reset</span></code></a></td>
 <td>OK</td>
 <td>OK</td>
 </tr>
@@ -409,7 +409,7 @@ Python class. If you need this functionallity please contact the SLS Detector Gr
 <td>&#160;</td>
 </tr>
 <tr class="row-odd"><td>tengiga</td>
-<td>&#160;</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Eiger.tengiga" title="sls_detector.Eiger.tengiga"><code class="xref py py-attr docutils literal"><span class="pre">Eiger.tengiga</span></code></a></td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
@@ -749,7 +749,7 @@ Python class. If you need this functionallity please contact the SLS Detector Gr
 <td>&#160;</td>
 </tr>
 <tr class="row-odd"><td>threaded</td>
-<td>&#160;</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.threaded" title="sls_detector.Detector.threaded"><code class="xref py py-attr docutils literal"><span class="pre">Detector.threaded</span></code></a></td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
@@ -819,791 +819,486 @@ Python class. If you need this functionallity please contact the SLS Detector Gr
 <td>&#160;</td>
 </tr>
 <tr class="row-odd"><td>vthreshold</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vcalibration</td>
-<td>&#160;</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.vthreshold" title="sls_detector.Detector.vthreshold"><code class="xref py py-attr docutils literal"><span class="pre">Detector.vthreshold</span></code></a></td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>vtrimbit</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vpreamp</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vshaper1</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vshaper2</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vhighvoltage</td>
+<tr class="row-even"><td>vhighvoltage</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.high_voltage" title="sls_detector.Detector.high_voltage"><code class="xref py py-attr docutils literal"><span class="pre">Detector.high_voltage</span></code></a></td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>vapower</td>
+<tr class="row-odd"><td>temp_adc</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>vddpower</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vshpower</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>viopower</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vref_ds</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vcascn_pb</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vcascp_pb</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vout_cm</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vcasc_out</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vin_cm</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vref_comp</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>ib_test_c</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>dac0</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>dac1</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>dac2</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>dac3</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>dac4</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>dac5</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>dac6</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>dac7</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vsvp</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vsvn</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vtr</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vrf</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vrs</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vtgstv</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vcmp_ll</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vcmp_lr</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vcall</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vcmp_rl</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vcmp_rr</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>rxb_rb</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>rxb_lb</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vcp</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vcn</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vis</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>iodelay</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>dac</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>adcvpp</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>v_a</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>v_b</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>v_c</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>v_d</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>v_io</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>v_chip</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>v_limit</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>temp_adc</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>temp_fpga</td>
+<tr class="row-even"><td>temp_fpga</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.fpga</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>temp_fpgaext</td>
+<tr class="row-odd"><td>temp_fpgaext</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.fpgaext</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>temp_10ge</td>
+<tr class="row-even"><td>temp_10ge</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.t10ge</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>temp_dcdc</td>
+<tr class="row-odd"><td>temp_dcdc</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.dcdc</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>temp_sodl</td>
+<tr class="row-even"><td>temp_sodl</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.sodl</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>temp_sodr</td>
+<tr class="row-odd"><td>temp_sodr</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.sodr</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>adc</td>
+<tr class="row-even"><td>adc</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>temp_fpgafl</td>
+<tr class="row-odd"><td>temp_fpgafl</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.fpgafl</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>temp_fpgafr</td>
+<tr class="row-even"><td>temp_fpgafr</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.temp" title="sls_detector.Detector.temp"><code class="xref py py-attr docutils literal"><span class="pre">Detector.temp</span></code></a>.fpgafr</td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>i_a</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>i_b</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>i_c</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>i_d</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>i_io</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vm_a</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vm_b</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vm_c</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>vm_d</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>vm_io</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>outdir</td>
+<tr class="row-odd"><td>outdir</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.file_path" title="sls_detector.Detector.file_path"><code class="xref py py-attr docutils literal"><span class="pre">Detector.file_path</span></code></a></td>
 <td>OK</td>
 <td>OK</td>
 </tr>
-<tr class="row-odd"><td>fname</td>
+<tr class="row-even"><td>fname</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.file_name" title="sls_detector.Detector.file_name"><code class="xref py py-attr docutils literal"><span class="pre">Detector.file_name</span></code></a></td>
 <td>OK</td>
 <td>OK</td>
 </tr>
-<tr class="row-even"><td>index</td>
+<tr class="row-odd"><td>index</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.file_index" title="sls_detector.Detector.file_index"><code class="xref py py-attr docutils literal"><span class="pre">Detector.file_index</span></code></a></td>
 <td>OK</td>
 <td>OK</td>
 </tr>
-<tr class="row-odd"><td>enablefwrite</td>
+<tr class="row-even"><td>enablefwrite</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.file_write" title="sls_detector.Detector.file_write"><code class="xref py py-attr docutils literal"><span class="pre">Detector.file_write</span></code></a></td>
 <td>OK</td>
 <td>OK</td>
 </tr>
-<tr class="row-even"><td>overwrite</td>
+<tr class="row-odd"><td>overwrite</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>currentfname</td>
+<tr class="row-even"><td>currentfname</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>fileformat</td>
+<tr class="row-odd"><td>fileformat</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>positions</td>
+<tr class="row-even"><td>positions</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>startscript</td>
+<tr class="row-odd"><td>startscript</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>startscriptpar</td>
+<tr class="row-even"><td>startscriptpar</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>stopscript</td>
+<tr class="row-odd"><td>stopscript</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>stopscriptpar</td>
+<tr class="row-even"><td>stopscriptpar</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>scriptbefore</td>
+<tr class="row-odd"><td>scriptbefore</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>scriptbeforepar</td>
+<tr class="row-even"><td>scriptbeforepar</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>scriptafter</td>
+<tr class="row-odd"><td>scriptafter</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>scriptafterpar</td>
+<tr class="row-even"><td>scriptafterpar</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>headerafter</td>
+<tr class="row-odd"><td>headerafter</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>headerbefore</td>
+<tr class="row-even"><td>headerbefore</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>headerbeforepar</td>
+<tr class="row-odd"><td>headerbeforepar</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>headerafterpar</td>
+<tr class="row-even"><td>headerafterpar</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>encallog</td>
+<tr class="row-odd"><td>encallog</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>angcallog</td>
+<tr class="row-even"><td>angcallog</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>scan0script</td>
+<tr class="row-odd"><td>scan0script</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>scan0par</td>
+<tr class="row-even"><td>scan0par</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>scan0prec</td>
+<tr class="row-odd"><td>scan0prec</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>scan0steps</td>
+<tr class="row-even"><td>scan0steps</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>scan0range</td>
+<tr class="row-odd"><td>scan0range</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>scan1script</td>
+<tr class="row-even"><td>scan1script</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>scan1par</td>
+<tr class="row-odd"><td>scan1par</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>scan1prec</td>
+<tr class="row-even"><td>scan1prec</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>scan1steps</td>
+<tr class="row-odd"><td>scan1steps</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>scan1range</td>
+<tr class="row-even"><td>scan1range</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>rx_hostname</td>
+<tr class="row-odd"><td>rx_hostname</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.rx_hostname" title="sls_detector.Detector.rx_hostname"><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_hostname</span></code></a></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>rx_udpip</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.rx_udpip" title="sls_detector.Detector.rx_udpip"><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_udpip</span></code></a></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>rx_udpmac</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>rx_udpip</td>
+<tr class="row-even"><td>rx_udpport</td>
+<td><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_udpport</span></code></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>rx_udpport2</td>
+<td><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_udpport</span></code></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>detectormac</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>rx_udpmac</td>
+<tr class="row-odd"><td>detectorip</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>rx_udpport</td>
+<tr class="row-even"><td>txndelay_left</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>rx_udpport2</td>
+<tr class="row-odd"><td>txndelay_right</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>detectormac</td>
+<tr class="row-even"><td>txndelay_frame</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>detectorip</td>
+<tr class="row-odd"><td>flowcontrol_10g</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>txndelay_left</td>
+<tr class="row-even"><td>zmqport</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>txndelay_right</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>txndelay_frame</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>flowcontrol_10g</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>zmqport</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>rx_zmqport</td>
-<td><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_port</span></code></td>
+<tr class="row-odd"><td>rx_zmqport</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.rx_zmqport" title="sls_detector.Detector.rx_zmqport"><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_zmqport</span></code></a></td>
 <td>Read</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>rx_datastream</td>
+<tr class="row-even"><td>rx_datastream</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.rx_datastream" title="sls_detector.Detector.rx_datastream"><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_datastream</span></code></a></td>
 <td>OK</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>zmqip</td>
+<tr class="row-odd"><td>zmqip</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>rx_zmqip</td>
+<tr class="row-even"><td>rx_zmqip</td>
 <td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.rx_zmqip" title="sls_detector.Detector.rx_zmqip"><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_zmqip</span></code></a></td>
 <td>Read</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>configuremac</td>
+<tr class="row-odd"><td>configuremac</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>rx_tcpport</td>
+<tr class="row-even"><td>rx_tcpport</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.rx_tcpport" title="sls_detector.Detector.rx_tcpport"><code class="xref py py-attr docutils literal"><span class="pre">Detector.rx_tcpport</span></code></a></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>port</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>port</td>
+<tr class="row-even"><td>stopport</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>stopport</td>
+<tr class="row-odd"><td>lock</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>lock</td>
+<tr class="row-even"><td>lastclient</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>lastclient</td>
+<tr class="row-odd"><td>receiver</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>receiver</td>
+<tr class="row-even"><td>r_online</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.receiver_online" title="sls_detector.Detector.receiver_online"><code class="xref py py-attr docutils literal"><span class="pre">Detector.receiver_online</span></code></a></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>r_checkonline</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>r_online</td>
+<tr class="row-even"><td>framescaught</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.frames_caught" title="sls_detector.Detector.frames_caught"><code class="xref py py-attr docutils literal"><span class="pre">Detector.frames_caught</span></code></a></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>resetframescaught</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.reset_frames_caught" title="sls_detector.Detector.reset_frames_caught"><code class="xref py py-func docutils literal"><span class="pre">Detector.reset_frames_caught()</span></code></a></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>frameindex</td>
+<td><a class="reference internal" href="sls_detector.html#sls_detector.Detector.receiver_frame_index" title="sls_detector.Detector.receiver_frame_index"><code class="xref py py-attr docutils literal"><span class="pre">Detector.receiver_frame_index</span></code></a></td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>r_lock</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>r_checkonline</td>
+<tr class="row-even"><td>r_lastclient</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>framescaught</td>
+<tr class="row-odd"><td>r_readfreq</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>resetframescaught</td>
+<tr class="row-even"><td>rx_fifodepth</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>frameindex</td>
+<tr class="row-odd"><td>r_silent</td>
 <td>&#160;</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>r_lock</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>r_lastclient</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>r_readfreq</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>rx_fifodepth</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>r_silent</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>adcinvert</td>
+<tr class="row-even"><td>adcinvert</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>adcdisable</td>
+<tr class="row-odd"><td>adcdisable</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>pattern</td>
+<tr class="row-even"><td>pattern</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patword</td>
+<tr class="row-odd"><td>patword</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patioctrl</td>
+<tr class="row-even"><td>patioctrl</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patclkctrl</td>
+<tr class="row-odd"><td>patclkctrl</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patlimits</td>
+<tr class="row-even"><td>patlimits</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patloop0</td>
+<tr class="row-odd"><td>patloop0</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patnloop0</td>
+<tr class="row-even"><td>patnloop0</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patwait0</td>
+<tr class="row-odd"><td>patwait0</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patwaittime0</td>
+<tr class="row-even"><td>patwaittime0</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patloop1</td>
+<tr class="row-odd"><td>patloop1</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patnloop1</td>
+<tr class="row-even"><td>patnloop1</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patwait1</td>
+<tr class="row-odd"><td>patwait1</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patwaittime1</td>
+<tr class="row-even"><td>patwaittime1</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patloop2</td>
+<tr class="row-odd"><td>patloop2</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patnloop2</td>
+<tr class="row-even"><td>patnloop2</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>patwait2</td>
+<tr class="row-odd"><td>patwait2</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>patwaittime2</td>
+<tr class="row-even"><td>patwaittime2</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>dut_clk</td>
+<tr class="row-odd"><td>dut_clk</td>
 <td>Chip test board only</td>
 <td>&#160;</td>
 <td>&#160;</td>

@@ -203,6 +203,8 @@ call using the error message from slsDetectorsSoftware</p>
 </div>
 <div class="section" id="using-decorators">
 <h2>Using decorators<a class="headerlink" href="#using-decorators" title="Permalink to this headline">¶</a></h2>
+<p>Using decorators we can reset the error mask before the command and then
+check it after the command</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1">#add decorator to check the error mask</span>
 <span class="nd">@error_handling</span>
 <span class="k">def</span> <span class="nf">some_function</span><span class="p">():</span>

@@ -174,7 +174,7 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
 <span class="kn">from</span> <span class="nn">.detector</span> <span class="k">import</span> <span class="n">Detector</span><span class="p">,</span> <span class="n">DetectorDacs</span><span class="p">,</span> <span class="n">DetectorAdcs</span><span class="p">,</span> <span class="n">Adc</span>
-
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
 
 <span class="k">class</span> <span class="nc">Register</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
@@ -228,14 +228,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_register</span> <span class="o">=</span> <span class="n">Register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">power_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">isChipPowered</span><span class="p">()</span>
     
     <span class="nd">@power_chip</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">power_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">powerChip</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Directly manipulate registers on the readout board</span>
 <span class="sd">        </span>
