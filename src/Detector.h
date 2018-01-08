@@ -16,7 +16,10 @@
 
 class Detector{
 public:
-    Detector():det(){
+    Detector(int i=0):det(i){
+        //added default arg to cope with branch
+        //removed when going back to developer
+
         //det.setOnline(slsDetectorDefs::ONLINE_FLAG);
         //det.setReceiverOnline(slsDetectorDefs::ONLINE_FLAG);
 
@@ -497,10 +500,12 @@ public:
 
 
     bool getGapPixels(){
-        return det.enableGapPixels(-1);
+        throw std::runtime_error("gap pixels only in develop");
+//        return det.enableGapPixels(-1);
     }
     void setGapPixels(bool val){
-        det.enableGapPixels(val);
+        throw std::runtime_error("gap pixels only in develop");
+//        det.enableGapPixels(val);
     }
 
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
@@ -571,7 +576,8 @@ slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_na
         return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_PORT;
     }
     else if(par_name == "rx_zmqip"){
-        return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_SRC_IP;
+        throw std::runtime_error("rx_zmqip only in developer");
+//        return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_SRC_IP;
     }
     
     return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_PORT;
