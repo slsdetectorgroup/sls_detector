@@ -26,9 +26,9 @@ class EigerVcmp:
     
     def __init__(self, detector):
         _names = ['vcmp_ll',
-              'vcmp_lr',
-              'vcmp_rl',
-              'vcmp_rr']
+                  'vcmp_lr',
+                  'vcmp_rl',
+                  'vcmp_rr']
         self.set = []
         self.get = []
         for i in range(detector.n_modules):

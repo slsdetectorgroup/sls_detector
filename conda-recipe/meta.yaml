@@ -17,10 +17,12 @@ requirements:
         - setuptools
         - pybind11
         - libgcc
+        - pyzmq
     run:
         - python
         - numpy 
         - libgcc
+        - pyzmq
 
 
 test:
