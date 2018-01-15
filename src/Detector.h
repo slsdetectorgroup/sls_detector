@@ -28,7 +28,7 @@ public:
 
     }
 
-    //get image size as [nrow, ncols]
+    //get image size as [nrow, ncols] return as a pair of ints
     std::pair<int, int> getImageSize(){
         std::pair<int, int> image_size{0,0};
         image_size.first = det.getMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::Y);
@@ -45,16 +45,18 @@ public:
     void acquire(){ det.acquire(); }
 
 
+    //for Eiger check status of  the module
+    //true active false deactivated
     bool getActive(const int i){
-
         auto d = det.getSlsDetector(i);
         if (d)
             return d->activate();
         else
             throw std::runtime_error("could not get detector");
     }
-    void setActive(const int i, bool value){
 
+    //activate or deactivate a module
+    void setActive(const int i, bool value){
         auto d = det.getSlsDetector(i);
         if (d)
             d->activate(value);
@@ -216,13 +218,10 @@ public:
         det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, speed);
     }
 
-    int getRxTcpport(int i){
-
+    int getRxTcpport(const int i){
         int port = -1;
         auto index = slsDetectorDefs::portType::DATA_PORT;
-
-        slsDetector* _d;
-        _d = det.getSlsDetector(i);
+        auto _d = det.getSlsDetector(i);
 
         //protect from accesing a nullptr
         if (_d)
@@ -230,14 +229,12 @@ public:
 
         return port;
     }
-    void setRxTcpport(int i, int value){
+    void setRxTcpport(const int i, const int value){
         auto index = slsDetectorDefs::portType::DATA_PORT;
-        slsDetector* _d;
-        _d = det.getSlsDetector(i);
+        auto _d = det.getSlsDetector(i);
         //protect from accesing a nullptr
         if (_d)
             _d->setPort(index, value);
-
     }
 
     void setRateCorrection(std::vector<double> tau){
@@ -276,18 +273,15 @@ public:
     }
 
 
-    void loadTrimbitFile(std::string fname, int idet){
+    void loadTrimbitFile(std::string fname, const int idet){
         det.loadSettingsFile(fname, idet);
     }
 
+    //Eiger: set the energies where the detector is trimmed
     void setTrimEnergies(std::vector<int> energy){
-        //int multiSlsDetector::setTrimEn(int ne, int *ene)
         det.setTrimEn(energy.size(), energy.data());
-
     }
     std::vector<int> getTrimEnergies(){
-        //int multiSlsDetector::getTrimEn(int *ene)
-
         //initial call to get legth, energies defaults to NULL
         auto n_trimen = det.getTrimEn();
         std::vector<int> trim_energies(n_trimen);
@@ -295,21 +289,19 @@ public:
         //second call to get the eneries
         det.getTrimEn(trim_energies.data());
         return trim_energies;
-
     }
 
-    void setThresholdEnergy(int eV){
+    void setThresholdEnergy(const int eV){
         //example of checking errors
+        //should now be done on the python side
         det.clearAllErrorMask();
         det.setThresholdEnergy(eV);
-
         if (det.getErrorMask()){
             int tmp=0;
             auto msg = det.getErrorMessage(tmp);
             det.clearAllErrorMask();
             throw std::runtime_error(msg);
         }
-
     }
 
     std::string getSettingsDir(){ return det.getSettingsDir(); }
@@ -368,9 +360,8 @@ public:
         det.setDAC(val, dac, 0, -1);
     }
 
-    //dacs_t multiSlsDetector::setDAC(dacs_t val, dacIndex idac, int mV, int imod)
 
-    void setFileIndex(int i){ det.setFileIndex(i); }
+    void setFileIndex(const int i){ det.setFileIndex(i); }
     int getFileIndex(){
         return det.setFileIndex(-1);
     }
@@ -381,6 +372,7 @@ public:
         auto timer = slsReceiverDefs::timerIndex::ACQUISITION_TIME;
         det.setTimer(timer, t);
     }
+
     int64_t getExposureTime(){
         //time in ns
         auto timer = slsReceiverDefs::timerIndex::ACQUISITION_TIME;
@@ -468,17 +460,16 @@ public:
     }
     
     bool getRxDataStreamStatus(){
-        auto i = det.enableDataStreamingFromReceiver();
-        if(i==0)
-            return false;
-        else
-            return true;
+        //can we implicitly convert?
+        return det.enableDataStreamingFromReceiver();
     }
     
     void setRxDataStreamStatus(bool state){
         det.enableDataStreamingFromReceiver(state);
     }
     
+    //Get a network parameter for all detectors, looping over individual detectors
+    //return a vector of strings
     std::vector<std::string> getNetworkParameter(std::string par_name){
         auto p = networkNameToEnum(par_name);
         std::vector<std::string> par;
@@ -487,8 +478,6 @@ public:
             _d = det.getSlsDetector(i);
             par.push_back(_d->getNetworkParameter(p));
         }
-
-
         return par;
     }
 
@@ -499,10 +488,16 @@ public:
     }
 
 
+    //Check if detector if filling in gap pixels in module
+    //return true if so, currently only in developer
     bool getGapPixels(){
         throw std::runtime_error("gap pixels only in develop");
 //        return det.enableGapPixels(-1);
     }
+
+
+    //Set to true to have the detector filling in gap pixels
+    //false to disable, currently only in developer
     void setGapPixels(bool val){
         throw std::runtime_error("gap pixels only in develop");
 //        det.enableGapPixels(val);
