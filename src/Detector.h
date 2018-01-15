@@ -646,7 +646,7 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
     else if(dac_name == "temp_fpgaext"){
         dac = slsDetectorDefs::dacIndex::TEMPERATURE_FPGAEXT;
     }
-    else if(dac_name == "temp_10gr"){
+    else if(dac_name == "temp_10ge"){
         dac = slsDetectorDefs::dacIndex::TEMPERATURE_10GE;
     }
     else if(dac_name == "temp_dcdc"){

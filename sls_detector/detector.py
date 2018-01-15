@@ -1229,7 +1229,8 @@ class Detector:
     @property
     def vthreshold(self):
         """
-        Threshold in DAC units for the detector
+        Threshold in DAC units for the detector. Sets the individual vcmp of 
+        all chips in the detector.
         """
         return self._api.getDac('vthreshold',-1)
 
@@ -1257,5 +1258,9 @@ class Detector:
 
 
 def free_shared_memory():
+    """
+    Function to free the shared memory. After this
+    we need to create a new detector object. 
+    """
     d = Detector()
     d.free_shared_memory()
