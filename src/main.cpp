@@ -110,6 +110,12 @@ PYBIND11_MODULE(_sls_detector, m) {
             
             .def("getNetworkParameter", &Detector::getNetworkParameter)
             .def("setNetworkParameter", &Detector::setNetworkParameter)
+            .def("getDelayFrame", &Detector::getDelayFrame)
+            .def("setDelayFrame", &Detector::setDelayFrame)
+            .def("getDelayLeft", &Detector::getDelayLeft)
+            .def("setDelayLeft", &Detector::setDelayLeft)
+            .def("getDelayRight", &Detector::getDelayRight)
+            .def("setDelayRight", &Detector::setDelayRight)
 
             .def("setFileWrite", &Detector::setFileWrite)
             .def("getFileWrite", &Detector::getFileWrite)

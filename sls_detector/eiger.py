@@ -69,6 +69,60 @@ class EigerDacs(DetectorDacs):
              ('iodelay', 0, 4000,  660)]
     _dacnames = [_d[0] for _d in _dacs]
 
+
+class DetectorDelays:
+    _delaynames = ['frame', 'left', 'right']
+    def __init__(self, detector):
+        #We need to at least initially know which detector we are connected to
+        self._detector = detector
+        
+        setattr(self, '_frame', DetectorProperty(detector._api.getDelayFrame,
+                                        detector._api.setDelayFrame,
+                                        detector._api.getNumberOfDetectors,
+                                        'frame'))
+
+        setattr(self, '_left', DetectorProperty(detector._api.getDelayLeft,
+                                        detector._api.setDelayLeft,
+                                        detector._api.getNumberOfDetectors,
+                                        'left'))
+
+        setattr(self, '_right', DetectorProperty(detector._api.getDelayRight,
+                                        detector._api.setDelayRight,
+                                        detector._api.getNumberOfDetectors,
+                                        'right'))
+        #Index to support iteration
+        self._current = 0
+
+    def __getattr__(self, name):
+        return self.__getattribute__('_' + name)
+
+
+    def __setattr__(self, name, value):
+        if name in self._delaynames:
+            return self.__getattribute__('_' + name).__setitem__(slice(None, None, None), value)
+        else:
+            super().__setattr__(name, value)
+
+    def __next__(self):
+        if self._current >= len(self._delaynames):
+            self._current = 0
+            raise StopIteration
+        else:
+            self._current += 1
+            return self.__getattr__(self._delaynames[self._current-1])
+
+    def __iter__(self):
+        return self
+
+    def __repr__(self):
+        hn = self._detector.hostname
+        r_str = ['Transmission delay [ns]\n'
+                 '{:11s}{:>8s}{:>8s}{:>8s}'.format('', 'left', 'right', 'frame')]
+        for i in range(self._detector.n_modules):
+            r_str.append( '{:2d}:{:8s}{:>8d}{:>8d}{:>8d}'.format(i, hn[i], self.left[i], self.right[i], self.frame[i]))
+        return '\n'.join(r_str)
+
+
 class Eiger(Detector):
     """
     Subclass of detector to populte the right dacs and provide detector
@@ -84,12 +138,23 @@ class Eiger(Detector):
         self._dacs = EigerDacs(self)
         self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
         
+        self._delay = DetectorDelays(self)
         
-        self._active = DetectorProperty(self._api.getActive,
-                                        self._api.setActive,
-                                        self._api.getNumberOfDetectors,
-                                        'active')
-        
+#        self._active = DetectorProperty(self._api.getActive,
+#                                        self._api.setActive,
+#                                        self._api.getNumberOfDetectors,
+#                                        'active')
+#        
+#        self._delay_frame = DetectorProperty(self._api.getDelayFrame,
+#                                        self._api.setDelayFrame,
+#                                        self._api.getNumberOfDetectors,
+#                                        'delay_frame')        
+#        self._delay_frame = DetectorProperty(self._api.getDelayFrame,
+#                                        self._api.setDelayFrame,
+#                                        self._api.getNumberOfDetectors,
+#                                        'delay_frame') 
+
+
         #Eiger specific adcs
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
@@ -101,6 +166,8 @@ class Eiger(Detector):
         self._temp.fpgafl = Adc('temp_fpgafl', self)
         self._temp.fpgafr = Adc('temp_fpgafr', self)
    
+
+
 
 
     @property
@@ -149,6 +216,32 @@ class Eiger(Detector):
         self._api.setGapPixels(value)
 
 
+
+    @property
+    def delay(self):
+        return self._delay
+#    @property
+#    @error_handling
+#    def delay_frame(self):
+#        return self._delay_frame
+#    
+#    @delay_frame.setter
+#    @error_handling
+#    def delay_frame(self, value):
+#        self._delay_frame[:] = value
+#
+#    @property
+#    @error_handling
+#    def delay_left(self):
+#        return self._delay_left
+#    
+#    @delay_left.setter
+#    @error_handling
+#    def delay_left(self, value):
+#        self._delay_left[:] = value
+
+
+        
     def default_settings(self):
         """
         reset the detector to some type of standard settings

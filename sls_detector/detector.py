@@ -999,7 +999,7 @@ class Detector:
         if isinstance(names, list):
             names = '+'.join(n for n in names)+'+'
 
-        self._api.setNetworkParameter('rx_hostname', names)
+        self._api.setNetworkParameter('rx_hostname', names, -1)
 
     @property
     @error_handling

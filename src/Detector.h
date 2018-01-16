@@ -47,8 +47,8 @@ public:
 
     //for Eiger check status of  the module
     //true active false deactivated
-    bool getActive(const int i){
-        auto d = det.getSlsDetector(i);
+    bool getActive(const int det_id){
+        auto d = det.getSlsDetector(det_id);
         if (d)
             return d->activate();
         else
@@ -56,8 +56,8 @@ public:
     }
 
     //activate or deactivate a module
-    void setActive(const int i, bool value){
-        auto d = det.getSlsDetector(i);
+    void setActive(const int det_id, bool value){
+        auto d = det.getSlsDetector(det_id);
         if (d)
             d->activate(value);
         else
@@ -481,10 +481,86 @@ public:
         return par;
     }
 
-    //Set network parameter for all detectors by passing a string
-    void setNetworkParameter(std::string par_name, std::string par){
+    //Set network parameter for all modules if det_id == -1 otherwise the module
+    //specified with det_id.
+    void setNetworkParameter(std::string par_name, std::string par, const int det_id){
         auto p = networkNameToEnum(par_name);
-        det.setNetworkParameter(p, par);
+        if (det_id == -1){
+            det.setNetworkParameter(p, par);
+        }else{
+            auto _d = det.getSlsDetector(det_id);
+            if (_d)
+                _d->setNetworkParameter(p, par);
+            else
+                throw std::runtime_error("could not get detector");
+        }
+
+    }
+
+
+    //get frame delay of module (det_id) in ns
+    int getDelayFrame(const int det_id){
+        auto _d = det.getSlsDetector(det_id);
+        if (_d){
+            auto r = _d->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_FRAME);
+            return std::stoi(r);
+
+        }else{
+            throw std::runtime_error("could not get detector");
+        }
+    }
+    //set frame delay of module (det_id) in ns
+    void setDelayFrame(const int det_id, const int delay){
+        auto delay_str = std::to_string(delay);
+        auto _d = det.getSlsDetector(det_id);
+        if (_d){
+            _d->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_FRAME, delay_str);
+        }else{
+            throw std::runtime_error("could not get detector");
+        }
+    }
+
+    //get delay left of module (det_id) in ns
+    int getDelayLeft(const int det_id){
+        auto _d = det.getSlsDetector(det_id);
+        if (_d){
+            auto r = _d->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT);
+            return std::stoi(r);
+
+        }else{
+            throw std::runtime_error("could not get detector");
+        }
+    }
+    //set delay left of module (det_id) in ns
+    void setDelayLeft(const int det_id, const int delay){
+        auto delay_str = std::to_string(delay);
+        auto _d = det.getSlsDetector(det_id);
+        if (_d){
+            _d->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT, delay_str);
+        }else{
+            throw std::runtime_error("could not get detector");
+        }
+    }
+    //get delay right of module (det_id) in ns
+    int getDelayRight(const int det_id){
+        auto _d = det.getSlsDetector(det_id);
+        if (_d){
+            auto r = _d->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT);
+            return std::stoi(r);
+
+        }else{
+            throw std::runtime_error("could not get detector");
+        }
+    }
+    //set delay right of module (det_id) in ns
+    void setDelayRight(const int det_id, const int delay){
+        auto delay_str = std::to_string(delay);
+        auto _d = det.getSlsDetector(det_id);
+        if (_d){
+            _d->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT, delay_str);
+        }else{
+            throw std::runtime_error("could not get detector");
+        }
     }
 
 
