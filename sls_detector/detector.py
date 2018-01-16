@@ -275,7 +275,7 @@ class Detector:
 
     def acq(self):
         """
-        Issue an aquire command to start the measurement
+        Blocking command. Acquire the number of frames specified by frames, cycles etc.
         """
         self._api.acq()
 
@@ -289,7 +289,7 @@ class Detector:
         Returns
         --------
         bool
-            :py:obj:`True` if the detector is acqiring otherwise :py:obj:`False`
+            :py:obj:`True` if the detector is acquiring otherwise :py:obj:`False`
 
 
         """
@@ -317,7 +317,7 @@ class Detector:
             temp_fpgafl   :  33.81°C,  30.93°C
             temp_fpgafr   :  27.88°C,  29.15°C
         
-            a = detector.temp_fpga[:]
+            a = detector.temp.fpga[:]
             a
             >> [36.568, 45.542]
             
@@ -328,10 +328,12 @@ class Detector:
 
 
     def clear_errors(self):
+        """Clear the error mask for the detector. Used to reset after checking."""
         self._api.clearErrorMask()
 
     @property
     def cycles(self):
+        """Number of cycles for the measurement (exp*n_frames)*cycles"""
         return self._api.getCycles()
     
     @cycles.setter
@@ -455,10 +457,12 @@ class Detector:
 
     @property
     def error_mask(self):
+        """Read the error mask from the slsDetectorSoftware"""
         return self._api.getErrorMask()
     
     @property
     def error_message(self):
+        """Read the error message from the slsDetectorSoftware"""
         return self._api.getErrorMessage()
 
     @property
@@ -482,7 +486,7 @@ class Detector:
     @error_handling
     def file_index(self):
         """
-        :obj:`int` Index for frames and filenames
+        :obj:`int` Index for frames and file names
 
         Raises
         -------
@@ -673,7 +677,7 @@ class Detector:
         
         .. note ::
             
-            Follows the normal convetion in Python of (rows, cols)
+            Follows the normal convention in Python of (rows, cols)
 
         Examples
         ----------
@@ -724,7 +728,7 @@ class Detector:
 
         .. note ::
 
-            If you are reling mainly on the Python API it is probably
+            If you are relying mainly on the Python API it is probably
             better to track the settings from Python. This function uses
             parameters stored in a text file and the command line commands.
 
@@ -856,6 +860,20 @@ class Detector:
     @property
     @error_handling
     def receiver_online(self):
+        """
+        Online flag for the receiver. Is set together with detector.online when creating the detector object
+
+        Examples
+        ---------
+
+        ::
+
+            d.receiver_online
+            >> True
+
+            d.receiver_online = False
+
+        """
         return self._api.getReceiverOnline()
     
     @receiver_online.setter
@@ -913,7 +931,7 @@ class Detector:
         Raises
         -------
         ValueError
-            If the passed list is not of the same lenght as the number of
+            If the passed list is not of the same length as the number of
             detectors
 
         Examples
@@ -941,6 +959,26 @@ class Detector:
     @property
     @error_handling
     def readout_clock(self):
+        """
+        Speed of the readout clock relative to the full speed
+
+        * Full Speed
+        * Half Speed
+        * Quarter Speed
+        * Super Slow Speed
+
+        Examples
+        ---------
+
+        ::
+
+            d.readout_clock
+            >> 'Half Speed'
+
+            d.readout_clock = 'Full Speed'
+
+
+        """
         speed = self._api.getReadoutClockSpeed()
         return self._speed_names[speed]
 
@@ -1110,7 +1148,7 @@ class Detector:
     @error_handling
     def status(self):
         """
-        :py:obj`str` Status of the detector: idle, running,
+        :py:obj:`str` Status of the detector: idle, running,
 
         .. todo ::
 
@@ -1167,6 +1205,20 @@ class Detector:
 
     @property
     def threaded(self):
+        """
+        Enable parallel execution of commands to the different detector modules
+
+        Examples
+        ----------
+
+        ::
+
+            d.threaded
+            >> True
+
+            d.threaded = False
+
+        """
         return self._api.getThreadedProcessing()
     
     @threaded.setter
@@ -1241,15 +1293,28 @@ class Detector:
     @property
     def trimbits(self):
         """
-        :py:obj`int` trimbits of the detector.
+        Set or read trimbits of the detector.
+
+        Examples
+        ---------
+
+        ::
+
+            #Set all to 32
+            d.trimbits = 32
+
+            d.trimbits
+            >> 32
+
+            #if undefined or different
+            d.trimbits
+            >> -1
+
         """
         return self._api.getAllTrimbits()
 
     @trimbits.setter
     def trimbits(self, value):
-        """
-        test
-        """
         if self._trimbit_limits.min <= value <= self._trimbit_limits.max:
             self._api.setAllTrimbits(value)
         else:

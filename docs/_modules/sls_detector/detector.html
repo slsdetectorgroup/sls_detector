@@ -439,7 +439,7 @@
 
 <div class="viewcode-block" id="Detector.acq"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.acq">[docs]</a>    <span class="k">def</span> <span class="nf">acq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Issue an aquire command to start the measurement</span>
+<span class="sd">        Blocking command. Acquire the number of frames specified by frames, cycles etc.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span></div>
 
@@ -453,7 +453,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        --------</span>
 <span class="sd">        bool</span>
-<span class="sd">            :py:obj:`True` if the detector is acqiring otherwise :py:obj:`False`</span>
+<span class="sd">            :py:obj:`True` if the detector is acquiring otherwise :py:obj:`False`</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -481,7 +481,7 @@
 <span class="sd">            temp_fpgafl   :  33.81°C,  30.93°C</span>
 <span class="sd">            temp_fpgafr   :  27.88°C,  29.15°C</span>
 <span class="sd">        </span>
-<span class="sd">            a = detector.temp_fpga[:]</span>
+<span class="sd">            a = detector.temp.fpga[:]</span>
 <span class="sd">            a</span>
 <span class="sd">            &gt;&gt; [36.568, 45.542]</span>
 <span class="sd">            </span>
@@ -492,10 +492,12 @@
 
 
 <div class="viewcode-block" id="Detector.clear_errors"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.clear_errors">[docs]</a>    <span class="k">def</span> <span class="nf">clear_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear the error mask for the detector. Used to reset after checking.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">clearErrorMask</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of cycles for the measurement (exp*n_frames)*cycles&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getCycles</span><span class="p">()</span>
     
     <span class="nd">@cycles</span><span class="o">.</span><span class="n">setter</span>
@@ -619,10 +621,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">error_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read the error mask from the slsDetectorSoftware&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getErrorMask</span><span class="p">()</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read the error message from the slsDetectorSoftware&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getErrorMessage</span><span class="p">()</span>
 
     <span class="nd">@property</span>
@@ -646,7 +650,7 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :obj:`int` Index for frames and filenames</span>
+<span class="sd">        :obj:`int` Index for frames and file names</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        -------</span>
@@ -837,7 +841,7 @@
 <span class="sd">        </span>
 <span class="sd">        .. note ::</span>
 <span class="sd">            </span>
-<span class="sd">            Follows the normal convetion in Python of (rows, cols)</span>
+<span class="sd">            Follows the normal convention in Python of (rows, cols)</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        ----------</span>
@@ -888,7 +892,7 @@
 
 <span class="sd">        .. note ::</span>
 
-<span class="sd">            If you are reling mainly on the Python API it is probably</span>
+<span class="sd">            If you are relying mainly on the Python API it is probably</span>
 <span class="sd">            better to track the settings from Python. This function uses</span>
 <span class="sd">            parameters stored in a text file and the command line commands.</span>
 
@@ -1020,6 +1024,20 @@
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">receiver_online</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Online flag for the receiver. Is set together with detector.online when creating the detector object</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.receiver_online</span>
+<span class="sd">            &gt;&gt; True</span>
+
+<span class="sd">            d.receiver_online = False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverOnline</span><span class="p">()</span>
     
     <span class="nd">@receiver_online</span><span class="o">.</span><span class="n">setter</span>
@@ -1077,7 +1095,7 @@
 <span class="sd">        Raises</span>
 <span class="sd">        -------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If the passed list is not of the same lenght as the number of</span>
+<span class="sd">            If the passed list is not of the same length as the number of</span>
 <span class="sd">            detectors</span>
 
 <span class="sd">        Examples</span>
@@ -1105,6 +1123,26 @@
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">readout_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Speed of the readout clock relative to the full speed</span>
+
+<span class="sd">        * Full Speed</span>
+<span class="sd">        * Half Speed</span>
+<span class="sd">        * Quarter Speed</span>
+<span class="sd">        * Super Slow Speed</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.readout_clock</span>
+<span class="sd">            &gt;&gt; &#39;Half Speed&#39;</span>
+
+<span class="sd">            d.readout_clock = &#39;Full Speed&#39;</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReadoutClockSpeed</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_names</span><span class="p">[</span><span class="n">speed</span><span class="p">]</span>
 
@@ -1163,7 +1201,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">names</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;+&#39;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_hostname&#39;</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_hostname&#39;</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1274,7 +1312,7 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :py:obj`str` Status of the detector: idle, running,</span>
+<span class="sd">        :py:obj:`str` Status of the detector: idle, running,</span>
 
 <span class="sd">        .. todo ::</span>
 
@@ -1331,6 +1369,20 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">threaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enable parallel execution of commands to the different detector modules</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.threaded</span>
+<span class="sd">            &gt;&gt; True</span>
+
+<span class="sd">            d.threaded = False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getThreadedProcessing</span><span class="p">()</span>
     
     <span class="nd">@threaded</span><span class="o">.</span><span class="n">setter</span>
@@ -1393,7 +1445,8 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">vthreshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Threshold in DAC units for the detector</span>
+<span class="sd">        Threshold in DAC units for the detector. Sets the individual vcmp of </span>
+<span class="sd">        all chips in the detector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDac</span><span class="p">(</span><span class="s1">&#39;vthreshold&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
@@ -1404,15 +1457,28 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">trimbits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :py:obj`int` trimbits of the detector.</span>
+<span class="sd">        Set or read trimbits of the detector.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            #Set all to 32</span>
+<span class="sd">            d.trimbits = 32</span>
+
+<span class="sd">            d.trimbits</span>
+<span class="sd">            &gt;&gt; 32</span>
+
+<span class="sd">            #if undefined or different</span>
+<span class="sd">            d.trimbits</span>
+<span class="sd">            &gt;&gt; -1</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getAllTrimbits</span><span class="p">()</span>
 
     <span class="nd">@trimbits</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">trimbits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        test</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">min</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setAllTrimbits</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1421,6 +1487,10 @@
 
 
 <span class="k">def</span> <span class="nf">free_shared_memory</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to free the shared memory. After this</span>
+<span class="sd">    we need to create a new detector object. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">()</span>
     <span class="n">d</span><span class="o">.</span><span class="n">free_shared_memory</span><span class="p">()</span>
 </pre></div>

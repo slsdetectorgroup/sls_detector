@@ -179,7 +179,7 @@
 
 <span class="k">class</span> <span class="nc">EigerVcmp</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convenience class to be able to loop over vcmp for eiger</span>
+<span class="sd">    Convenience class to be able to loop over vcmp for Eiger</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    .. todo::</span>
@@ -190,9 +190,9 @@
     
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
         <span class="n">_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;vcmp_ll&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;vcmp_lr&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;vcmp_rl&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;vcmp_rr&#39;</span><span class="p">]</span>
+                  <span class="s1">&#39;vcmp_lr&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;vcmp_rl&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;vcmp_rr&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">n_modules</span><span class="p">):</span>
@@ -233,10 +233,64 @@
              <span class="p">(</span><span class="s1">&#39;iodelay&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span>  <span class="mi">660</span><span class="p">)]</span>
     <span class="n">_dacnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">_d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_d</span> <span class="ow">in</span> <span class="n">_dacs</span><span class="p">]</span>
 
+
+<span class="k">class</span> <span class="nc">DetectorDelays</span><span class="p">:</span>
+    <span class="n">_delaynames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
+        <span class="c1">#We need to at least initially know which detector we are connected to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
+        
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_frame&#39;</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDelayFrame</span><span class="p">,</span>
+                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayFrame</span><span class="p">,</span>
+                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                        <span class="s1">&#39;frame&#39;</span><span class="p">))</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_left&#39;</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDelayLeft</span><span class="p">,</span>
+                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayLeft</span><span class="p">,</span>
+                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                        <span class="s1">&#39;left&#39;</span><span class="p">))</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_right&#39;</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDelayRight</span><span class="p">,</span>
+                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayRight</span><span class="p">,</span>
+                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                        <span class="s1">&#39;right&#39;</span><span class="p">))</span>
+        <span class="c1">#Index to support iteration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delaynames</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_delaynames</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_delaynames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_current</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">hn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">hostname</span>
+        <span class="n">r_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Transmission delay [ns]</span><span class="se">\n</span><span class="s1">&#39;</span>
+                 <span class="s1">&#39;</span><span class="si">{:11s}{:&gt;8s}{:&gt;8s}{:&gt;8s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;frame&#39;</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">n_modules</span><span class="p">):</span>
+            <span class="n">r_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s1">&#39;</span><span class="si">{:2d}</span><span class="s1">:</span><span class="si">{:8s}{:&gt;8d}{:&gt;8d}{:&gt;8d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">hn</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r_str</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="Eiger"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger">[docs]</a><span class="k">class</span> <span class="nc">Eiger</span><span class="p">(</span><span class="n">Detector</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass of detector to populte the right dacs and provide detector</span>
-<span class="sd">    specific functions</span>
+<span class="sd">    Subclassing Detector to set up correct dacs and detector specific </span>
+<span class="sd">    functions. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_detector_dynamic_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
     
@@ -247,12 +301,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_vcmp</span> <span class="o">=</span> <span class="n">EigerVcmp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span> <span class="o">=</span> <span class="n">EigerDacs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;trimbit_limits&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])(</span><span class="mi">0</span><span class="p">,</span><span class="mi">63</span><span class="p">)</span>
-        
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getActive</span><span class="p">,</span>
-                                        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setActive</span><span class="p">,</span>
-                                        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
-                                        <span class="s1">&#39;active&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delay</span> <span class="o">=</span> <span class="n">DetectorDelays</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
         <span class="c1">#Eiger specific adcs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span> <span class="o">=</span> <span class="n">DetectorAdcs</span><span class="p">()</span>
@@ -266,11 +315,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgafr</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgafr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
    
 
-
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Is the detector active? Can be used to disable</span>
+<span class="sd">        Is the detector active? Can be used to enable or disable a detector</span>
+<span class="sd">        module</span>
 <span class="sd">        </span>
 <span class="sd">        Examples</span>
 <span class="sd">        ----------</span>
@@ -286,33 +336,59 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span>
     
     <span class="nd">@active</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">value</span>
 
+<span class="c1">#   Currently only supported in the developer branch of sls</span>
+<span class="c1">#</span>
+<span class="c1">#    @property</span>
+<span class="c1">#    @error_handling</span>
+<span class="c1">#    def add_gappixels(self):</span>
+<span class="c1">#        &quot;&quot;&quot;Enable or disable the (virual) pixels between ASICs</span>
+<span class="c1">#        </span>
+<span class="c1">#        Examples</span>
+<span class="c1">#        ----------</span>
+<span class="c1">#        </span>
+<span class="c1">#        ::</span>
+<span class="c1">#            </span>
+<span class="c1">#            d.add_gappixels = True</span>
+<span class="c1">#            </span>
+<span class="c1">#            d.add_gappixels</span>
+<span class="c1">#            &gt;&gt; True</span>
+<span class="c1">#        </span>
+<span class="c1">#        &quot;&quot;&quot;</span>
+<span class="c1">#        return self._api.getGapPixels()</span>
+<span class="c1">#    </span>
+<span class="c1">#    @add_gappixels.setter</span>
+<span class="c1">#    @error_handling</span>
+<span class="c1">#    def add_gappixels(self, value):</span>
+<span class="c1">#        self._api.setGapPixels(value)</span>
+
+
+
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
-    <span class="k">def</span> <span class="nf">add_gappixels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Enable or disable the (virual) pixels between ASICs</span>
-<span class="sd">        </span>
-<span class="sd">        Examples</span>
-<span class="sd">        ----------</span>
-<span class="sd">        </span>
+    <span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transmission delay of the modules to allow running the detector</span>
+<span class="sd">        in a network not supporting the full speed of the detector.</span>
+
+
 <span class="sd">        ::</span>
 <span class="sd">            </span>
-<span class="sd">            d.add_gappixels = True</span>
-<span class="sd">            </span>
-<span class="sd">            d.add_gappixels</span>
-<span class="sd">            &gt;&gt; True</span>
-<span class="sd">        </span>
+<span class="sd">            d.delay</span>
+<span class="sd">            &gt;&gt;</span>
+<span class="sd">            Transmission delay [ns]</span>
+<span class="sd">                           left   right   frame</span>
+<span class="sd">             0:beb048         0   15000       0</span>
+<span class="sd">             1:beb049       100  190000     100</span>
+<span class="sd">             </span>
+<span class="sd">             d.delay.left = [2000,5000]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getGapPixels</span><span class="p">()</span>
-    
-    <span class="nd">@add_gappixels</span><span class="o">.</span><span class="n">setter</span>
-    <span class="nd">@error_handling</span>
-    <span class="k">def</span> <span class="nf">add_gappixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setGapPixels</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delay</span>
 
-
+        
 <div class="viewcode-block" id="Eiger.default_settings"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.default_settings">[docs]</a>    <span class="k">def</span> <span class="nf">default_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        reset the detector to some type of standard settings</span>
@@ -324,17 +400,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_range</span> <span class="o">=</span> <span class="mi">16</span></div>
 
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">eiger_matrix_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Matrix reset bit for Eiger.</span>
 
-<span class="sd">        :py:obj:`True` : Normal operation, the matrix is reset befor each acq.</span>
-<span class="sd">        :py:obj:`False` : Matrix reset disableld. Used to not reset before</span>
+<span class="sd">        :py:obj:`True` : Normal operation, the matrix is reset before each acq.</span>
+<span class="sd">        :py:obj:`False` : Matrix reset disabled. Used to not reset before</span>
 <span class="sd">        reading out analog test pulses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getCounterBit</span><span class="p">()</span>
 
     <span class="nd">@eiger_matrix_reset</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">eiger_matrix_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setCounterBit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
@@ -342,7 +420,7 @@
     <span class="k">def</span> <span class="nf">pulse_all_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Pulse each pixel of the chip **n** times using the analog test pulses.</span>
-<span class="sd">        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being</span>
+<span class="sd">        The pulse height is set using d.dacs.vcall with 4000 being 0 and 0 being</span>
 <span class="sd">        the highest pulse.</span>
 <span class="sd">        </span>
 <span class="sd">        ::</span>
@@ -366,7 +444,7 @@
 <div class="viewcode-block" id="Eiger.pulse_chip"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_chip">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">pulse_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Advance the counter by toggeling enable. Gives 2*n+2 int the counter</span>
+<span class="sd">        Advance the counter by toggling enable. Gives 2*n+2 int the counter</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -378,6 +456,25 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">vcmp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience function to get and set the individual vcmp of chips</span>
+<span class="sd">        Used mainly in the calibration code.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            #Reading</span>
+<span class="sd">            d.vcmp[:]</span>
+<span class="sd">            &gt;&gt; [500, 500, 500, 500, 500, 500, 500, 500]</span>
+
+<span class="sd">            #Setting</span>
+<span class="sd">            d.vcmp = [500, 500, 500, 500, 500, 500, 500, 500]</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vcmp</span>
     
     <span class="nd">@vcmp</span><span class="o">.</span><span class="n">setter</span>
@@ -395,7 +492,7 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_udpport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        UDP port for the receiver. Each module has two ports refered to </span>
+<span class="sd">        UDP port for the receiver. Each module has two ports referred to</span>
 <span class="sd">        as rx_udpport and rx_udpport2 in the command line interface</span>
 <span class="sd">        here they are grouped for each detector</span>
 <span class="sd">        </span>
@@ -431,6 +528,19 @@
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">tengiga</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enable 10Gbit/s data output</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+<span class="sd">        </span>
+<span class="sd">        ::</span>
+<span class="sd">            </span>
+<span class="sd">            d.tengiga</span>
+<span class="sd">            &gt;&gt; False</span>
+<span class="sd">            </span>
+<span class="sd">            d.tengiga = True</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getTenGigabitEthernet</span><span class="p">()</span>
     
     <span class="nd">@tengiga</span><span class="o">.</span><span class="n">setter</span>
@@ -440,7 +550,7 @@
         
 <div class="viewcode-block" id="Eiger.setup500k"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.setup500k">[docs]</a>    <span class="k">def</span> <span class="nf">setup500k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostnames</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Setup the eiger detector to run on the local machine</span>
+<span class="sd">        Setup the Eiger detector to run on the local machine</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostnames</span>

@@ -15,7 +15,7 @@ from .decorators import error_handling
 
 class EigerVcmp:
     """
-    Convenience class to be able to loop over vcmp for eiger
+    Convenience class to be able to loop over vcmp for Eiger
     
     
     .. todo::
@@ -125,8 +125,8 @@ class DetectorDelays:
 
 class Eiger(Detector):
     """
-    Subclass of detector to populte the right dacs and provide detector
-    specific functions
+    Subclassing Detector to set up correct dacs and detector specific 
+    functions. 
     """
     _detector_dynamic_range = [4, 8, 16, 32]
     
@@ -137,24 +137,8 @@ class Eiger(Detector):
         self._vcmp = EigerVcmp(self)
         self._dacs = EigerDacs(self)
         self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
-        
         self._delay = DetectorDelays(self)
         
-#        self._active = DetectorProperty(self._api.getActive,
-#                                        self._api.setActive,
-#                                        self._api.getNumberOfDetectors,
-#                                        'active')
-#        
-#        self._delay_frame = DetectorProperty(self._api.getDelayFrame,
-#                                        self._api.setDelayFrame,
-#                                        self._api.getNumberOfDetectors,
-#                                        'delay_frame')        
-#        self._delay_frame = DetectorProperty(self._api.getDelayFrame,
-#                                        self._api.setDelayFrame,
-#                                        self._api.getNumberOfDetectors,
-#                                        'delay_frame') 
-
-
         #Eiger specific adcs
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
@@ -167,13 +151,12 @@ class Eiger(Detector):
         self._temp.fpgafr = Adc('temp_fpgafr', self)
    
 
-
-
-
     @property
+    @error_handling
     def active(self):
         """
-        Is the detector active? Can be used to disable
+        Is the detector active? Can be used to enable or disable a detector
+        module
         
         Examples
         ----------
@@ -189,57 +172,57 @@ class Eiger(Detector):
         return self._active
     
     @active.setter
+    @error_handling
     def active(self, value):
         self._active[:] = value
 
-    @property
-    @error_handling
-    def add_gappixels(self):
-        """Enable or disable the (virual) pixels between ASICs
-        
-        Examples
-        ----------
-        
-        ::
-            
-            d.add_gappixels = True
-            
-            d.add_gappixels
-            >> True
-        
-        """
-        return self._api.getGapPixels()
-    
-    @add_gappixels.setter
-    @error_handling
-    def add_gappixels(self, value):
-        self._api.setGapPixels(value)
-
-
-
-    @property
-    def delay(self):
-        return self._delay
-#    @property
-#    @error_handling
-#    def delay_frame(self):
-#        return self._delay_frame
-#    
-#    @delay_frame.setter
-#    @error_handling
-#    def delay_frame(self, value):
-#        self._delay_frame[:] = value
+#   Currently only supported in the developer branch of sls
 #
 #    @property
 #    @error_handling
-#    def delay_left(self):
-#        return self._delay_left
+#    def add_gappixels(self):
+#        """Enable or disable the (virual) pixels between ASICs
+#        
+#        Examples
+#        ----------
+#        
+#        ::
+#            
+#            d.add_gappixels = True
+#            
+#            d.add_gappixels
+#            >> True
+#        
+#        """
+#        return self._api.getGapPixels()
 #    
-#    @delay_left.setter
+#    @add_gappixels.setter
 #    @error_handling
-#    def delay_left(self, value):
-#        self._delay_left[:] = value
+#    def add_gappixels(self, value):
+#        self._api.setGapPixels(value)
 
+
+
+    @property
+    @error_handling
+    def delay(self):
+        """
+        Transmission delay of the modules to allow running the detector
+        in a network not supporting the full speed of the detector.
+
+
+        ::
+            
+            d.delay
+            >>
+            Transmission delay [ns]
+                           left   right   frame
+             0:beb048         0   15000       0
+             1:beb049       100  190000     100
+             
+             d.delay.left = [2000,5000]
+        """
+        return self._delay
 
         
     def default_settings(self):
@@ -253,17 +236,19 @@ class Eiger(Detector):
         self.dynamic_range = 16
 
     @property
+    @error_handling
     def eiger_matrix_reset(self):
         """
         Matrix reset bit for Eiger.
 
-        :py:obj:`True` : Normal operation, the matrix is reset befor each acq.
-        :py:obj:`False` : Matrix reset disableld. Used to not reset before
+        :py:obj:`True` : Normal operation, the matrix is reset before each acq.
+        :py:obj:`False` : Matrix reset disabled. Used to not reset before
         reading out analog test pulses.
         """
         return self._api.getCounterBit()
 
     @eiger_matrix_reset.setter
+    @error_handling
     def eiger_matrix_reset(self, value):
         self._api.setCounterBit(value)
 
@@ -271,7 +256,7 @@ class Eiger(Detector):
     def pulse_all_pixels(self, n):
         """
         Pulse each pixel of the chip **n** times using the analog test pulses.
-        The pulse heigh is set using d.dacs.vcall with 4000 being 0 and 0 being
+        The pulse height is set using d.dacs.vcall with 4000 being 0 and 0 being
         the highest pulse.
         
         ::
@@ -295,7 +280,7 @@ class Eiger(Detector):
     @error_handling
     def pulse_chip(self, n):
         """
-        Advance the counter by toggeling enable. Gives 2*n+2 int the counter
+        Advance the counter by toggling enable. Gives 2*n+2 int the counter
         
         """
         n = int(n)
@@ -307,6 +292,25 @@ class Eiger(Detector):
 
     @property
     def vcmp(self):
+        """
+        Convenience function to get and set the individual vcmp of chips
+        Used mainly in the calibration code.
+
+        Examples
+        ---------
+
+        ::
+
+            #Reading
+            d.vcmp[:]
+            >> [500, 500, 500, 500, 500, 500, 500, 500]
+
+            #Setting
+            d.vcmp = [500, 500, 500, 500, 500, 500, 500, 500]
+
+
+        """
+
         return self._vcmp
     
     @vcmp.setter
@@ -324,7 +328,7 @@ class Eiger(Detector):
     @error_handling
     def rx_udpport(self):
         """
-        UDP port for the receiver. Each module has two ports refered to 
+        UDP port for the receiver. Each module has two ports referred to
         as rx_udpport and rx_udpport2 in the command line interface
         here they are grouped for each detector
         
@@ -360,7 +364,19 @@ class Eiger(Detector):
     @property
     @error_handling
     def tengiga(self):
-        """enable 10Gbit data output"""
+        """Enable 10Gbit/s data output
+        
+        Examples
+        ----------
+        
+        ::
+            
+            d.tengiga
+            >> False
+            
+            d.tengiga = True
+            
+        """
         return self._api.getTenGigabitEthernet()
     
     @tengiga.setter
@@ -370,7 +386,7 @@ class Eiger(Detector):
         
     def setup500k(self, hostnames):
         """
-        Setup the eiger detector to run on the local machine
+        Setup the Eiger detector to run on the local machine
         """
         
         self.hostname = hostnames
