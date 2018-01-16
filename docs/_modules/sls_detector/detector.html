@@ -173,6 +173,7 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">Iterable</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">Process</span>
 <span class="kn">from</span> <span class="nn">_sls_detector</span> <span class="k">import</span> <span class="n">DetectorApi</span> <span class="c1"># c++ api wrapping multiSlsDetector</span>
 
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
@@ -414,7 +415,8 @@
 
 <div class="viewcode-block" id="Detector"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector">[docs]</a><span class="k">class</span> <span class="nc">Detector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Python class that is used for controlling an sls detector.</span>
+<span class="sd">    Base class used as interface with the slsDetectorSoftware. To control a specific detector use the</span>
+<span class="sd">    derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_detector_dynamic_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
@@ -422,13 +424,11 @@
     <span class="n">_speed_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Full Speed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#C++ API interfacing slsDetector and multiSlsDetector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">()</span>
-        
-        <span class="c1">#Do we need more of these later?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">True</span>
-        
-                
+
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">()</span>
@@ -445,10 +445,15 @@
 
 
 
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">busy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks the acquire flag of the detector.</span>
+<span class="sd">        Checks the detector is acquiring.</span>
+
+<span class="sd">        .. note ::</span>
+
+<span class="sd">            Only works when the measurement is launched using acquire, not with status start!</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        --------</span>

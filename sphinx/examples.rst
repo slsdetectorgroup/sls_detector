@@ -22,12 +22,12 @@ file writing etc.
     
 
 If we want to control the shutter of for example, the big X-ray box we can add
-this line in our code. It then opens the shutter just befre the measurement
+this line in our code. It then opens the shutter just before the measurement
 and closes is afterwards.
     
 ::
 
-    with xray_box.shutter_open:
+    with xrf_shutter_open(box, 'Fe'):
         for th in threshold:
             d.vthreshold = th
             d.acq()
@@ -41,14 +41,14 @@ Reading temperatures
 
     d.temp
     >>
-    temp_fpga     :  40.81°C,  39.13°C
-    temp_fpgaext  :  38.50°C,  35.50°C
-    temp_10ge     :   0.00°C,   0.00°C
-    temp_dcdc     :  41.50°C,  41.00°C
-    temp_sodl     :  39.50°C,  37.00°C
-    temp_sodr     :  36.50°C,  39.50°C
-    temp_fpgafl   :  41.30°C,  34.08°C
-    temp_fpgafr   :  41.20°C,  41.43°C
+    temp_fpga     :  43.19°C,  51.83°C
+    temp_fpgaext  :  38.50°C,  38.50°C
+    temp_10ge     :  39.50°C,  39.50°C
+    temp_dcdc     :  42.50°C,  42.50°C
+    temp_sodl     :  39.50°C,  40.50°C
+    temp_sodr     :  39.50°C,  40.50°C
+    temp_fpgafl   :  40.87°C,  37.61°C
+    temp_fpgafr   :  34.51°C,  35.63°C
     
     d.temp.fpga
     >> temp_fpga     :  40.84°C,  39.31°C
@@ -66,6 +66,9 @@ Reading temperatures
 Non blocking acquire
 -----------------------
 
+There are mainly two ways to achieve a non blocking acquire when calling from the Python API. One is to manually start
+the detector and the second one is to launch the normal acquire from a different process. Lets first look at the manual
+way:
 
 ::
 
@@ -102,3 +105,38 @@ Non blocking acquire
     #Reset to not interfere with a potential next measurement
     d.reset_frames_caught()
 
+Instead launching d.acq() from a different process is a bit easier since the control of receiver and detector
+is handled in the acq call. However, you need to join the process used otherwise a lot of zombie processes would
+hang around until the main process exits.
+
+::
+
+    import time
+    from multiprocessing import Process
+    from sls_detector import Eiger
+
+    def acquire():
+        """
+        Create a new Eiger object that still referes to the same actual detector
+        and same shared memory. Then launch acq.
+        """
+        detector = Eiger()
+        detector.acq()
+
+    #This is the detector we use throughout the session
+    d = Eiger()
+
+    #Process to run acquire
+    p = Process(target=acquire)
+
+    #Start the thread and short sleep to allow the acq to start
+    p.start()
+    time.sleep(0.01)
+
+    #Do some other work
+    while d.busy is True:
+        print(d.busy)
+        time.sleep(0.1)
+
+    #Join the process
+    p.join()

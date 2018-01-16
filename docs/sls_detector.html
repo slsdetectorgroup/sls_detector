@@ -98,6 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="error-handling.html">Error handling</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#detector">Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#eiger">Eiger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#jungfrau">Jungfrau</a></li>
 </ul>
@@ -167,17 +168,14 @@
             
   <div class="section" id="api-documentation">
 <h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
-<p>#.. automodule:: sls_detector
-#    :members:
-#    :private-members:
-#    :imported-members:
-#    :undoc-members:
-#    :show-inheritance:</p>
+<div class="section" id="detector">
+<h2>Detector<a class="headerlink" href="#detector" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Detector">
 <em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Python class that is used for controlling an sls detector.</p>
+<p>Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
+derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API</p>
 <dl class="method">
 <dt id="sls_detector.Detector.acq">
 <code class="descname">acq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.acq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.acq" title="Permalink to this definition">¶</a></dt>
@@ -187,7 +185,11 @@
 <dl class="attribute">
 <dt id="sls_detector.Detector.busy">
 <code class="descname">busy</code><a class="headerlink" href="#sls_detector.Detector.busy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks the acquire flag of the detector.</p>
+<dd><p>Checks the detector is acquiring.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only works when the measurement is launched using acquire, not with status start!</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -881,6 +883,7 @@ all chips in the detector.</p>
 
 </dd></dl>
 
+</div>
 <div class="section" id="eiger">
 <h2>Eiger<a class="headerlink" href="#eiger" title="Permalink to this headline">¶</a></h2>
 <dl class="class">

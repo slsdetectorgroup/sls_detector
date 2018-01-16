@@ -9,6 +9,7 @@ import os
 from collections import namedtuple, Iterable
 from functools import partial
 import numpy as np
+from multiprocessing import Process
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
 from .decorators import error_handling
@@ -250,7 +251,8 @@ class DetectorDacs:
 
 class Detector:
     """
-    Python class that is used for controlling an sls detector.
+    Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
+    derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API
 
     """
     _detector_dynamic_range = [4, 8, 16, 32]
@@ -258,13 +260,11 @@ class Detector:
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
 
     def __init__(self):
+        #C++ API interfacing slsDetector and multiSlsDetector
         self._api = DetectorApi()
-        
-        #Do we need more of these later?
         self.online = True
         self.receiver_online = True
-        
-                
+
 
     def __len__(self):
         return self._api.getNumberOfDetectors()
@@ -281,10 +281,15 @@ class Detector:
 
 
 
+
     @property
     def busy(self):
         """
-        Checks the acquire flag of the detector.
+        Checks the detector is acquiring.
+
+        .. note ::
+
+            Only works when the measurement is launched using acquire, not with status start!
 
         Returns
         --------
