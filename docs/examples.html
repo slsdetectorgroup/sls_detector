@@ -99,6 +99,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#simple-threshold-scan">Simple threshold scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reading-temperatures">Reading temperatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-blocking-acquire">Non blocking acquire</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="error-handling.html">Error handling</a></li>
@@ -173,9 +174,9 @@
 <h2>Simple threshold scan<a class="headerlink" href="#simple-threshold-scan" title="Permalink to this headline">¶</a></h2>
 <p>Assuming you have set up your detector with exposure time, period, enabled
 file writing etc.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sls_detector</span> <span class="kn">import</span> <span class="n">Detector</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sls_detector</span> <span class="kn">import</span> <span class="n">Eiger</span>
 
-<span class="n">d</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">()</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
 <span class="n">threshold</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">threshold</span><span class="p">:</span>
     <span class="n">d</span><span class="o">.</span><span class="n">vthreshold</span> <span class="o">=</span> <span class="n">th</span>
@@ -215,6 +216,43 @@ t
 t = d.temp.fpga[:]
 t
 &gt;&gt; [40.566, 39.128]
+</pre></div>
+</div>
+</div>
+<div class="section" id="non-blocking-acquire">
+<h2>Non blocking acquire<a class="headerlink" href="#non-blocking-acquire" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">d</span><span class="o">.</span><span class="n">exposure_time</span> <span class="o">=</span> <span class="n">t</span>
+<span class="n">d</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="n">n</span>
+<span class="n">d</span><span class="o">.</span><span class="n">reset_frames_caught</span><span class="p">()</span>
+
+<span class="c1">#Start the measurement</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">d</span><span class="o">.</span><span class="n">start_receiver</span><span class="p">()</span>
+<span class="n">d</span><span class="o">.</span><span class="n">start_detector</span><span class="p">()</span>
+
+<span class="c1">#Wait for the detector to be ready or do other important stuff</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1">#check if the detector is ready otherwise wait a bit longer</span>
+<span class="k">while</span> <span class="n">d</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s1">&#39;idle&#39;</span><span class="p">:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1">#Stop the receiver after we got the frames</span>
+<span class="c1">#Detector is already idle so we don&#39;t need to stop it</span>
+<span class="n">d</span><span class="o">.</span><span class="n">stop_receiver</span><span class="p">()</span>
+
+<span class="n">lost</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">frames_caught</span> <span class="o">-</span> <span class="n">n</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{n}</span><span class="s1"> frames of </span><span class="si">{t}</span><span class="s1">s took {time.time()-t0:{.3}}s with </span><span class="si">{lost}</span><span class="s1"> frames lost &#39;</span><span class="p">)</span>
+
+<span class="c1">#Reset to not interfere with a potential next measurement</span>
+<span class="n">d</span><span class="o">.</span><span class="n">reset_frames_caught</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

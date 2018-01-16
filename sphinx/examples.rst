@@ -12,9 +12,9 @@ file writing etc.
 
 .. code-block:: python
  
-    from sls_detector import Detector
+    from sls_detector import Eiger
 
-    d = Detector()
+    d = Eiger()
     threshold = range(0, 2000, 200)
     for th in threshold:
         d.vthreshold = th
@@ -60,4 +60,45 @@ Reading temperatures
     t = d.temp.fpga[:]
     t
     >> [40.566, 39.128]
-    
+
+
+-----------------------
+Non blocking acquire
+-----------------------
+
+
+::
+
+    import time
+    from sls_detector import Eiger
+    d = Eiger()
+
+    n = 10
+    t = 1
+
+    d.exposure_time = t
+    d.n_frames = n
+    d.reset_frames_caught()
+
+    #Start the measurement
+    t0 = time.time()
+    d.start_receiver()
+    d.start_detector()
+
+    #Wait for the detector to be ready or do other important stuff
+    time.sleep(t*n)
+
+    #check if the detector is ready otherwise wait a bit longer
+    while d.status != 'idle':
+        time.sleep(0.1)
+
+    #Stop the receiver after we got the frames
+    #Detector is already idle so we don't need to stop it
+    d.stop_receiver()
+
+    lost = d.frames_caught - n
+    print(f'{n} frames of {t}s took {time.time()-t0:{.3}}s with {lost} frames lost ')
+
+    #Reset to not interfere with a potential next measurement
+    d.reset_frames_caught()
+
