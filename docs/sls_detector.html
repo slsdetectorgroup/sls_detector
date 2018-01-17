@@ -185,7 +185,8 @@ derived classes such as Eiger and Jungfrau. Functions as an interface to the C++
 <dl class="attribute">
 <dt id="sls_detector.Detector.busy">
 <code class="descname">busy</code><a class="headerlink" href="#sls_detector.Detector.busy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks the detector is acquiring.</p>
+<dd><p>Checks the detector is acquiring. Can also be set but should only be used if the acquire fails and
+leaves the detector with busy == True</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Only works when the measurement is launched using acquire, not with status start!</p>
@@ -200,6 +201,11 @@ derived classes such as Eiger and Jungfrau. Functions as an interface to the C++
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>d.busy
+&gt;&gt; True</p>
+<p>#If the detector is stuck
+d.busy = False</p>
 </dd></dl>
 
 <dl class="method">
@@ -937,6 +943,14 @@ in a network not supporting the full speed of the detector.</p>
 <p><code class="xref py py-obj docutils literal"><span class="pre">True</span></code> : Normal operation, the matrix is reset before each acq.
 <code class="xref py py-obj docutils literal"><span class="pre">False</span></code> : Matrix reset disabled. Used to not reset before
 reading out analog test pulses.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.flowcontrol_10g">
+<code class="descname">flowcontrol_10g</code><a class="headerlink" href="#sls_detector.Eiger.flowcontrol_10g" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal"><span class="pre">True</span></code> - Flow control enabled <code class="xref py py-obj docutils literal"><span class="pre">False</span></code> flow control disabled.
+Sets for all moduels, if for some reason access to a single module is needed
+this can be done trough the C++ API.</p>
 </dd></dl>
 
 <dl class="method">

@@ -67,8 +67,9 @@ Non blocking acquire
 -----------------------
 
 There are mainly two ways to achieve a non blocking acquire when calling from the Python API. One is to manually start
-the detector and the second one is to launch the normal acquire from a different process. Lets first look at the manual
-way:
+the detector and the second one is to launch the normal acquire from a different process. Depending on your measurement
+it might also be better to run the other task in a seperate process and use acq in the main thread.
+But lets start looking at the at the manual way:
 
 ::
 

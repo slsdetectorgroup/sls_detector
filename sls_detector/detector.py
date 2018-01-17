@@ -283,9 +283,11 @@ class Detector:
 
 
     @property
+    @error_handling
     def busy(self):
         """
-        Checks the detector is acquiring.
+        Checks the detector is acquiring. Can also be set but should only be used if the acquire fails and
+        leaves the detector with busy == True
 
         .. note ::
 
@@ -296,9 +298,23 @@ class Detector:
         bool
             :py:obj:`True` if the detector is acquiring otherwise :py:obj:`False`
 
+        Examples
+        ----------
+
+        d.busy
+        >> True
+
+        #If the detector is stuck
+        d.busy = False
+
 
         """
         return self._api.getAcquiringFlag()
+
+    @busy.setter
+    @error_handling
+    def busy(self, value):
+        self._api.setAcquiringFlag(value)
 
     @property
     def temp(self):
@@ -861,6 +877,12 @@ class Detector:
     @error_handling
     def online(self, value):
         self._api.setOnline(value)
+
+
+    @property
+    @error_handling
+    def last_client_ip(self):
+        return self._api.getLastClientIP()
 
     @property
     @error_handling

@@ -10,7 +10,7 @@ from functools import partial
 from collections import namedtuple
 import socket
 
-from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, DetectorProperty
+from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, DetectorProperty, element_if_equal
 from .decorators import error_handling
 
 class EigerVcmp:
@@ -251,6 +251,28 @@ class Eiger(Detector):
     @error_handling
     def eiger_matrix_reset(self, value):
         self._api.setCounterBit(value)
+
+
+    @property
+    @error_handling
+    def flowcontrol_10g(self):
+        """
+        :py:obj:`True` - Flow control enabled :py:obj:`False` flow control disabled.
+        Sets for all moduels, if for some reason access to a single module is needed
+        this can be done trough the C++ API.
+
+        """
+        fc = self._api.getNetworkParameter('flow_control_10g')
+        return element_if_equal([bool(int(e)) for e in fc])
+
+    @flowcontrol_10g.setter
+    @error_handling
+    def flowcontrol_10g(self, value):
+        if value is True:
+            v = '1'
+        else:
+            v = '0'
+        self._api.setNetworkParameter('flow_control_10g', v, -1)
 
     @error_handling
     def pulse_all_pixels(self, n):

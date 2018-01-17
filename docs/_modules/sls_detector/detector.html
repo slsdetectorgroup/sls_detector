@@ -447,9 +447,11 @@
 
 
     <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">busy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks the detector is acquiring.</span>
+<span class="sd">        Checks the detector is acquiring. Can also be set but should only be used if the acquire fails and</span>
+<span class="sd">        leaves the detector with busy == True</span>
 
 <span class="sd">        .. note ::</span>
 
@@ -460,9 +462,23 @@
 <span class="sd">        bool</span>
 <span class="sd">            :py:obj:`True` if the detector is acquiring otherwise :py:obj:`False`</span>
 
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        d.busy</span>
+<span class="sd">        &gt;&gt; True</span>
+
+<span class="sd">        #If the detector is stuck</span>
+<span class="sd">        d.busy = False</span>
+
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getAcquiringFlag</span><span class="p">()</span>
+
+    <span class="nd">@busy</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">busy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setAcquiringFlag</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

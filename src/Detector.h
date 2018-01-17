@@ -161,6 +161,10 @@ public:
         return det.getAcquiringFlag();
     }
 
+    void setAcquiringFlag(bool flag){
+        det.setAcquiringFlag(flag);
+    }
+
     bool getCounterBit(){
         return det.setCounterBit();
     }
@@ -495,6 +499,11 @@ public:
                 throw std::runtime_error("could not get detector");
         }
 
+    }
+
+
+    std::string getLastClientIP(){
+        return det.getLastClientIP();
     }
 
 

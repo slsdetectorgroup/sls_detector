@@ -23,6 +23,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("freeSharedMemory", &Detector::freeSharedMemory)
             .def("acq", &Detector::acquire, "Acqire")
             .def("getAcquiringFlag", &Detector::getAcquiringFlag)
+            .def("setAcquiringFlag", &Detector::setAcquiringFlag)
+
             .def("setAllTrimbits", &Detector::setAllTrimbits)
             .def("getAllTrimbits", &Detector::getAllTrimbits)
             .def("setCounterBit", &Detector::setCounterBit)
@@ -116,6 +118,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setDelayLeft", &Detector::setDelayLeft)
             .def("getDelayRight", &Detector::getDelayRight)
             .def("setDelayRight", &Detector::setDelayRight)
+            .def("getLastClientIP", &Detector::getLastClientIP)
+
 
             .def("setFileWrite", &Detector::setFileWrite)
             .def("getFileWrite", &Detector::getFileWrite)

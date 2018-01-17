@@ -223,10 +223,10 @@ rx_udpport            :py:attr:`Detector.rx_udpport`
 rx_udpport2           :py:attr:`Detector.rx_udpport`
 detectormac
 detectorip
-txndelay_left
-txndelay_right
-txndelay_frame
-flowcontrol_10g
+txndelay_left         :py:attr:`Eiger.delay`.left              OK
+txndelay_right        :py:attr:`Eiger.delay`.right             OK
+txndelay_frame        :py:attr:`Eiger.delay`.frame             OK
+flowcontrol_10g       :py:attr:`Eiger.flowcontrol_10g`         OK
 zmqport
 rx_zmqport              :py:attr:`Detector.rx_zmqport`             Read
 rx_datastream           |rxd|                                   OK

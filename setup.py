@@ -38,17 +38,17 @@ ext_modules = [
             # Path to pybind11 headers
             get_pybind_include(),
             get_pybind_include(user=True),
-            get_sls_path() + 'slsDetectorSoftware/multiSlsDetector',
-            get_sls_path() + 'slsReceiverSoftware/include/',
-            get_sls_path() + 'slsDetectorSoftware/commonFiles/',
-            get_sls_path() + 'slsDetectorSoftware/slsDetector',
-            get_sls_path() + 'slsDetectorSoftware/slsDetectorAnalysis',
-            get_sls_path() + 'slsDetectorSoftware/slsReceiverInterface/',
+            os.path.join(get_sls_path(), 'slsDetectorSoftware/multiSlsDetector'),
+            os.path.join(get_sls_path(), 'slsReceiverSoftware/include/'),
+            os.path.join(get_sls_path(),'slsDetectorSoftware/commonFiles/'),
+            os.path.join(get_sls_path(), 'slsDetectorSoftware/slsDetector'),
+            os.path.join(get_sls_path(), 'slsDetectorSoftware/slsDetectorAnalysis'),
+            os.path.join(get_sls_path(), 'slsDetectorSoftware/slsReceiverInterface/'),
 
         ],
         libraries = ['SlsDetector', 'zmq'],
-        library_dirs = [get_sls_path()+'build/bin',
-                        get_sls_path()+'slsReceiverSoftware/include'],
+        library_dirs = [os.path.join(get_sls_path(),'build/bin'),
+                        os.path.join(get_sls_path(),'slsReceiverSoftware/include')],
   
         language='c++'
     ),

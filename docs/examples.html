@@ -222,8 +222,9 @@ t
 <div class="section" id="non-blocking-acquire">
 <h2>Non blocking acquire<a class="headerlink" href="#non-blocking-acquire" title="Permalink to this headline">¶</a></h2>
 <p>There are mainly two ways to achieve a non blocking acquire when calling from the Python API. One is to manually start
-the detector and the second one is to launch the normal acquire from a different process. Lets first look at the manual
-way:</p>
+the detector and the second one is to launch the normal acquire from a different process. Depending on your measurement
+it might also be better to run the other task in a seperate process and use acq in the main thread.
+But lets start looking at the at the manual way:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
