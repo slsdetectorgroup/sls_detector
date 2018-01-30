@@ -7,7 +7,7 @@ matrix:
     - os: linux
       env: CONDA_PY=3.6
 
-dist: precise
+dist: trusty
 
 install:
   - sudo apt-get update
