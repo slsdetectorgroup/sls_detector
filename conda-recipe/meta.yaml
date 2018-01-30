@@ -4,9 +4,6 @@ package:
 
 build:
   number: 0
-  script_env:
-      - SLS_DETECTOR_SOURCE
-      - LD_LIBRARY_PATH
 
 source:
     path: ..

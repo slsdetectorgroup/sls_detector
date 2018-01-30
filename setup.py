@@ -10,16 +10,12 @@ import os
 
 __version__ = '0.0.1'
 
-def get_sls_path():
-    """
-    Keep this a function if we need some fancier logic later
-    """
-    return os.environ['SLS_DETECTOR_SOURCE']
 
 def get_conda_path():
     """
     Keep this a function if we need some fancier logic later
     """
+    print('Prefix: ', os.environ['CONDA_PREFIX'])
     return os.environ['CONDA_PREFIX']
 
 
