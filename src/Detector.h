@@ -210,6 +210,7 @@ public:
 
     void pulseChip(int n){ det.pulseChip(n); }
     void pulseAllPixels(int n);
+    void pulseDiagonal(int n);
 
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
     void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
@@ -790,7 +791,18 @@ void Detector::pulseAllPixels(int n){
     }
     return;
 }
+void Detector::pulseDiagonal(int n){
+//  int pulsePixelNMove(int n=0,int x=0,int y=0);
+//  int pulsePixel(int n=0,int x=0,int y=0);
 
+    for (int j=20; j<232; j+=16){
+        det.pulsePixel(0, -255, j);
+        for (int i=0; i<8; ++i){
+            det.pulsePixelNMove(n, 1, 1);
+        }
+    }
+    return;
+}
 
 
 #endif // DETECTOR_H

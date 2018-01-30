@@ -16,6 +16,13 @@ def get_sls_path():
     """
     return os.environ['SLS_DETECTOR_SOURCE']
 
+def get_conda_path():
+    """
+    Keep this a function if we need some fancier logic later
+    """
+    return os.environ['CONDA_PREFIX']
+
+
 class get_pybind_include(object):
     """Helper class to determine the pybind11 include path
     The purpose of this class is to postpone importing pybind11
@@ -30,6 +37,30 @@ class get_pybind_include(object):
         return pybind11.get_include(self.user)
 
 
+# ext_modules = [
+#     Extension(
+#         '_sls_detector',
+#         ['src/main.cpp'],
+#         include_dirs=[
+#             # Path to pybind11 headers
+#             get_pybind_include(),
+#             get_pybind_include(user=True),
+#             os.path.join(get_sls_path(), 'slsDetectorSoftware/multiSlsDetector'),
+#             os.path.join(get_sls_path(), 'slsReceiverSoftware/include/'),
+#             os.path.join(get_sls_path(),'slsDetectorSoftware/commonFiles/'),
+#             os.path.join(get_sls_path(), 'slsDetectorSoftware/slsDetector'),
+#             os.path.join(get_sls_path(), 'slsDetectorSoftware/slsDetectorAnalysis'),
+#             os.path.join(get_sls_path(), 'slsDetectorSoftware/slsReceiverInterface/'),
+#
+#         ],
+#         libraries = ['SlsDetector', 'zmq'],
+#         library_dirs = [os.path.join(get_sls_path(),'build/bin'),
+#                         os.path.join(get_sls_path(),'slsReceiverSoftware/include')],
+#
+#         language='c++'
+#     ),
+# ]
+
 ext_modules = [
     Extension(
         '_sls_detector',
@@ -38,21 +69,19 @@ ext_modules = [
             # Path to pybind11 headers
             get_pybind_include(),
             get_pybind_include(user=True),
-            os.path.join(get_sls_path(), 'slsDetectorSoftware/multiSlsDetector'),
-            os.path.join(get_sls_path(), 'slsReceiverSoftware/include/'),
-            os.path.join(get_sls_path(),'slsDetectorSoftware/commonFiles/'),
-            os.path.join(get_sls_path(), 'slsDetectorSoftware/slsDetector'),
-            os.path.join(get_sls_path(), 'slsDetectorSoftware/slsDetectorAnalysis'),
-            os.path.join(get_sls_path(), 'slsDetectorSoftware/slsReceiverInterface/'),
+            os.path.join(get_conda_path(), 'include'),
 
         ],
-        libraries = ['SlsDetector', 'zmq'],
-        library_dirs = [os.path.join(get_sls_path(),'build/bin'),
-                        os.path.join(get_sls_path(),'slsReceiverSoftware/include')],
-  
+        libraries=['SlsDetector', 'SlsReceiver', 'zmq'],
+        library_dirs=[
+            os.path.join(get_conda_path(), 'lib'),
+            os.path.join(get_conda_path(), 'bin'),
+        ],
+
         language='c++'
     ),
 ]
+
 
 
 # As of Python 3.6, CCompiler has a `has_flag` method.
@@ -113,8 +142,8 @@ setup(
     version=__version__,
     author='Erik Frojdh',
     author_email='erik.frojdh@psi.ch',
-    url='https://github.com/something/',
-    description='A test project using pybind11',
+    url='https://github.com/slsdetectorgroup/sls_detector',
+    description='Detector API for SLS Detector Group detectors',
     long_description='',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     ext_modules=ext_modules,

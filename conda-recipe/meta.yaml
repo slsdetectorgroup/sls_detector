@@ -14,14 +14,18 @@ source:
 requirements:
     build:
         - python
+        - gcc
+        - cmake
         - setuptools
         - pybind11
-        - libgcc
+        - sls_detector_software
         - pyzmq
     run:
         - python
-        - numpy 
-        - libgcc
+        - gcc
+        - cmake
+        - numpy
+        - sls_detector_software
         - pyzmq
 
 

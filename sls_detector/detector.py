@@ -262,8 +262,11 @@ class Detector:
     def __init__(self):
         #C++ API interfacing slsDetector and multiSlsDetector
         self._api = DetectorApi()
-        self.online = True
-        self.receiver_online = True
+        try:
+            self.online = True
+            self.receiver_online = True
+        except DetectorError:
+            print('Waring cannot connect to detector')
 
 
     def __len__(self):

@@ -297,7 +297,13 @@ class Eiger(Detector):
         
         """
         self._api.pulseAllPixels(n)
-
+        
+    @error_handling
+    def pulse_diagonal(self, n):
+        """
+        Unsed for calibraiton
+        """
+        self._api.pulseDiagonal(n)
 
     @error_handling
     def pulse_chip(self, n):
