@@ -20,11 +20,9 @@ public:
         //added default arg to cope with branch
         //removed when going back to developer
 
-        //det.setOnline(slsDetectorDefs::ONLINE_FLAG);
-        //det.setReceiverOnline(slsDetectorDefs::ONLINE_FLAG);
 
         //Disable any output from std::cout
-//        std::cout.setstate(std::ios_base::failbit);
+        std::cout.setstate(std::ios_base::failbit);
 
     }
 

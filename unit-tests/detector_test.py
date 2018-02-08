@@ -28,9 +28,6 @@ def test_busy_call(d, mocker):
     m.return_value = False
     assert d.busy == False
 
-def test_assign_to_busy(d,mocker):
-    with pytest.raises(AttributeError):
-        d.busy = True
 
 def test_assign_to_detector_type(d,mocker):
     with pytest.raises(AttributeError):
@@ -40,48 +37,6 @@ def test_det_type(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getDetectorType')
     m.return_value = 'Eiger'
     assert d.detector_type == 'Eiger'
-
-def test_set_dynamic_range_4(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setDynamicRange')
-    d.dynamic_range = 4
-    m.assert_called_with(4)
-
-def test_set_dynamic_range_8(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setDynamicRange')
-    d.dynamic_range = 8
-    m.assert_called_with(8)
-
-
-def test_set_dynamic_range_16(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setDynamicRange')
-    d.dynamic_range = 16
-    m.assert_called_with(16)
-
-def test_set_dynamic_range_32(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setDynamicRange')
-    d.dynamic_range = 32
-    m.assert_called_with(32)
-
-def test_set_dynamic_range_raises_exception(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setDynamicRange')
-    with pytest.raises(ValueError):
-        d.dynamic_range = 17
-
-def test_get_dynamic_range_32(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.getDynamicRange')
-    m.return_value = 32
-    dr = d.dynamic_range
-    assert dr == 32
-
-def test_eiger_matrix_reset(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.getCounterBit')
-    m.return_value = True
-    assert d.eiger_matrix_reset == True
-
-def test_set_eiger_matrix_reset(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setCounterBit')
-    d.eiger_matrix_reset = True
-    m.assert_called_once_with(True)
 
 
 def test_get_exposure_time(d, mocker):
@@ -205,9 +160,6 @@ def test_get_image_size_gives_correct_size(d, mocker):
     assert im_size.rows == 512
     assert im_size.cols == 1024
 
-def test_cannot_set_image_size(d, mocker):
-    with pytest.raises(AttributeError):
-        d.image_size = (20, 50)
 
 
 def test_load_config(d, mocker):
@@ -296,21 +248,6 @@ def test_set_period_time_less_than_zero(d, mocker):
     with pytest.raises(ValueError):
         d.period = -7
 
-def test_pulse_chip_call(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.pulseChip')
-    d.pulse_chip(15)
-    m.assert_called_once_with(15)
-
-def test_pulse_chip_call_minus_one(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.pulseChip')
-    d.pulse_chip(-1)
-    m.assert_called_once_with(-1)
-
-def test_pulse_chip_asserts_on_smaller_than_minus_one(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.pulseChip')
-    with pytest.raises(ValueError):
-        d.pulse_chip(-3)
-
 
 #-------------------------------------------------------------Rate correction
 def test_get_rate_correction(d, mocker):
@@ -396,7 +333,7 @@ def test_get_rx_zmqport_call(d, mocker):
 
 def test_get_rx_zmqport_decode(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNetworkParameter')
-    m.return_value = '30001+30003+'
+    m.return_value = ['30001', '30003']
     assert d.rx_zmqport == [30001, 30002, 30003, 30004]
 
 def test_get_rx_zmqport_empty(d, mocker):
@@ -411,14 +348,14 @@ def test_status_call(d, mocker):
     s = d.status
     m.assert_called_once_with()
 
-def test_start_acq_call(d, mocker):
+def test_start_detecor(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.startAcquisition')
-    d.start_acq()
+    d.start_detector()
     m.assert_called_once_with()
 
 def test_stop_acq_call(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.stopAcquisition')
-    d.stop_acq()
+    d.stop_detector()
     m.assert_called_once_with()
 
 #--------------------------------------------------------------------subexptime
@@ -460,22 +397,6 @@ def test_set_vthreshold(d, mocker):
     d.vthreshold = 1675
     m.assert_called_once_with('vthreshold', -1, 1675)
 
-#----------------------------------------------------------------trimbits
-def test_get_trimbits(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.getAllTrimbits')
-    t = d.trimbits
-    m.assert_called_once_with()
 
-def test_set_trimbits(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setAllTrimbits')
-    d.trimbits = 15
-    m.assert_called_once_with(15)
 
-def test_set_trimbits_raises_outside_range(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setAllTrimbits')
 
-    with pytest.raises(ValueError):
-        d.trimbits = 69
-
-    with pytest.raises(ValueError):
-        d.trimbits = -5

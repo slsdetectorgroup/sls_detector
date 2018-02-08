@@ -5,14 +5,14 @@ Tests for hostname related functions of the detector
 """
 import unittest
 import random
-from sls_detector import Detector
+from sls_detector import Eiger
 
 
 
 class TestTrimbitsAndDacs(unittest.TestCase):
     @classmethod
     def setUp(self):
-        self.detector = Detector()
+        self.detector = Eiger()
 
 #    @classmethod
 #    def tearDown(self):
