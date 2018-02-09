@@ -16,14 +16,14 @@ requirements:
         - setuptools
         - pybind11
         - sls_detector_software 3.0.1
-        - pyzmq
+        - pyzmq 16.0.2
     run:
         - python
         - gcc
         - cmake
         - numpy
         - sls_detector_software 3.0.1
-        - pyzmq
+        - pyzmq 16.0.2
 
 
 test:
