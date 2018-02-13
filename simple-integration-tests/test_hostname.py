@@ -3,29 +3,26 @@
 """
 Tests for hostname related functions of the detector
 """
-import unittest
+import pytest
+import config_test
+
+from sls_detector.errors import DetectorValueError
+
 from sls_detector import Detector
-import config_test as cfg
+detector_type = Detector().detector_type
+
+@pytest.fixture
+def detector():
+    from sls_detector import Detector
+    return Detector()
 
 
-class TestHostname(unittest.TestCase):
-    @classmethod
-    def setUp(self):
-        self.detector = Detector()
+def test_get_hostname(detector):
+    for detector_host, config_host in zip(detector.hostname, config_test.known_hostnames):
+        assert detector_host == config_host
 
+def test_hostname_has_same_length_as_n_modules(detector):
+    assert len(detector.hostname) == detector.n_modules
 
-    def test_hostname_has_same_length_as_n_modules(self):
-        self.assertEqual(self.detector.n_modules, len(self.detector.hostname))
-
-    def test_first_hostname_is_correct(self):
-        self.assertEqual(cfg.known_hostnames[0], self.detector.hostname[0])
-        
-    def test_second_hostname_is_correct(self):
-        self.assertEqual(cfg.known_hostnames[1], self.detector.hostname[1])
-        
-    def test_return_type_is_list(self):
-        self.assertTrue(isinstance(self.detector.hostname, list))
-
-if __name__ == '__main__':
-    unittest.main()
-
+def test_hostname_is_list(detector):
+    assert isinstance(detector.hostname, list) == True

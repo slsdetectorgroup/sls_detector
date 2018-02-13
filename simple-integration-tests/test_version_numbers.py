@@ -3,26 +3,19 @@
 """
 Tests for hostname related functions of the detector
 """
-import unittest
-from sls_detector import Detector
+import pytest
+import config_test
+
+from sls_detector.errors import DetectorValueError
+
+@pytest.fixture
+def detector():
+    from sls_detector import Detector
+    d = Detector()
+    return d
 
 
-import config_test as cfg
+def test_firmware_version(detector):
+    assert detector.firmware_version == config_test.fw_version
 
-class TestVersionNumbersAndNames(unittest.TestCase):
-    @classmethod
-    def setUp(self):
-        self.detector = Detector()
 
-    def test_hasattr_firmware_version(self):
-        self.assertTrue( hasattr(self.detector, 'firmware_version') )
-
-    def test_firmware_version(self):
-        self.assertEqual(self.detector.firmware_version, cfg.fw_version)
-
-    def tess_type_of_detector(self):
-        a = self.detector.detector_type
-        self.assertEqual(a, cfg.detector_type)
-
-if __name__ == '__main__':
-    unittest.main()

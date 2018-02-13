@@ -1,43 +1,51 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Tests for hostname related functions of the detector
+Tests for trimbit and dac related functions
 """
-import unittest
-import random
-from sls_detector import Eiger
+import pytest
+import config_test
+
+from sls_detector.errors import DetectorValueError
+
+from sls_detector import Detector
+detector_type = Detector().detector_type
 
 
 
-class TestTrimbitsAndDacs(unittest.TestCase):
-    @classmethod
-    def setUp(self):
-        self.detector = Eiger()
+@pytest.fixture
+def eiger():
+    from sls_detector import Eiger
+    return Eiger()
 
-#    @classmethod
-#    def tearDown(self):
-#        self.detector.eiger_matrix_reset = True
+@pytest.fixture
+def jungfrau():
+    from sls_detector import Jungfrau
+    return Jungfrau()
 
-    def test_set_and_get_trimbits_32(self):
-        self.detector.trimbits = 32
-        self.assertEqual(self.detector.trimbits, 32)
-    
-    def test_set_and_get_trimbits_17(self):
-        self.detector.trimbits = 17
-        self.assertEqual(self.detector.trimbits, 17)       
-    
-    def test_raises_when_tb_is_too_large(self):
-        with self.assertRaises(Exception) as context:
-            self.detector.trimbits = 89
-            self.assertTrue('Trimbit setting 89' in str(context.exception))
-            
-    def test_raises_when_tb_is_too_small(self):
-        with self.assertRaises(Exception) as context:
-            self.detector.trimbits = -10
-            self.assertTrue('Trimbit setting -10' in str(context.exception))
+eigertest = pytest.mark.skipif(detector_type != 'Eiger', reason = 'Only valid for Eiger')
+jungfrautest = pytest.mark.skipif(detector_type != 'Jungfrau', reason = 'Only valid for Jungfrau')
+
+@eigertest
+def test_set_trimbits(eiger):
+    """Limited values due to time"""
+    for i in [17, 32, 60]:
+        print(i)
+        eiger.trimbits = i
+        assert eiger.trimbits == i
+
+@eigertest
+def test_set_trimbits_raises_on_too_big(eiger):
+    with pytest.raises(DetectorValueError):
+        eiger.trimbits = 75
+
+@eigertest
+def test_set_trimbits_raises_on_negative(eiger):
+    with pytest.raises(DetectorValueError):
+        eiger.trimbits = -5
 
 
-
-if __name__ == '__main__':
-    unittest.main()
-
+@jungfrautest
+def test_jungfrau(jungfrau):
+    """Example of a test that is not run with Eiger connected"""
+    pass

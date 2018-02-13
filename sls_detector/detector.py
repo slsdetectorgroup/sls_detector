@@ -13,7 +13,7 @@ from multiprocessing import Process
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
 from .decorators import error_handling
-from .errors import DetectorError
+from .errors import DetectorError, DetectorValueError
 
 def all_equal(mylist):
     return all(x == mylist[0] for x in mylist)
@@ -255,7 +255,7 @@ class Detector:
     derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API
 
     """
-    _detector_dynamic_range = [4, 8, 16, 32]
+
     _speed_names = {0: 'Full Speed', 1: 'Half Speed', 2: 'Quarter Speed', 3: 'Super Slow Speed'}
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
 
@@ -475,7 +475,7 @@ class Detector:
             self._api.setDynamicRange(dr)
             return
         else:
-            raise ValueError('Cannot set dynamic range to: {:d} availble options: '.format(dr),
+            raise DetectorValueError('Cannot set dynamic range to: {:d} availble options: '.format(dr),
                              self._detector_dynamic_range)
 
 
@@ -503,7 +503,7 @@ class Detector:
     def exposure_time(self, t):
         ns_time = int(t * 1e9)
         if ns_time <= 0:
-            raise ValueError('Exposure time must be larger than 0')
+            raise DetectorValueError('Exposure time must be larger than 0')
         self._api.setExposureTime(ns_time)
 
     @property
@@ -556,7 +556,7 @@ class Detector:
 
             detector.file_name = 'myrun'
 
-            #For a single acqusition the detector now writes
+            #For a single acquisition the detector now writes
             # myrun_master_0.raw
             # myrun_d0_0.raw
             # myrun_d1_0.raw
@@ -658,8 +658,8 @@ class Detector:
     @error_handling
     def high_voltage(self, voltage):
         voltage = int(voltage)
-        if voltage < 0:
-            raise ValueError('High voltage needs to be positive')
+        if voltage < 0 or voltage > 200:
+            raise DetectorValueError('High voltage {:d}V is out of range.  Should be between 0-200V'.format(voltage))
         self._api.setDac('vhighvoltage', -1, voltage)
 
 
@@ -939,7 +939,7 @@ class Detector:
     def period(self, t):
         ns_time = int(t * 1e9)
         if ns_time < 0:
-            raise ValueError('Period must be 0 or positive')
+            raise ValueError('Period must be 0 or larger')
         self._api.setPeriod(ns_time)
 
 
@@ -1348,7 +1348,7 @@ class Detector:
         if self._trimbit_limits.min <= value <= self._trimbit_limits.max:
             self._api.setAllTrimbits(value)
         else:
-            raise ValueError('Trimbit setting {:d} is  outside of range:'\
+            raise DetectorValueError('Trimbit setting {:d} is  outside of range:'\
                              '{:d}-{:d}'.format(value, self._trimbit_limits.min, self._trimbit_limits.max))
 
 

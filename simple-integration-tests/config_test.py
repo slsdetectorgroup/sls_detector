@@ -9,3 +9,5 @@ Created on Tue Nov 14 16:49:07 2017
 fw_version = 20
 detector_type = 'Eiger'
 known_hostnames = ['beb083', 'beb098']
+image_size = (512,1024) #rows, cols
+module_geometry = (1,2) #horizontal, vertical

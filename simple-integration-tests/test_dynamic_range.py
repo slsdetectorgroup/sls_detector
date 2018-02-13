@@ -1,41 +1,37 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Unit testing of sls_detector.plot
-TODO! Far from complete
+Testing setting dynamic range for Eiger. If the detector is not Eiger the tests are skipped
 """
-import unittest
+import pytest
+import config_test
+
+from sls_detector.errors import DetectorValueError
+
 from sls_detector import Detector
-#Detector needs to be online
+detector_type = Detector().detector_type
 
-class TestDynamicRange(unittest.TestCase):
-    
-    def setUp(self):
-        self.detector = Detector()
-        self.detector.dynamic_range = 4
-        
-    def test_setting_to_32(self):
-        self.detector.dynamic_range = 32
-        self.assertEqual(self.detector.dynamic_range, 32)
+@pytest.fixture
+def detector():
+    from sls_detector import Detector
+    return Detector()
 
-    def test_setting_to_16(self):
-        self.detector.dynamic_range = 16
-        self.assertEqual(self.detector.dynamic_range, 16)
-        
-    def test_setting_to_8(self):
-        self.detector.dynamic_range = 8
-        self.assertEqual(self.detector.dynamic_range, 8)
-        
-    def test_setting_to_4(self):
-        self.detector.dynamic_range = 4
-        self.assertEqual(self.detector.dynamic_range, 4)
-        
-    def test_if_raising_on_wrong_value(self):
-        with self.assertRaises(Exception) as context:
-            self.detector.dynamic_range = 75
-            self.assertTrue('Cannot set dynamic range ' in str(context.exception))
+@pytest.fixture
+def eiger():
+    from sls_detector import Eiger
+    return Eiger()
+
+eigertest = pytest.mark.skipif(detector_type != 'Eiger', reason = 'Only valid for Eiger')
+
+@eigertest
+def test_set_dynamic_range(eiger):
+    for dr in [4,8,16,32]:
+        eiger.dynamic_range = dr
+        assert eiger.dynamic_range == dr
+@eigertest
+def test_set_dynamic_range_raises(eiger):
+    with pytest.raises(DetectorValueError):
+        eiger.dynamic_range = 75
 
 
-if __name__ == '__main__':
-    unittest.main()
 
