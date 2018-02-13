@@ -413,8 +413,12 @@ public:
         det.freeSharedMemory();
     }
 
-    std::string getDetectorType(){
-        return det.ssetDetectorsType();
+    std::vector<std::string> getDetectorType(){
+        std::vector<std::string> detector_type;
+        for (int i=0; i<det.getNumberOfDetectors(); ++i){
+            detector_type.push_back(det.sgetDetectorsType(i));
+        }
+        return detector_type;
     }
 
     int64_t getPeriod(){

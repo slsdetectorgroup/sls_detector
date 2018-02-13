@@ -429,14 +429,14 @@ class Detector:
     @property
     def detector_type(self):
         """
-        :py:obj:`str` Detector type
+        list if the type is different otherwise string
 
         * Eiger
         * Jungfrau
         * etc.
 
         """
-        return self._api.getDetectorType()
+        return element_if_equal(self._api.getDetectorType())
 
 
 

@@ -26,11 +26,8 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
 
-
-  # Replace dep1 dep2 ... with your dependencies
   - conda create -q -n test-environment python=$CONDA_PY
   - source activate test-environment
-  - conda install sls_detector_software
   - conda-build .
 
 script:
