@@ -636,6 +636,18 @@ class Detector:
 
 
     @property
+    def flags(self):
+        return self._api.getReadoutFlags()
+
+    @flags.setter
+    def flags(self, flags):
+        if isinstance(flags, str):
+            self._api.setReadoutFlag(flags)
+        elif isinstance(flags, Iterable):
+            for f in flags:
+                self._api.setReadoutFlag(f)
+
+    @property
     def frames_caught(self):
         """
         Number of frames caught by the receiver. Can be used to check for

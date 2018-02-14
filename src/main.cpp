@@ -149,6 +149,9 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getReceiverLock", &Detector::getReceiverLock)
             .def("setReceiverLock", &Detector::setReceiverLock)
 
+            .def("getReadoutFlags", &Detector::getReadoutFlags)
+            .def("setReadoutFlag", &Detector::setReadoutFlag)
+
             .def("getFileFormat", &Detector::getFileFormat)
 
             .def("getActive", &Detector::getActive)

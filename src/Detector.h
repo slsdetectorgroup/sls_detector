@@ -388,6 +388,54 @@ public:
 
     }
 
+    std::vector<std::string> getReadoutFlags(){
+        std::vector<std::string> flags;
+        auto r = det.setReadOutFlags();
+        if(r & slsDetectorDefs::readOutFlags::STORE_IN_RAM)
+            flags.push_back("storeinram");
+        if(r & slsDetectorDefs::readOutFlags::TOT_MODE)
+            flags.push_back("tot");
+        if(r & slsDetectorDefs::readOutFlags::CONTINOUS_RO)
+            flags.push_back("continous");
+        if(r & slsDetectorDefs::readOutFlags::PARALLEL)
+            flags.push_back("parallel");
+        if(r & slsDetectorDefs::readOutFlags::NONPARALLEL)
+            flags.push_back("nonparallel");
+        if(r & slsDetectorDefs::readOutFlags::SAFE)
+            flags.push_back("safe");
+        if(r & slsDetectorDefs::readOutFlags::DIGITAL_ONLY)
+            flags.push_back("digital");
+        if(r & slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL)
+            flags.push_back("analog_digital");
+
+        return flags;
+    }
+
+    //note singular
+    void setReadoutFlag(const string flag_name){
+        if(flag_name == "none")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::NORMAL_READOUT);
+        else if(flag_name == "storeinram")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::STORE_IN_RAM);
+        else if(flag_name == "tot")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::TOT_MODE);
+        else if(flag_name == "continous")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::CONTINOUS_RO);
+        else if(flag_name == "parallel")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::PARALLEL);
+        else if(flag_name == "nonparallel")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::NONPARALLEL);
+        else if(flag_name == "safe")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::SAFE);
+        else if(flag_name == "digital")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::DIGITAL_ONLY);
+        else if(flag_name == "analog_digital")
+            det.setReadOutFlags(slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL);
+        else
+            throw std::runtime_error("Flag name not recognized");
+
+    }
+
     //name to enum transltion of dac
     dacs_t getDacVthreshold(){
         dacs_t val = -1;

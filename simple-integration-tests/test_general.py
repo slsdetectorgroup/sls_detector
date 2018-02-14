@@ -191,7 +191,11 @@ def test_set_rx_zmqport_list(detector):
     detector.rx_zmqport = [37000, 38000]
     assert detector.rx_zmqport == [37000, 37001, 38000, 38001]
 
-
+def test_set_timing_mode(detector):
+    detector.timing_mode = 'trigger'
+    assert detector.timing_mode == 'trigger'
+    detector.timing_mode = 'auto'
+    assert detector.timing_mode == 'auto'
 
 
 #     def test_one_frame(self):

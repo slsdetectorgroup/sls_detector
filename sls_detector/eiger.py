@@ -205,7 +205,7 @@ class Eiger(Detector):
 
     @property
     @error_handling
-    def delay(self):
+    def tx_delay(self):
         """
         Transmission delay of the modules to allow running the detector
         in a network not supporting the full speed of the detector.
@@ -213,14 +213,14 @@ class Eiger(Detector):
 
         ::
             
-            d.delay
+            d.tx_delay
             >>
             Transmission delay [ns]
                            left   right   frame
              0:beb048         0   15000       0
              1:beb049       100  190000     100
              
-             d.delay.left = [2000,5000]
+             d.tx_delay.left = [2000,5000]
         """
         return self._delay
 
