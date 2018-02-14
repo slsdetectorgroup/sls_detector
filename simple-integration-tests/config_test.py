@@ -11,3 +11,7 @@ detector_type = 'Eiger'
 known_hostnames = ['beb083', 'beb098']
 image_size = (512,1024) #rows, cols
 module_geometry = (1,2) #horizontal, vertical
+
+#Remember to change these in the settings file as well!
+settings_path = '/home/l_frojdh/slsDetectorPackage/settingsdir/eiger'
+file_path = '/home/l_frojdh/out'

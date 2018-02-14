@@ -182,6 +182,18 @@ def test_set_receiver_hostname(detector):
     assert detector.rx_hostname == phony_host
     detector.rx_hostname = host
     assert detector.rx_hostname == host
+
+def test_set_rx_zmqport_single_value(detector):
+    detector.rx_zmqport = 35000
+    assert detector.rx_zmqport == [35000, 35001, 35002, 35003]
+
+def test_set_rx_zmqport_list(detector):
+    detector.rx_zmqport = [37000, 38000]
+    assert detector.rx_zmqport == [37000, 37001, 38000, 38001]
+
+
+
+
 #     def test_one_frame(self):
 #         self.detector.exposure_time = 0.1
 #         self.detector.n_frames = 1

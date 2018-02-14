@@ -249,6 +249,8 @@ public:
 
     }
 
+
+
     std::vector<double>getRateCorrection(){
         std::vector<double> rate_corr;
         slsDetector* _d;
@@ -261,7 +263,39 @@ public:
         return rate_corr;
     }
 
+    bool getFlippedDataX(const int i){
+        auto _d = det.getSlsDetector(i);
+        if(_d){
+            return _d->getFlippedData(slsDetectorDefs::dimension::X);
+        }else{
+            throw std::runtime_error("Detector index does not exist");
+        }
+    }
+    bool getFlippedDataY(const int i){
+        auto _d = det.getSlsDetector(i);
+        if(_d){
+            return _d->getFlippedData(slsDetectorDefs::dimension::Y);
+        }else{
+            throw std::runtime_error("Detector index does not exist");
+        }
+    }
 
+    void setFlippedDataX(const int i, const bool value){
+        auto _d = det.getSlsDetector(i);
+        if(_d){
+            _d->setFlippedData(slsDetectorDefs::dimension::X, value);
+        }else{
+            throw std::runtime_error("Detector index does not exist");
+        }
+    }
+    void setFlippedDataY(const int i, const bool value){
+        auto _d = det.getSlsDetector(i);
+        if(_d){
+            _d->setFlippedData(slsDetectorDefs::dimension::Y, value);
+        }else{
+            throw std::runtime_error("Detector index does not exist");
+        }
+    }
     //----------------------------------------------------File
     void setFileName(std::string fname){ det.setFileName(fname); }
    
@@ -342,8 +376,11 @@ public:
         det.setDAC(val, dac, 0, mod_id);
     }
 
-
-
+    //Calling multi do we have a need to lock/unlock a single det?
+    bool getServerLock(){ return det.lockServer(-1); }
+    void setServerLock(const bool value){ det.lockServer(value); }
+    bool getReceiverLock(){ return det.lockReceiver(-1); }
+    void setReceiverLock(const bool value){ det.lockReceiver(value); }
 
     dacs_t getAdc(std::string adc_name, int mod_id){
         auto adc = dacNameToEnum(adc_name);

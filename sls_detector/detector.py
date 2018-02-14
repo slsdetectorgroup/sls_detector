@@ -262,6 +262,15 @@ class Detector:
     def __init__(self):
         #C++ API interfacing slsDetector and multiSlsDetector
         self._api = DetectorApi()
+
+        self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,
+                                              self._api.setFlippedDataX,
+                                              self._api.getNumberOfDetectors,
+                                              'flippeddatax')
+        self._flippeddatay = DetectorProperty(self._api.getFlippedDataY,
+                                              self._api.setFlippedDataY,
+                                              self._api.getNumberOfDetectors,
+                                              'flippeddatay')
         try:
             self.online = True
             self.receiver_online = True
@@ -647,6 +656,14 @@ class Detector:
         self._api.freeSharedMemory()
 
     @property
+    def flipped_data_x(self):
+        return self._flippeddatax
+
+    @property
+    def flipped_data_y(self):
+        return self._flippeddatax
+
+    @property
     @error_handling
     def high_voltage(self):
         """
@@ -797,6 +814,40 @@ class Detector:
         """
         self._api.loadTrimbitFile(fname, idet)
 
+
+    @property
+    @error_handling
+    def lock(self):
+        """Lock the detector to this client
+
+
+        ::
+
+            detector.lock = True
+
+        """
+        return self._api.getServerLock()
+
+    @lock.setter
+    def lock(self, value):
+        self._api.setServerLock(value)
+
+    @property
+    @error_handling
+    def lock_receiver(self):
+        """Lock the receivers to this client
+
+        ::
+
+            detector.lock_receiver = True
+
+        """
+
+        return self._api.getReceiverLock()
+
+    @lock_receiver.setter
+    def lock_receiver(self, value):
+        self._api.setReceiverLock(value)
 
     @property
     @error_handling
@@ -1117,6 +1168,15 @@ class Detector:
             return []
         return [int(_p)+i for _p in _s for i in range(2)]
 
+    @rx_zmqport.setter
+    @error_handling
+    def rx_zmqport(self, port):
+        if isinstance(port, Iterable):
+            for i, p in enumerate(port):
+                self._api.setNetworkParameter('rx_zmqport', str(p), i)
+        else:
+            self._api.setNetworkParameter('rx_zmqport', str(port), -1)
+
 #Add back when versioning is defined
 #    @property
 #    def software_version(self):
@@ -1351,6 +1411,13 @@ class Detector:
             raise DetectorValueError('Trimbit setting {:d} is  outside of range:'\
                              '{:d}-{:d}'.format(value, self._trimbit_limits.min, self._trimbit_limits.max))
 
+    @property
+    def client_zmqport(self):
+        """zmq port of the client"""
+        _s = self._api.getNetworkParameter('client_zmqport')
+        if _s == '':
+            return []
+        return [int(_p)+i for _p in _s for i in range(2)]
 
 def free_shared_memory():
     """

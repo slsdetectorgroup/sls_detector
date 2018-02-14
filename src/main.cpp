@@ -139,6 +139,16 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getErrorMessage", &Detector::getErrorMessage)
 
 
+            .def("getFlippedDataX", &Detector::getFlippedDataX)
+            .def("getFlippedDataY", &Detector::getFlippedDataY)
+            .def("setFlippedDataX", &Detector::setFlippedDataX)
+            .def("setFlippedDataY", &Detector::setFlippedDataY)
+
+            .def("getServerLock", &Detector::getServerLock)
+            .def("setServerLock", &Detector::setServerLock)
+            .def("getReceiverLock", &Detector::getReceiverLock)
+            .def("setReceiverLock", &Detector::setReceiverLock)
+
             .def("getFileFormat", &Detector::getFileFormat)
 
             .def("getActive", &Detector::getActive)
