@@ -135,6 +135,7 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setNumberOfFrames", &Detector::setNumberOfFrames)
             .def("getNumberOfFrames", &Detector::getNumberOfFrames)
             .def("getFramesCaughtByReceiver", &Detector::getFramesCaughtByReceiver)
+            .def("getFramesCaughtByReceiverSingleDetector", &Detector::getFramesCaughtByReceiverSingleDetector)
             .def("resetFramesCaught", &Detector::resetFramesCaught)
             .def("getReceiverCurrentFrameIndex", &Detector::getReceiverCurrentFrameIndex)
             .def("getGapPixels", &Detector::getGapPixels)
@@ -142,6 +143,7 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("clearErrorMask", &Detector::clearErrorMask)
             .def("getErrorMask", &Detector::getErrorMask)
+            .def("setErrorMask", &Detector::setErrorMask)
             .def("getErrorMessage", &Detector::getErrorMessage)
 
 

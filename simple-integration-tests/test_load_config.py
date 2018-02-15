@@ -6,14 +6,9 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 from sls_detector.detector import element_if_equal
 from sls_detector.errors import DetectorValueError
 
-from sls_detector import Detector
-detector_type = Detector().detector_type
-eigertest = pytest.mark.skipif(detector_type != 'Eiger', reason = 'Only valid for Eiger')
 
-@pytest.fixture
-def eiger():
-    from sls_detector import Eiger
-    return Eiger()
+from fixtures import eiger, eigertest
+
 
 @eigertest
 def test_load_config_file_eiger(eiger):

@@ -65,6 +65,13 @@ public:
     int getFramesCaughtByReceiver(){
         return det.getFramesCaughtByReceiver();
     }
+    int getFramesCaughtByReceiverSingleDetector(const int i){
+        auto d = det.getSlsDetector(i);
+        if(d)
+            return d->getFramesCaughtByReceiver();
+        else
+            throw std::runtime_error("Detector index does not exist");
+    }
 
     void resetFramesCaught(){
         det.resetFramesCaught();
@@ -109,6 +116,9 @@ public:
 
     int64_t getErrorMask(){
         return det.getErrorMask();
+    }
+    void setErrorMask(const int64_t i){
+        det.setErrorMask(i);
     }
 
     std::string getErrorMessage(){

@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 14 17:12:06 2017
-
-@author: l_frojdh
+Function decorators for the sls_detector.
 """
 from .errors import DetectorError
 import functools

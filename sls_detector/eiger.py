@@ -133,7 +133,12 @@ class Eiger(Detector):
     def __init__(self):
         #Init on base calss
         super().__init__()
-        
+
+        self._active = DetectorProperty(self._api.getActive,
+                                              self._api.setActive,
+                                              self._api.getNumberOfDetectors,
+                                              'active')
+
         self._vcmp = EigerVcmp(self)
         self._dacs = EigerDacs(self)
         self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
@@ -228,11 +233,13 @@ class Eiger(Detector):
     def default_settings(self):
         """
         reset the detector to some type of standard settings
+        mostly used when testing
         """
-        
         self.n_frames = 1
         self.exposure_time = 1
         self.period = 0
+        self.n_cycles =1
+        self.n_measurements = 1
         self.dynamic_range = 16
 
     @property
@@ -417,6 +424,7 @@ class Eiger(Detector):
         """
         
         self.hostname = hostnames
+        self.file_write = False
         self.image_size = (512,1024)
         self.rx_tcpport = [1954,1955]
         self.rx_udpport = [50010, 50011, 50004, 50005]

@@ -9,22 +9,36 @@ NOTE! Uses hostnames from config_test
 
 import pytest
 import config_test
+from fixtures import detector
+from sls_detector.errors import DetectorValueError, DetectorError
 
-from sls_detector.errors import DetectorValueError
 
-@pytest.fixture
-def detector():
-    from sls_detector import Detector
-    d = Detector()
-    yield d
-    #Reset to a good state
-    d.busy = False
-    d.period = 0
+# @pytest.fixture
+# def detector():
+#     from sls_detector import Detector
+#     d = Detector()
+#     yield d
+#     #Reset to a good state
+#     d.busy = False
+#     d.period = 0
 
+
+
+
+def test_error_handling(detector):
+    with pytest.raises(DetectorError):
+        detector._provoke_error()
 
 def test_not_busy(detector):
     """Test that the detector is not busy from the start"""
     assert detector.busy == False
+
+def test_reset_frames_caught(detector):
+    detector.file_write = False
+    detector.acq()
+    assert detector.frames_caught == 1
+    detector.reset_frames_caught()
+    assert detector.frames_caught == 0
 
 def test_set_busy_true_then_false(detector):
     """Test both cases of assignment"""
@@ -54,18 +68,20 @@ def test_len_method(detector):
     """to test this we need to know the length, this we get from the configuration of hostnames"""
     assert len(detector) == len(config_test.known_hostnames)
 
-def test_setting_cycles_to_zero_gives_error(detector):
+def test_setting_n_cycles_to_zero_gives_error(detector):
     with pytest.raises(DetectorValueError):
-        detector.cycles = 0
+        detector.n_cycles = 0
 
-def test_setting_cycles_to_negative_gives_error(detector):
+def test_setting_n_cycles_to_negative_gives_error(detector):
     with pytest.raises(DetectorValueError):
-        detector.cycles = -50
+        detector.n_cycles = -50
 
 def test_set_cycles_frome_one_to_ten(detector):
     for i in range(1,11):
-        detector.cycles = i
-        assert detector.cycles == i
+        detector.n_cycles = i
+        assert detector.n_cycles == i
+        detector.n_cycles = 1
+        assert detector.n_cycles == 1
 
 def test_get_detector_type(detector):
     assert detector.detector_type == config_test.detector_type
@@ -153,10 +169,7 @@ def test_set_online(detector):
     detector.online = True
     assert detector.online == True
 
-def test_last_client(detector):
-    import socket
-    myip = socket.gethostbyname_ex(socket.gethostname())[-1][0] #We probably should check for multiple ip
-    assert detector.last_client_ip == myip
+
 
 def test_receiver_is_online(detector):
     assert detector.receiver_online == True
@@ -177,28 +190,7 @@ def test_set_period(detector):
     detector.period = 0
     assert detector.period == 0
 
-def test_get_receiver_hostname(detector):
-    """Assume that the receiver are on the local computer"""
-    import socket
-    host = socket.gethostname().split('.')[0]
-    assert detector.rx_hostname == host
 
-def test_set_receiver_hostname(detector):
-    import socket
-    host = socket.gethostname().split('.')[0]
-    phony_host = 'madeup'
-    detector.rx_hostname = phony_host
-    assert detector.rx_hostname == phony_host
-    detector.rx_hostname = host
-    assert detector.rx_hostname == host
-
-def test_set_rx_zmqport_single_value(detector):
-    detector.rx_zmqport = 35000
-    assert detector.rx_zmqport == [35000, 35001, 35002, 35003]
-
-def test_set_rx_zmqport_list(detector):
-    detector.rx_zmqport = [37000, 38000]
-    assert detector.rx_zmqport == [37000, 37001, 38000, 38001]
 
 def test_set_timing_mode(detector):
     detector.timing_mode = 'trigger'

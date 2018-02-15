@@ -365,13 +365,18 @@ class Detector:
         self._api.clearErrorMask()
 
     @property
-    def cycles(self):
+    @error_handling
+    def n_cycles(self):
         """Number of cycles for the measurement (exp*n_frames)*cycles"""
         return self._api.getCycles()
     
-    @cycles.setter
-    def cycles(self, n_cycles):
-        self._api.setCycles(n_cycles)
+    @n_cycles.setter
+    @error_handling
+    def n_cycles(self, n_cycles):
+        if n_cycles > 0:
+            self._api.setCycles(n_cycles)
+        else:
+            raise DetectorValueError('Number of cycles must be positive')
 
     @property
     def dacs(self):
@@ -1440,6 +1445,10 @@ class Detector:
         if _s == '':
             return []
         return [int(_p)+i for _p in _s for i in range(2)]
+
+    @error_handling
+    def _provoke_error(self):
+        self._api.setErrorMask(1)
 
 def free_shared_memory():
     """
