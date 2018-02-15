@@ -488,13 +488,18 @@ public:
         return det.setTimer(slsReceiverDefs::timerIndex::MEASUREMENTS_NUMBER, -1);
     }
 
-    //time in ns
+
     int getNumberOfGates(){
         return det.setTimer(slsReceiverDefs::timerIndex::GATES_NUMBER, -1);
     }
-    //time in ns
     void setNumberOfGates(const int t){
         det.setTimer(slsReceiverDefs::timerIndex::GATES_NUMBER, t);
+    }
+    int getNumberOfProbes(){
+        return det.setTimer(slsReceiverDefs::timerIndex::PROBES_NUMBER, -1);
+    }
+    void setNumberOfProbes(const int t){
+        det.setTimer(slsReceiverDefs::timerIndex::PROBES_NUMBER, t);
     }
     //time in ns
     int64_t getDelay(){

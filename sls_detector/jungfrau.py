@@ -87,6 +87,26 @@ class Jungfrau(Detector):
 
     @property
     @error_handling
+    def n_gates(self):
+        return self._api.getNumberOfGates()
+
+    @n_gates.setter
+    @error_handling
+    def n_gates(self, n):
+        self._api.setNumberOfGates()
+
+    @property
+    @error_handling
+    def n_probes(self):
+        return self._api.getNumberOfProbes()
+
+    @n_gates.setter
+    @error_handling
+    def n_probes(self, n):
+        self._api.setNumberOfProbes()
+
+    @property
+    @error_handling
     def register(self):
         """Directly manipulate registers on the readout board
         

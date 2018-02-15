@@ -382,12 +382,11 @@ class Eiger(Detector):
     @rx_udpport.setter
     @error_handling
     def rx_udpport(self, ports):
-        #Iterable with port numbers
-        p0 = '+'.join(str(p) for p in ports[0::2])+'+'
-        p1 = '+'.join(str(p) for p in ports[1::2])+'+'
-#        print(p0,p1)
-        self._api.setNetworkParameter('rx_udpport', p0)
-        self._api.setNetworkParameter('rx_udpport2', p1)
+        """Requires iterating over elements two and two for setting ports"""
+        a = iter(ports)
+        for i,p in enumerate(zip(a,a)):
+            self._api.setNetworkParameter('rx_udpport', str(p[0]), i)
+            self._api.setNetworkParameter('rx_udpport2', str(p[1]), i)
 
     @property
     @error_handling
