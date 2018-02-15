@@ -906,6 +906,16 @@ class Detector:
 
     @property
     @error_handling
+    def n_measurements(self):
+        return self._api.getNumberOfMeasurements()
+
+    @n_measurements.setter
+    @error_handling
+    def n_measurements(self, value):
+        self._api.setNumberOfMeasurements(value)
+
+    @property
+    @error_handling
     def n_modules(self):
         """
         :obj:`int` Number of (half)modules in the detector

@@ -127,6 +127,14 @@ def test_get_module_geometry(detector):
 def test_set_nframes(detector):
     detector.n_frames = 5
     assert detector.n_frames == 5
+    detector.n_frames = 1
+    assert detector.n_frames == 1
+
+def test_set_n_measurements(detector):
+    detector.n_measurements = 7
+    assert detector.n_measurements == 7
+    detector.n_measurements = 1
+    assert detector.n_measurements == 1
 
 def test_negative_nframes_raises(detector):
     with pytest.raises(ValueError):
@@ -166,7 +174,8 @@ def test_set_receiver_online_raises_on_non_bool(detector):
 def test_set_period(detector):
     detector.period = 5.123
     assert detector.period == 5.123
-
+    detector.period = 0
+    assert detector.period == 0
 
 def test_get_receiver_hostname(detector):
     """Assume that the receiver are on the local computer"""

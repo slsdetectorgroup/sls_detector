@@ -101,6 +101,12 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("getCycles", &Detector::getCycles)
             .def("setCycles", &Detector::setCycles)
+            .def("setNumberOfMeasurements", &Detector::setNumberOfMeasurements)
+            .def("getNumberOfMeasurements", &Detector::getNumberOfMeasurements)
+            .def("getNumberOfGates", &Detector::getNumberOfGates)
+            .def("setNumberOfGates", &Detector::setNumberOfGates)
+            .def("getDelay", &Detector::getDelay)
+            .def("setDelay", &Detector::setDelay)
 
             .def("getTimingMode", &Detector::getTimingMode)
             .def("setTimingMode", &Detector::setTimingMode)
@@ -151,6 +157,8 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("getReadoutFlags", &Detector::getReadoutFlags)
             .def("setReadoutFlag", &Detector::setReadoutFlag)
+
+
 
             .def("getFileFormat", &Detector::getFileFormat)
 

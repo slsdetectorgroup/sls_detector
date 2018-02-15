@@ -454,55 +454,77 @@ public:
         return det.setFileIndex(-1);
     }
 
-
+    //time in ns
     void setExposureTime(const int64_t t){
-        //time in ns
-        auto timer = slsReceiverDefs::timerIndex::ACQUISITION_TIME;
-        det.setTimer(timer, t);
+        det.setTimer(slsReceiverDefs::timerIndex::ACQUISITION_TIME, t);
     }
 
+    //time in ns
     int64_t getExposureTime(){
-        //time in ns
-        auto timer = slsReceiverDefs::timerIndex::ACQUISITION_TIME;
-        return det.setTimer(timer, -1);
+        return det.setTimer(slsReceiverDefs::timerIndex::ACQUISITION_TIME, -1);
     }
 
     void setSubExposureTime(const int64_t t){
-        auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
-        det.setTimer(timer, t);
+        det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, t);
     }
 
     int64_t getSubExposureTime(){
         //time in ns
-        auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
-        return det.setTimer(timer, -1);
+        return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, -1);
     }
-
 
     int64_t getCycles(){
-        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
-        return det.setTimer(timer, -1);
+        return det.setTimer(slsReceiverDefs::timerIndex::CYCLES_NUMBER, -1);
     }
+
     void setCycles(const int64_t n_cycles){
-        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
-        det.setTimer(timer, n_cycles);
+        det.setTimer(slsReceiverDefs::timerIndex::CYCLES_NUMBER, n_cycles);
     }
 
     void setNumberOfMeasurements(const int n_measurements){
         det.setTimer(slsReceiverDefs::timerIndex::MEASUREMENTS_NUMBER, n_measurements);
     }
-    int setNumberOfMeasurements(){
+    int getNumberOfMeasurements(){
         return det.setTimer(slsReceiverDefs::timerIndex::MEASUREMENTS_NUMBER, -1);
     }
 
+    //time in ns
+    int getNumberOfGates(){
+        return det.setTimer(slsReceiverDefs::timerIndex::GATES_NUMBER, -1);
+    }
+    //time in ns
+    void setNumberOfGates(const int t){
+        det.setTimer(slsReceiverDefs::timerIndex::GATES_NUMBER, t);
+    }
+    //time in ns
+    int64_t getDelay(){
+        return det.setTimer(slsReceiverDefs::timerIndex::DELAY_AFTER_TRIGGER, -1);
+    }
+    //time in ns
+    void setDelay(const int64_t t){
+        det.setTimer(slsReceiverDefs::timerIndex::DELAY_AFTER_TRIGGER, t);
+    }
+    //time in ns
+    int64_t getPeriod(){
+        return det.setTimer(slsReceiverDefs::timerIndex::FRAME_PERIOD, -1);
+    }
+    //time in ns
+    void setPeriod(const int64_t t){
+        det.setTimer(slsReceiverDefs::timerIndex::FRAME_PERIOD, t);
+    }
 
+    int64_t getNumberOfFrames(){
+        return det.setTimer(slsReceiverDefs::timerIndex::FRAME_NUMBER, -1);
+    }
 
-
+    void setNumberOfFrames(const int64_t nframes){
+        det.setTimer(slsReceiverDefs::timerIndex::FRAME_NUMBER, nframes);
+    }
 
     std::string getTimingMode(){
         return det.externalCommunicationType(det.setExternalCommunicationMode());
     }
-    void setTimingMode(std::string mode){
+    void setTimingMode(const std::string mode){
         det.setExternalCommunicationMode(det.externalCommunicationType(mode));
     }
 
@@ -518,26 +540,7 @@ public:
         return detector_type;
     }
 
-    int64_t getPeriod(){
-        //time in ns
-        auto timer = slsReceiverDefs::timerIndex::FRAME_PERIOD;
-        return det.setTimer(timer, -1);
-    }
-    void setPeriod(int64_t t){
-        //time in ns
-        auto timer = slsReceiverDefs::timerIndex::FRAME_PERIOD;
-        det.setTimer(timer, t);
-    }
-    int64_t getNumberOfFrames(){
-        //time in ns
-        auto timer = slsReceiverDefs::timerIndex::FRAME_NUMBER;
-        return det.setTimer(timer, -1);
-    }
-    void setNumberOfFrames(int64_t nframes){
-        //time in ns
-        auto timer = slsReceiverDefs::timerIndex::FRAME_NUMBER;
-        det.setTimer(timer, nframes);
-    }
+
 
     void setFileWrite(bool value){
         if (value == true)

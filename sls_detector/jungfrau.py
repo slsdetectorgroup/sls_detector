@@ -72,7 +72,19 @@ class Jungfrau(Detector):
     @error_handling
     def power_chip(self, value):
         return self._api.powerChip(value)
-    
+
+
+    @property
+    @error_handling
+    def delay(self):
+        return self._api.getDelay()/1e9
+
+    @delay.setter
+    @error_handling
+    def delay(self, t):
+        ns_time = int(t * 1e9)
+        self._api.setDelay(ns_time)
+
     @property
     @error_handling
     def register(self):
