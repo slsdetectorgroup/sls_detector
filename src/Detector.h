@@ -455,7 +455,7 @@ public:
     }
 
 
-    void setExposureTime(int64_t t){
+    void setExposureTime(const int64_t t){
         //time in ns
         auto timer = slsReceiverDefs::timerIndex::ACQUISITION_TIME;
         det.setTimer(timer, t);
@@ -467,18 +467,9 @@ public:
         return det.setTimer(timer, -1);
     }
 
-    void setSubExposureTime(int64_t t){
+    void setSubExposureTime(const int64_t t){
         auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
         det.setTimer(timer, t);
-    }
-
-    int64_t getCycles(){
-        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
-        return det.setTimer(timer, -1);
-    }
-    void setCycles(int64_t n_cycles){
-        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
-        det.setTimer(timer, n_cycles);
     }
 
     int64_t getSubExposureTime(){
@@ -486,6 +477,27 @@ public:
         auto timer = slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME;
         return det.setTimer(timer, -1);
     }
+
+
+    int64_t getCycles(){
+        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
+        return det.setTimer(timer, -1);
+    }
+    void setCycles(const int64_t n_cycles){
+        auto timer = slsReceiverDefs::timerIndex::CYCLES_NUMBER;
+        det.setTimer(timer, n_cycles);
+    }
+
+    void setNumberOfMeasurements(const int n_measurements){
+        det.setTimer(slsReceiverDefs::timerIndex::MEASUREMENTS_NUMBER, n_measurements);
+    }
+    int setNumberOfMeasurements(){
+        return det.setTimer(slsReceiverDefs::timerIndex::MEASUREMENTS_NUMBER, -1);
+    }
+
+
+
+
 
     std::string getTimingMode(){
         return det.externalCommunicationType(det.setExternalCommunicationMode());
