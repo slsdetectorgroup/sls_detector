@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sls_detector.eiger &mdash; sls_detector pre-alpha documentation</title>
+  <title>sls_detector.eiger &mdash; sls_detector 3.0.1 rc documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="sls_detector pre-alpha documentation" href="../../index.html"/>
+    <link rel="top" title="sls_detector 3.0.1 rc documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                pre-alpha
+                3.0.1
               </div>
             
           
@@ -297,7 +297,12 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">#Init on base calss</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getActive</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setActive</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                              <span class="s1">&#39;active&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_vcmp</span> <span class="o">=</span> <span class="n">EigerVcmp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span> <span class="o">=</span> <span class="n">EigerDacs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;trimbit_limits&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])(</span><span class="mi">0</span><span class="p">,</span><span class="mi">63</span><span class="p">)</span>
@@ -369,7 +374,7 @@
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
-    <span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">tx_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transmission delay of the modules to allow running the detector</span>
 <span class="sd">        in a network not supporting the full speed of the detector.</span>
@@ -377,14 +382,14 @@
 
 <span class="sd">        ::</span>
 <span class="sd">            </span>
-<span class="sd">            d.delay</span>
+<span class="sd">            d.tx_delay</span>
 <span class="sd">            &gt;&gt;</span>
 <span class="sd">            Transmission delay [ns]</span>
 <span class="sd">                           left   right   frame</span>
 <span class="sd">             0:beb048         0   15000       0</span>
 <span class="sd">             1:beb049       100  190000     100</span>
 <span class="sd">             </span>
-<span class="sd">             d.delay.left = [2000,5000]</span>
+<span class="sd">             d.tx_delay.left = [2000,5000]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delay</span>
 
@@ -392,12 +397,14 @@
 <div class="viewcode-block" id="Eiger.default_settings"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.default_settings">[docs]</a>    <span class="k">def</span> <span class="nf">default_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        reset the detector to some type of standard settings</span>
+<span class="sd">        mostly used when testing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
         <span class="bp">self</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exposure_time</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">period</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_range</span> <span class="o">=</span> <span class="mi">16</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_cycles</span> <span class="o">=</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_measurements</span> <span class="o">=</span> <span class="mi">1</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_range</span> <span class="o">=</span> <span class="mi">16</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -459,9 +466,15 @@
 <span class="sd">            d.eiger_matrix_reset = True</span>
 <span class="sd">        </span>
 <span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseAllPixels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
-
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseAllPixels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="Eiger.pulse_diagonal"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_diagonal">[docs]</a>    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">pulse_diagonal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unsed for calibraiton</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseDiagonal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Eiger.pulse_chip"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_chip">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">pulse_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -472,8 +485,8 @@
         <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">n</span><span class="o">&gt;=-</span><span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseChip</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n must be equal or larger than -1&#39;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n must be equal or larger than -1&#39;</span><span class="p">)</span>
 
 
     <span class="nd">@property</span>
@@ -540,12 +553,39 @@
     <span class="nd">@rx_udpport</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_udpport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ports</span><span class="p">):</span>
-        <span class="c1">#Iterable with port numbers</span>
-        <span class="n">p0</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ports</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;+&#39;</span>
-        <span class="n">p1</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ports</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;+&#39;</span>
-<span class="c1">#        print(p0,p1)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport&#39;</span><span class="p">,</span> <span class="n">p0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport2&#39;</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;Requires iterating over elements two and two for setting ports&quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">ports</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport2&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_zmqport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the receiver zmq ports. Note that Eiger has two ports per receiver!</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.rx_zmqport</span>
+<span class="sd">            &gt;&gt; [30001, 30002, 30003, 30004]</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_s</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">_p</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span> <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_s</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+    <span class="nd">@rx_zmqport</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_zmqport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">port</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -576,14 +616,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostnames</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_write</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="mi">1024</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rx_tcpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1954</span><span class="p">,</span><span class="mi">1955</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rx_udpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50010</span><span class="p">,</span> <span class="mi">50011</span><span class="p">,</span> <span class="mi">50004</span><span class="p">,</span> <span class="mi">50005</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rx_hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rx_datastream</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_write</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">True</span>
         
 </pre></div>
 
@@ -621,7 +662,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'pre-alpha',
+            VERSION:'3.0.1 rc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

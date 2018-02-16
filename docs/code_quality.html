@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Code quality &mdash; sls_detector pre-alpha documentation</title>
+  <title>Code quality &mdash; sls_detector 3.0.1 rc documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector pre-alpha documentation" href="index.html"/>
+    <link rel="top" title="sls_detector 3.0.1 rc documentation" href="index.html"/>
         <link rel="next" title="Command line to Python" href="command_line.html"/>
         <link rel="prev" title="Getting started" href="getting_started.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                pre-alpha
+                3.0.1
               </div>
             
           
@@ -173,23 +173,19 @@
 <p>For usability and reliability of the software the code needs to be high quality. For this
 project it means meeting the four criteria described below. Any addition should pass all of
 them.</p>
-<div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">Investigate continuous integration pipelines</p>
-</div>
 <div class="section" id="look-read-and-feel-like-python">
 <h2>Look, read and feel like Python<a class="headerlink" href="#look-read-and-feel-like-python" title="Permalink to this headline">¶</a></h2>
 <p>When using classes and functions from the
 package it should feel like you are using Python tools and be forces
 to write C++ style code with Python syntax.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">xray_box</span><span class="o">.</span><span class="n">shutter_open</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">xray_box</span><span class="o">.</span><span class="n">shutter_open</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">threshold</span><span class="p">:</span>
         <span class="n">d</span><span class="o">.</span><span class="n">vthreshold</span> <span class="o">=</span> <span class="n">th</span>
         <span class="n">d</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>should be preferred over</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
 <span class="n">xray_box</span><span class="o">.</span><span class="n">open_shutter</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">set_dac</span><span class="p">(</span><span class="s1">&#39;vthreshold&#39;</span><span class="p">,</span> <span class="n">threshold</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -204,7 +200,7 @@ to write C++ style code with Python syntax.</p>
 <p>Classes and functions should be documented with doc-strings
 in the source code. Preferably with examples. The syntax to be used
 is numpy-sphinx.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a function that does something</span>
 
@@ -243,23 +239,41 @@ add an exception.</p>
 All code that goes in should have adequate tests. If a new function does not
 have a minimum of one test it does not get added.</p>
 <p><strong>Unit-tests with pytest and mocker</strong></p>
-<blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">3</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
-<span class="n">Name</span>                       <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
-<span class="o">----------------------------------------------</span>
-<span class="n">sls_detector</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>       <span class="mi">2</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
-<span class="n">sls_detector</span><span class="o">/</span><span class="n">detector</span><span class="o">.</span><span class="n">py</span>     <span class="mi">272</span>     <span class="mi">28</span>    <span class="mi">90</span><span class="o">%</span>
-<span class="o">----------------------------------------------</span>
-<span class="n">TOTAL</span>                        <span class="mi">274</span>     <span class="mi">28</span>    <span class="mi">90</span><span class="o">%</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
+<span class="n">Name</span>                         <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
+<span class="o">------------------------------------------------</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>         <span class="mi">4</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">decorators</span><span class="o">.</span><span class="n">py</span>      <span class="mi">14</span>      <span class="mi">3</span>    <span class="mi">79</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">detector</span><span class="o">.</span><span class="n">py</span>       <span class="mi">461</span>    <span class="mi">115</span>    <span class="mi">75</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">eiger</span><span class="o">.</span><span class="n">py</span>          <span class="mi">150</span>     <span class="mi">64</span>    <span class="mi">57</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">errors</span><span class="o">.</span><span class="n">py</span>           <span class="mi">7</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">jungfrau</span><span class="o">.</span><span class="n">py</span>        <span class="mi">59</span>     <span class="mi">26</span>    <span class="mi">56</span><span class="o">%</span>
+<span class="o">------------------------------------------------</span>
+<span class="n">TOTAL</span>                          <span class="mi">695</span>    <span class="mi">208</span>    <span class="mi">70</span><span class="o">%</span>
 
 
-<span class="o">=====================</span> <span class="mi">92</span> <span class="n">passed</span> <span class="ow">in</span> <span class="mf">0.59</span> <span class="n">seconds</span> <span class="o">=====================</span>
+<span class="o">=========</span> <span class="mi">78</span> <span class="n">passed</span> <span class="ow">in</span> <span class="mf">0.60</span> <span class="n">seconds</span> <span class="o">=========</span>
 </pre></div>
 </div>
-</div></blockquote>
 <p><strong>Simple integration tests</strong></p>
 <p>These tests require a detector connected. Performs simple tasks like setting
 exposure time and reading back to double check the value</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
+<span class="n">Name</span>                         <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
+<span class="o">------------------------------------------------</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>         <span class="mi">4</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">decorators</span><span class="o">.</span><span class="n">py</span>      <span class="mi">14</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">detector</span><span class="o">.</span><span class="n">py</span>       <span class="mi">461</span>    <span class="mi">103</span>    <span class="mi">78</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">eiger</span><span class="o">.</span><span class="n">py</span>          <span class="mi">150</span>     <span class="mi">20</span>    <span class="mi">87</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">errors</span><span class="o">.</span><span class="n">py</span>           <span class="mi">7</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
+<span class="n">sls_detector</span><span class="o">/</span><span class="n">jungfrau</span><span class="o">.</span><span class="n">py</span>        <span class="mi">59</span>     <span class="mi">26</span>    <span class="mi">56</span><span class="o">%</span>
+<span class="o">------------------------------------------------</span>
+<span class="n">TOTAL</span>                          <span class="mi">695</span>    <span class="mi">149</span>    <span class="mi">79</span><span class="o">%</span>
+
+
+<span class="o">=========</span> <span class="mi">67</span> <span class="n">passed</span><span class="p">,</span> <span class="mi">1</span> <span class="n">skipped</span> <span class="ow">in</span> <span class="mf">16.66</span> <span class="n">seconds</span> <span class="o">=========</span>
+</pre></div>
+</div>
 <p><strong>Complex integration test</strong></p>
 <p>Typical measurements. Might require X-rays. Tests are usually evaluated from
 plots</p>
@@ -310,7 +324,7 @@ plots</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'pre-alpha',
+            VERSION:'3.0.1 rc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

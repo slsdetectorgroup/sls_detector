@@ -39,6 +39,8 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |rfc| replace:: :py:func:`Detector.reset_frames_caught` 
 .. |rfi| replace:: :py:attr:`Detector.receiver_frame_index` 
 .. |ron| replace:: :py:attr:`Detector.receiver_online`
+.. |flipy| replace:: :py:attr:`Detector.flipped_data_y`
+.. |flipx| replace:: :py:attr:`Detector.flipped_data_x`
 
 ------------------------
 Commands
@@ -47,12 +49,12 @@ Commands
 ===================== ================================= ================== =========
 Command               Python                              Implementation     Tests
 ===================== ================================= ================== =========
-sls_detector_acquire   :py:func:`Detector.acq`               OK               No
+sls_detector_acquire  :py:func:`Detector.acq`               OK               OK
 test                   Also not in the cmdline?
 help                   help(Detector.acq)
 exitserver
 exitreceiver
-flippeddatay           Also not in the cmdline?
+flippeddatay          |flipy|
 digitet                Which detector?
 bustest                |m|
 digibittest            Which detector?
@@ -75,24 +77,24 @@ resmat                |resmat|                                OK               O
 free                  |free|
 add
 remove
-type                  :py:attr:`Detector.detector_type`       OK               OK
-hostname              :py:attr:`Detector.hostname`            OK               OK
+type                  :py:attr:`Detector.detector_type`        OK               OK
+hostname              :py:attr:`Detector.hostname`             OK               OK
 id
 master
 sync
-online                :py:attr:`Detector.online`               OK
+online                :py:attr:`Detector.online`                OK
 checkonline
-activate
+activate              :py:attr:`Eiger.active`
 nmod                   |m|
 maxmod                 |m|
-dr                     |dr|                                    OK              OK
+dr                     |dr|                                     OK              OK
 roi                    |g|
-detsizechan           :py:attr:`Detector.image_size`           OK
+detsizechan           :py:attr:`Detector.image_size`            OK
 roimask                ??
-flippeddatax
-tengiga               :py:attr:`Eiger.tengiga`
-gappixels             :py:attr:`Eiger.add_gappixels`       OK
-flags
+flippeddatax          |flipx|
+tengiga               :py:attr:`Eiger.tengiga`                  OK
+gappixels             :py:attr:`Eiger.add_gappixels`            OK
+flags                 :py:attr:`Detector.flags`                 OK
 extsig                 |mg|
 programfpga            |j|
 resetfpga              |j|

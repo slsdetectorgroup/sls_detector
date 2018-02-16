@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Getting started &mdash; sls_detector pre-alpha documentation</title>
+  <title>Getting started &mdash; sls_detector 3.0.1 rc documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector pre-alpha documentation" href="index.html"/>
+    <link rel="top" title="sls_detector 3.0.1 rc documentation" href="index.html"/>
         <link rel="next" title="Code quality" href="code_quality.html"/>
         <link rel="prev" title="Installation" href="installation.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                pre-alpha
+                3.0.1
               </div>
             
           
@@ -171,9 +171,11 @@
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="setting-up-the-detector">
 <h2>Setting up the detector<a class="headerlink" href="#setting-up-the-detector" title="Permalink to this headline">¶</a></h2>
-<p>Currently there is no support for setting up the detector, starting
-receivers etc. Configure your detector as normal and then launch a
-Python terminal. The detector is the discovered automatically.</p>
+<p>All configuration of the detector can either be done from the Python
+API (including loading config file) or externally. The detector setup is
+discovered from the shared memory when launching a new script. Because the
+detector usually should remain online longer than a specific script it is
+recommended to run the receivers seperate.</p>
 </div>
 <div class="section" id="setting-and-getting-attributes">
 <h2>Setting and getting attributes<a class="headerlink" href="#setting-and-getting-attributes" title="Permalink to this headline">¶</a></h2>
@@ -181,7 +183,7 @@ Python terminal. The detector is the discovered automatically.</p>
 in the Detector class. When something is assigned it is also set
 in the detector and when the attribute is called using dot notation it
 it looked up from the detector.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Currently Eiger and Jungfrau but Detector should work for all</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Currently Eiger and Jungfrau but Detector should work for all</span>
 <span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span><span class="p">()</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
 
@@ -200,7 +202,7 @@ it looked up from the detector.</p>
 <h2>Working with DACs<a class="headerlink" href="#working-with-dacs" title="Permalink to this headline">¶</a></h2>
 <p>The following examples assumes an Eiger500k detector. But the same syntax
 works for other detector sizes and models.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">dacs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">dacs</span>
 <span class="o">&gt;&gt;</span>
 <span class="o">==========</span> <span class="n">DACS</span> <span class="o">=========</span>
 <span class="n">vsvp</span>      <span class="p">:</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span>
@@ -288,7 +290,7 @@ works for other detector sizes and models.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'pre-alpha',
+            VERSION:'3.0.1 rc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

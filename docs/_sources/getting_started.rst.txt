@@ -6,9 +6,11 @@ Getting started
 Setting up the detector
 ------------------------
         
-Currently there is no support for setting up the detector, starting 
-receivers etc. Configure your detector as normal and then launch a
-Python terminal. The detector is the discovered automatically.        
+All configuration of the detector can either be done from the Python
+API (including loading config file) or externally. The detector setup is
+discovered from the shared memory when launching a new script. Because the
+detector usually should remain online longer than a specific script it is
+recommended to run the receivers seperate.
         
 ---------------------------------
 Setting and getting attributes

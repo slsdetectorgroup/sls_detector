@@ -46,31 +46,22 @@ public:
     //for Eiger check status of  the module
     //true active false deactivated
     bool getActive(const int det_id){
-        auto d = det.getSlsDetector(det_id);
-        if (d)
-            return d->activate();
-        else
-            throw std::runtime_error("could not get detector");
+        return getSlsDetector(det_id)->activate();
     }
 
     //activate or deactivate a module
     void setActive(const int det_id, bool value){
         auto d = det.getSlsDetector(det_id);
-        if (d)
-            d->activate(value);
-        else
-            throw std::runtime_error("could not get detector");
+        d->activate(value);
     }
 
     int getFramesCaughtByReceiver(){
         return det.getFramesCaughtByReceiver();
     }
     int getFramesCaughtByReceiverSingleDetector(const int i){
-        auto d = det.getSlsDetector(i);
-        if(d)
-            return d->getFramesCaughtByReceiver();
-        else
-            throw std::runtime_error("Detector index does not exist");
+        auto d = getSlsDetector(i);
+        return d->getFramesCaughtByReceiver();
+
     }
 
     void resetFramesCaught(){
@@ -226,6 +217,14 @@ public:
 
     int getFirmwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_FIRMWARE_VERSION); }
     int getSoftwareVersion(){  return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
+
+    int getDetectorNumber(const int i){
+        auto _d = det.getSlsDetector(i);
+        if(_d)
+            return _d->getId(slsDetectorDefs::DETECTOR_SERIAL_NUMBER);
+        else
+            throw std::runtime_error("Detector index does not exist");
+    }
 
     void setReadoutClockSpeed(int speed){
         det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, speed);
@@ -707,10 +706,23 @@ public:
     }
 
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
+
 private:
     multiSlsDetector det;
+    slsDetector* getSlsDetector(int i);
 };
 
+
+slsDetector* Detector::getSlsDetector(int i){
+    //Get a pointer to an slsDetector
+    //throw an exception to avoid accessing
+    //a null pointer
+    auto _d =  det.getSlsDetector(i);
+    if(_d)
+        return _d;
+    else
+        throw std::runtime_error("Could not get detector: " + std::to_string(i));
+}
 
 //enum networkParameter {
 //  DETECTOR_MAC, 	    	/**< detector MAC */

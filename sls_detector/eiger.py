@@ -397,6 +397,34 @@ class Eiger(Detector):
 
     @property
     @error_handling
+    def rx_zmqport(self):
+        """
+        Return the receiver zmq ports. Note that Eiger has two ports per receiver!
+
+        ::
+
+            detector.rx_zmqport
+            >> [30001, 30002, 30003, 30004]
+
+
+        """
+        _s = self._api.getNetworkParameter('rx_zmqport')
+        if _s == '':
+            return []
+        else:
+            return [int(_p) + i for _p in _s for i in range(2)]
+
+    @rx_zmqport.setter
+    @error_handling
+    def rx_zmqport(self, port):
+        if isinstance(port, Iterable):
+            for i, p in enumerate(port):
+                self._api.setNetworkParameter('rx_zmqport', str(p), i)
+        else:
+            self._api.setNetworkParameter('rx_zmqport', str(port), -1)
+
+    @property
+    @error_handling
     def tengiga(self):
         """Enable 10Gbit/s data output
         
