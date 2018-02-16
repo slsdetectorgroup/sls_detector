@@ -5,9 +5,6 @@ For usability and reliability of the software the code needs to be high quality.
 project it means meeting the four criteria described below. Any addition should pass all of 
 them. 
 
-.. todo::
-	Investigate continuous integration pipelines
-
 
 --------------------------------
 Look, read and feel like Python
@@ -90,18 +87,22 @@ have a minimum of one test it does not get added.
  
 **Unit-tests with pytest and mocker**
 
- ::
- 
-    ----------- coverage: platform linux, python 3.6.3-final-0 -----------
-    Name                       Stmts   Miss  Cover
-    ----------------------------------------------
-    sls_detector/__init__.py       2      0   100%
-    sls_detector/detector.py     272     28    90%
-    ----------------------------------------------
-    TOTAL                        274     28    90%
-    
-    
-    ===================== 92 passed in 0.59 seconds =====================
+::
+
+    ----------- coverage: platform linux, python 3.6.4-final-0 -----------
+    Name                         Stmts   Miss  Cover
+    ------------------------------------------------
+    sls_detector/__init__.py         4      0   100%
+    sls_detector/decorators.py      14      3    79%
+    sls_detector/detector.py       461    115    75%
+    sls_detector/eiger.py          150     64    57%
+    sls_detector/errors.py           7      0   100%
+    sls_detector/jungfrau.py        59     26    56%
+    ------------------------------------------------
+    TOTAL                          695    208    70%
+
+
+    ========= 78 passed in 0.60 seconds =========
 
 
     
@@ -109,6 +110,23 @@ have a minimum of one test it does not get added.
 
 These tests require a detector connected. Performs simple tasks like setting 
 exposure time and reading back to double check the value
+
+::
+    
+    ----------- coverage: platform linux, python 3.6.4-final-0 -----------
+    Name                         Stmts   Miss  Cover
+    ------------------------------------------------
+    sls_detector/__init__.py         4      0   100%
+    sls_detector/decorators.py      14      0   100%
+    sls_detector/detector.py       461    103    78%
+    sls_detector/eiger.py          150     20    87%
+    sls_detector/errors.py           7      0   100%
+    sls_detector/jungfrau.py        59     26    56%
+    ------------------------------------------------
+    TOTAL                          695    149    79%
+
+
+    ========= 67 passed, 1 skipped in 16.66 seconds =========
 
 **Complex integration test**
 
