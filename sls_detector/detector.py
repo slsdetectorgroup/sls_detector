@@ -1430,6 +1430,7 @@ class Detector:
         self._api.setThreadedProcessing(value)
 
     @property
+    @error_handling
     def threshold(self):
         """
         Detector threshold in eV
@@ -1437,6 +1438,7 @@ class Detector:
         return self._api.getThresholdEnergy()
         
     @threshold.setter
+    @error_handling
     def threshold(self, eV):
         self._api.setThresholdEnergy(eV)
 

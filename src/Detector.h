@@ -283,16 +283,7 @@ public:
     }
 
     void setThresholdEnergy(const int eV){
-        //example of checking errors
-        //should now be done on the python side
-        det.clearAllErrorMask();
         det.setThresholdEnergy(eV);
-        if (det.getErrorMask()){
-            int tmp=0;
-            auto msg = det.getErrorMessage(tmp);
-            det.clearAllErrorMask();
-            throw std::runtime_error(msg);
-        }
     }
 
     std::string getSettingsDir(){ return det.getSettingsDir(); }
@@ -307,14 +298,7 @@ public:
     }
 
     void setSettings(std::string s){
-        det.clearAllErrorMask();
         det.setSettings(det.getDetectorSettings(s));
-        if (det.getErrorMask()){
-            int tmp=0;
-            auto msg = det.getErrorMessage(tmp);
-            det.clearAllErrorMask();
-            throw std::runtime_error(msg);
-        }
     }
 
     //name to enum translation on the c++ side
