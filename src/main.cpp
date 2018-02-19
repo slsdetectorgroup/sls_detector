@@ -78,6 +78,7 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getDynamicRange", &Detector::getDynamicRange)
             .def("getFirmwareVersion", &Detector::getFirmwareVersion)
             .def("getSoftwareVersion", &Detector::getSoftwareVersion)
+            .def("getDetectorNumber", &Detector::getDetectorNumber)
             .def("getRateCorrection", &Detector::getRateCorrection)
             .def("setRateCorrection", &Detector::setRateCorrection)
 

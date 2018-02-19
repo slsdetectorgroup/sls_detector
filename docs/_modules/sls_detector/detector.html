@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sls_detector.detector &mdash; sls_detector pre-alpha documentation</title>
+  <title>sls_detector.detector &mdash; sls_detector 3.0.1 rc documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="sls_detector pre-alpha documentation" href="../../index.html"/>
+    <link rel="top" title="sls_detector 3.0.1 rc documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                pre-alpha
+                3.0.1
               </div>
             
           
@@ -177,7 +177,7 @@
 <span class="kn">from</span> <span class="nn">_sls_detector</span> <span class="k">import</span> <span class="n">DetectorApi</span> <span class="c1"># c++ api wrapping multiSlsDetector</span>
 
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
-<span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">DetectorError</span>
+<span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">DetectorError</span><span class="p">,</span> <span class="n">DetectorValueError</span>
 
 <span class="k">def</span> <span class="nf">all_equal</span><span class="p">(</span><span class="n">mylist</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">mylist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mylist</span><span class="p">)</span>
@@ -419,15 +419,27 @@
 <span class="sd">    derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_detector_dynamic_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+
     <span class="n">_speed_names</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;Full Speed&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">}</span>
     <span class="n">_speed_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Full Speed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">#C++ API interfacing slsDetector and multiSlsDetector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flippeddatax</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFlippedDataX</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFlippedDataX</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                              <span class="s1">&#39;flippeddatax&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flippeddatay</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFlippedDataY</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFlippedDataY</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                              <span class="s1">&#39;flippeddatay&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">DetectorError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waring cannot connect to detector&#39;</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -440,8 +452,8 @@
 <div class="viewcode-block" id="Detector.acq"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.acq">[docs]</a>    <span class="k">def</span> <span class="nf">acq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Blocking command. Acquire the number of frames specified by frames, cycles etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span>
 
 
 
@@ -513,17 +525,28 @@
 
 
 <div class="viewcode-block" id="Detector.clear_errors"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.clear_errors">[docs]</a>    <span class="k">def</span> <span class="nf">clear_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clear the error mask for the detector. Used to reset after checking.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">clearErrorMask</span><span class="p">()</span></div>
+        <span class="sd">&quot;&quot;&quot;Clear the error mask for the detector. Used to reset after checking.&quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">clearErrorMask</span><span class="p">()</span>
+
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Number of cycles for the measurement (exp*n_frames)*cycles&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getCycles</span><span class="p">()</span>
-    
-    <span class="nd">@cycles</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_cycles</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setCycles</span><span class="p">(</span><span class="n">n_cycles</span><span class="p">)</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">detector_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all detector numbers, return as list</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            #for beb083 and beb098</span>
+<span class="sd">            detector.detector_number</span>
+<span class="sd">            &gt;&gt; [83, 98]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorNumber</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_modules</span><span class="p">)]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dacs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -590,14 +613,14 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">detector_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :py:obj:`str` Detector type</span>
+<span class="sd">        list if the type is different otherwise string</span>
 
 <span class="sd">        * Eiger</span>
 <span class="sd">        * Jungfrau</span>
 <span class="sd">        * etc.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorType</span><span class="p">())</span>
 
 
 
@@ -636,7 +659,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDynamicRange</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot set dynamic range to: </span><span class="si">{:d}</span><span class="s1"> availble options: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dr</span><span class="p">),</span>
+            <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Cannot set dynamic range to: </span><span class="si">{:d}</span><span class="s1"> availble options: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dr</span><span class="p">),</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">_detector_dynamic_range</span><span class="p">)</span>
 
 
@@ -664,7 +687,7 @@
     <span class="k">def</span> <span class="nf">exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Exposure time must be larger than 0&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Exposure time must be larger than 0&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setExposureTime</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -717,7 +740,7 @@
 
 <span class="sd">            detector.file_name = &#39;myrun&#39;</span>
 
-<span class="sd">            #For a single acqusition the detector now writes</span>
+<span class="sd">            #For a single acquisition the detector now writes</span>
 <span class="sd">            # myrun_master_0.raw</span>
 <span class="sd">            # myrun_d0_0.raw</span>
 <span class="sd">            # myrun_d1_0.raw</span>
@@ -788,6 +811,44 @@
 
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read and set flags. Accepts both single flag as</span>
+<span class="sd">        string or list of flags.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        --------</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            If flag not recognized</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            #Eiger</span>
+<span class="sd">            detector.flags</span>
+<span class="sd">            &gt;&gt; [&#39;storeinram&#39;, &#39;parallel&#39;]</span>
+
+<span class="sd">            detector.flags = &#39;nonparallel&#39;</span>
+<span class="sd">            detector.flags</span>
+<span class="sd">            &gt;&gt; [&#39;storeinram&#39;, &#39;nonparallel&#39;]</span>
+
+<span class="sd">            detector.flags = [&#39;continous&#39;, &#39;parallel&#39;]</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReadoutFlags</span><span class="p">()</span>
+
+    <span class="nd">@flags</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flags</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReadoutFlag</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flags</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">flags</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReadoutFlag</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">frames_caught</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Number of frames caught by the receiver. Can be used to check for</span>
@@ -804,8 +865,18 @@
 <span class="sd">            After doing this you can&#39;t access the detector until it is</span>
 <span class="sd">            reconfigured</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">freeSharedMemory</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">freeSharedMemory</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">flipped_data_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Flips data on x axis. Set for eiger bottom modules&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flippeddatax</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">flipped_data_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Flips data on y axis.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flippeddatax</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -819,8 +890,8 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">high_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voltage</span><span class="p">):</span>
         <span class="n">voltage</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">voltage</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">voltage</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;High voltage needs to be positive&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">voltage</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">voltage</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;High voltage </span><span class="si">{:d}</span><span class="s1">V is out of range.  Should be between 0-200V&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">voltage</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDac</span><span class="p">(</span><span class="s1">&#39;vhighvoltage&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">voltage</span><span class="p">)</span>
 
 
@@ -902,8 +973,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readConfigurationFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find settings file&#39;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find settings file&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Detector.load_parameters"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.load_parameters">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">load_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
@@ -925,8 +996,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readParametersFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find parameters file&#39;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find parameters file&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Detector.load_trimbits"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.load_trimbits">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">load_trimbits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
@@ -955,9 +1026,43 @@
 <span class="sd">            #Load one file to a specific detector</span>
 <span class="sd">            detector.load_trimbits(&#39;/path/to/dir/name.sn049&#39;, 0)</span>
 <span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">loadTrimbitFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="p">)</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">loadTrimbitFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="p">)</span>
 
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Lock the detector to this client</span>
+
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.lock = True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getServerLock</span><span class="p">()</span>
+
+    <span class="nd">@lock</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setServerLock</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">lock_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Lock the receivers to this client</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.lock_receiver = True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverLock</span><span class="p">()</span>
+
+    <span class="nd">@lock_receiver</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">lock_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReceiverLock</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1004,6 +1109,53 @@
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">n_cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of cycles for the measurement (exp*n_frames)*n_cycles&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getCycles</span><span class="p">()</span>
+
+    <span class="nd">@n_cycles</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">n_cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_cycles</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n_cycles</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setCycles</span><span class="p">(</span><span class="n">n_cycles</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Number of cycles must be positive&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">n_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Number of times to repeat the programmed measurement.</span>
+<span class="sd">        This is the outer most part. Real time operation is not</span>
+<span class="sd">        guaranteed since this is software controlled.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.n_frames = 1</span>
+<span class="sd">            detector.n_cycles = 1</span>
+<span class="sd">            detector.n_measurements = 3</span>
+
+<span class="sd">            detector.acq() # 1 frame 3 times</span>
+
+<span class="sd">            detector.n_frames = 5</span>
+<span class="sd">            detector.n_cycles = 3</span>
+<span class="sd">            detector.n_measurements = 2</span>
+
+<span class="sd">            detector.acq() # 5x3 frames 2 times total 30 frames</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfMeasurements</span><span class="p">()</span>
+
+    <span class="nd">@n_measurements</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">n_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNumberOfMeasurements</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">n_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :obj:`int` Number of (half)modules in the detector</span>
@@ -1042,6 +1194,29 @@
     <span class="k">def</span> <span class="nf">online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setOnline</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">last_client_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the ip address of the last client</span>
+<span class="sd">        that accessed the detector</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        :obj:`str` last client ip</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.last_client_ip</span>
+<span class="sd">            &gt;&gt; &#39;129.129.202.117&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getLastClientIP</span><span class="p">()</span>
+
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">receiver_online</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1076,8 +1251,8 @@
 <span class="sd">            Automatically done when using d.acq()</span>
 <span class="sd">            </span>
 <span class="sd">            </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetFramesCaught</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetFramesCaught</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1094,7 +1269,7 @@
     <span class="k">def</span> <span class="nf">period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Period must be 0 or positive&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Period must be 0 or larger&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setPeriod</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
 
 
@@ -1254,23 +1429,31 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_zmqport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the receiver zmq ports</span>
+<span class="sd">        Return the receiver zmq ports.</span>
 <span class="sd">        </span>
 <span class="sd">        ::</span>
 <span class="sd">            </span>
 <span class="sd">            detector.rx_zmqport</span>
-<span class="sd">            &gt;&gt; [30001, 30002, 30003, 30004]</span>
+<span class="sd">            &gt;&gt; [30001, 30002]</span>
 <span class="sd">            </span>
 
-<span class="sd">        .. todo ::</span>
 
-<span class="sd">            also set</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_s</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">_p</span><span class="p">)</span><span class="o">+</span><span class="n">i</span> <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_s</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">_p</span><span class="p">)</span> <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_s</span><span class="p">]</span>
+
+    <span class="nd">@rx_zmqport</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_zmqport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">port</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#Add back when versioning is defined</span>
 <span class="c1">#    @property</span>
@@ -1347,21 +1530,21 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Non blocking command to star acquisition. Needs to be used in combination</span>
 <span class="sd">        with receiver start.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startAcquisition</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startAcquisition</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Detector.stop_detector"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_detector">[docs]</a>    <span class="k">def</span> <span class="nf">stop_detector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop acquisition early or if the detector hangs</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopAcquisition</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopAcquisition</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="Detector.start_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.start_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">start_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startReceiver</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Detector.start_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.start_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">start_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startReceiver</span><span class="p">()</span>
         
-<div class="viewcode-block" id="Detector.stop_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">stop_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopReceiver</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Detector.stop_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">stop_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopReceiver</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sub_exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1503,9 +1686,20 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">min</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setAllTrimbits</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Trimbit setting </span><span class="si">{:d}</span><span class="s1"> is  outside of range:&#39;</span>\
-                             <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">-</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">max</span><span class="p">))</span></div>
+            <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Trimbit setting </span><span class="si">{:d}</span><span class="s1"> is  outside of range:&#39;</span>\
+                             <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">-</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span><span class="o">.</span><span class="n">max</span><span class="p">))</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">client_zmqport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;zmq port of the client&quot;&quot;&quot;</span>
+        <span class="n">_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;client_zmqport&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_s</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">_p</span><span class="p">)</span><span class="o">+</span><span class="n">i</span> <span class="k">for</span> <span class="n">_p</span> <span class="ow">in</span> <span class="n">_s</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">_provoke_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setErrorMask</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">free_shared_memory</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1550,7 +1744,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'pre-alpha',
+            VERSION:'3.0.1 rc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

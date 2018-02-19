@@ -11,6 +11,7 @@ import sys
 sys.path.append('/home/l_frojdh/slsdetectorgrup/sls_detector')
 
 import _sls_detector
+from sls_detector.errors import  DetectorValueError
 
 @pytest.fixture
 def d():
@@ -51,7 +52,7 @@ def test_set_exposure_time(d, mocker):
 
 def test_set_exposure_time_less_than_zero(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.setExposureTime')
-    with pytest.raises(ValueError):
+    with pytest.raises(DetectorValueError):
         d.exposure_time = -7
 
 

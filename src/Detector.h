@@ -34,7 +34,7 @@ public:
         return image_size;
     }
 
-    void setImageSize(int rows, int cols){
+    void setImageSize(const int rows, const int cols){
         det.setMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::Y, rows);
         det.setMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::X, cols);
     }
@@ -45,32 +45,20 @@ public:
 
     //for Eiger check status of  the module
     //true active false deactivated
-    bool getActive(const int det_id){
-        auto d = det.getSlsDetector(det_id);
-        if (d)
-            return d->activate();
-        else
-            throw std::runtime_error("could not get detector");
+    bool getActive(const int i){
+        return getSlsDetector(i)->activate();
     }
-
     //activate or deactivate a module
-    void setActive(const int det_id, bool value){
-        auto d = det.getSlsDetector(det_id);
-        if (d)
-            d->activate(value);
-        else
-            throw std::runtime_error("could not get detector");
+    void setActive(const int i, const bool value){
+        getSlsDetector(i)->activate(value);
     }
 
     int getFramesCaughtByReceiver(){
         return det.getFramesCaughtByReceiver();
     }
     int getFramesCaughtByReceiverSingleDetector(const int i){
-        auto d = det.getSlsDetector(i);
-        if(d)
-            return d->getFramesCaughtByReceiver();
-        else
-            throw std::runtime_error("Detector index does not exist");
+        return getSlsDetector(i)->getFramesCaughtByReceiver();
+
     }
 
     void resetFramesCaught(){
@@ -84,21 +72,17 @@ public:
     bool getThreadedProcessing(){
         return det.setThreadedProcessing();
     }
-    void setThreadedProcessing(bool value){
+    void setThreadedProcessing(const bool value){
         det.setThreadedProcessing(value);
     }
 
-    void startReceiver(){
-        det.startReceiver();
-    }
-    void stopReceiver(){
-        det.stopReceiver();
-    }
+    void startReceiver(){ det.startReceiver(); }
+    void stopReceiver(){ det.stopReceiver(); }
 
     bool getTenGigabitEthernet(){
         return det.enableTenGigabitEthernet();
     }
-    void setTenGigabitEthernet(bool value){
+    void setTenGigabitEthernet(const bool value){
         det.enableTenGigabitEthernet(value);
     }
 
@@ -130,14 +114,14 @@ public:
     bool getReceiverOnline(){
         return det.setReceiverOnline();
     }
-    void setReceiverOnline(bool status){
+    void setReceiverOnline(const bool status){
         det.setReceiverOnline(status);
     }
 
     bool getOnline(){
         return det.setOnline();
     }
-    void setOnline(bool status){
+    void setOnline(const bool status){
         det.setOnline(status);
     }
 
@@ -145,23 +129,23 @@ public:
     bool isChipPowered(){
         return det.powerChip();
     }
-    void powerChip(bool value){
+    void powerChip(const bool value){
         det.powerChip(value);
     }
 
 
     //read register from readout system, used for low level control
-    int readRegister(int addr){
+    int readRegister(const int addr){
         return det.readRegister(addr);
     }
 
     //directly write to register in readout system
-    void writeRegister(int addr, int value){
+    void writeRegister(const int addr, const int value){
         det.writeRegister(addr, value);
     }
 
     //directly write to the ADC register
-    void writeAdcRegister(int addr, int value){
+    void writeAdcRegister(const int addr, const int value){
         det.writeAdcRegister(addr, value);
     }
 
@@ -169,7 +153,7 @@ public:
         return det.getAcquiringFlag();
     }
 
-    void setAcquiringFlag(bool flag){
+    void setAcquiringFlag(const bool flag){
         det.setAcquiringFlag(flag);
     }
 
@@ -212,100 +196,59 @@ public:
     int getDynamicRange(){
         return det.setDynamicRange(-1);
     }
-    void setDynamicRange(int dr){
+    void setDynamicRange(const int dr){
         det.setDynamicRange(dr);
     }
 
-    void pulseChip(int n){ det.pulseChip(n); }
-    void pulseAllPixels(int n);
-    void pulseDiagonal(int n);
+    void pulseChip(const int n){ det.pulseChip(n); }
+    void pulseAllPixels(const int n);
+    void pulseDiagonal(const int n);
 
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
     void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
     int getReadoutClockSpeed(){ return det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, -1); }
 
     int getFirmwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_FIRMWARE_VERSION); }
-    int getSoftwareVersion(){  return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
+    int getSoftwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
 
-    void setReadoutClockSpeed(int speed){
+    int getDetectorNumber(const int i){
+        return getSlsDetector(i)->getId(slsDetectorDefs::DETECTOR_SERIAL_NUMBER);
+    }
+
+    void setReadoutClockSpeed(const int speed){
         det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, speed);
     }
 
     int getRxTcpport(const int i){
-        int port = -1;
-        auto index = slsDetectorDefs::portType::DATA_PORT;
-        auto _d = det.getSlsDetector(i);
-
-        //protect from accesing a nullptr
-        if (_d)
-            port = _d->setPort(index);
-
-        return port;
+        return getSlsDetector(i)->setPort(slsDetectorDefs::portType::DATA_PORT);
     }
+
     void setRxTcpport(const int i, const int value){
-        auto index = slsDetectorDefs::portType::DATA_PORT;
-        auto _d = det.getSlsDetector(i);
-        //protect from accesing a nullptr
-        if (_d)
-            _d->setPort(index, value);
+         getSlsDetector(i)->setPort(slsDetectorDefs::portType::DATA_PORT, value);
     }
 
     void setRateCorrection(std::vector<double> tau){
-        slsDetector* _d;
-        for (int i=0; i<det.getNumberOfDetectors(); ++i){
-            _d = det.getSlsDetector(i);
-            _d->setRateCorrection(tau[i]);
-        }
-
+        for (int i=0; i<det.getNumberOfDetectors(); ++i)
+            getSlsDetector(i)->setRateCorrection(tau[i]);
     }
 
-
-
-    std::vector<double>getRateCorrection(){
-        std::vector<double> rate_corr;
-        slsDetector* _d;
-        for (int i=0; i<det.getNumberOfDetectors(); ++i){
-            _d = det.getSlsDetector(i);
-            std::pair<int, double> r = {0,0};
-            r.first = _d->getRateCorrection(r.second);
-            rate_corr.push_back(r.second);
-        }
-        return rate_corr;
-    }
+    std::vector<double>getRateCorrection();
 
     bool getFlippedDataX(const int i){
-        auto _d = det.getSlsDetector(i);
-        if(_d){
-            return _d->getFlippedData(slsDetectorDefs::dimension::X);
-        }else{
-            throw std::runtime_error("Detector index does not exist");
-        }
+        return getSlsDetector(i)->getFlippedData(slsDetectorDefs::dimension::X);
     }
+
     bool getFlippedDataY(const int i){
-        auto _d = det.getSlsDetector(i);
-        if(_d){
-            return _d->getFlippedData(slsDetectorDefs::dimension::Y);
-        }else{
-            throw std::runtime_error("Detector index does not exist");
-        }
+        return getSlsDetector(i)->getFlippedData(slsDetectorDefs::dimension::Y);
     }
 
     void setFlippedDataX(const int i, const bool value){
-        auto _d = det.getSlsDetector(i);
-        if(_d){
-            _d->setFlippedData(slsDetectorDefs::dimension::X, value);
-        }else{
-            throw std::runtime_error("Detector index does not exist");
-        }
+        getSlsDetector(i)->setFlippedData(slsDetectorDefs::dimension::X, value);
     }
     void setFlippedDataY(const int i, const bool value){
-        auto _d = det.getSlsDetector(i);
-        if(_d){
-            _d->setFlippedData(slsDetectorDefs::dimension::Y, value);
-        }else{
-            throw std::runtime_error("Detector index does not exist");
-        }
+        getSlsDetector(i)->setFlippedData(slsDetectorDefs::dimension::Y, value);
     }
+
     //----------------------------------------------------File
     void setFileName(std::string fname){ det.setFileName(fname); }
    
@@ -333,22 +276,13 @@ public:
         auto n_trimen = det.getTrimEn();
         std::vector<int> trim_energies(n_trimen);
 
-        //second call to get the eneries
+        //second call to get the energies
         det.getTrimEn(trim_energies.data());
         return trim_energies;
     }
 
     void setThresholdEnergy(const int eV){
-        //example of checking errors
-        //should now be done on the python side
-        det.clearAllErrorMask();
         det.setThresholdEnergy(eV);
-        if (det.getErrorMask()){
-            int tmp=0;
-            auto msg = det.getErrorMessage(tmp);
-            det.clearAllErrorMask();
-            throw std::runtime_error(msg);
-        }
     }
 
     std::string getSettingsDir(){ return det.getSettingsDir(); }
@@ -363,25 +297,18 @@ public:
     }
 
     void setSettings(std::string s){
-        det.clearAllErrorMask();
         det.setSettings(det.getDetectorSettings(s));
-        if (det.getErrorMask()){
-            int tmp=0;
-            auto msg = det.getErrorMessage(tmp);
-            det.clearAllErrorMask();
-            throw std::runtime_error(msg);
-        }
     }
 
     //name to enum translation on the c++ side
     //should we instead expose the enum to Python?
-    dacs_t getDac(std::string dac_name, int mod_id){
+    dacs_t getDac(std::string dac_name, const int mod_id){
         dacs_t val = -1;
         auto dac = dacNameToEnum(dac_name);
         return det.setDAC(val, dac, 0, mod_id);
     }
 
-    void setDac(std::string dac_name, int mod_id, dacs_t val){
+    void setDac(std::string dac_name, const int mod_id, dacs_t val){
         auto dac = dacNameToEnum(dac_name);
         det.setDAC(val, dac, 0, mod_id);
     }
@@ -398,53 +325,10 @@ public:
 
     }
 
-    std::vector<std::string> getReadoutFlags(){
-        std::vector<std::string> flags;
-        auto r = det.setReadOutFlags();
-        if(r & slsDetectorDefs::readOutFlags::STORE_IN_RAM)
-            flags.push_back("storeinram");
-        if(r & slsDetectorDefs::readOutFlags::TOT_MODE)
-            flags.push_back("tot");
-        if(r & slsDetectorDefs::readOutFlags::CONTINOUS_RO)
-            flags.push_back("continous");
-        if(r & slsDetectorDefs::readOutFlags::PARALLEL)
-            flags.push_back("parallel");
-        if(r & slsDetectorDefs::readOutFlags::NONPARALLEL)
-            flags.push_back("nonparallel");
-        if(r & slsDetectorDefs::readOutFlags::SAFE)
-            flags.push_back("safe");
-        if(r & slsDetectorDefs::readOutFlags::DIGITAL_ONLY)
-            flags.push_back("digital");
-        if(r & slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL)
-            flags.push_back("analog_digital");
-
-        return flags;
-    }
+    std::vector<std::string> getReadoutFlags();
 
     //note singular
-    void setReadoutFlag(const string flag_name){
-        if(flag_name == "none")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::NORMAL_READOUT);
-        else if(flag_name == "storeinram")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::STORE_IN_RAM);
-        else if(flag_name == "tot")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::TOT_MODE);
-        else if(flag_name == "continous")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::CONTINOUS_RO);
-        else if(flag_name == "parallel")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::PARALLEL);
-        else if(flag_name == "nonparallel")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::NONPARALLEL);
-        else if(flag_name == "safe")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::SAFE);
-        else if(flag_name == "digital")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::DIGITAL_ONLY);
-        else if(flag_name == "analog_digital")
-            det.setReadOutFlags(slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL);
-        else
-            throw std::runtime_error("Flag name not recognized");
-
-    }
+    void setReadoutFlag(const string flag_name);
 
     //name to enum transltion of dac
     dacs_t getDacVthreshold(){
@@ -453,7 +337,7 @@ public:
         return det.setDAC(val, dac, 0, -1);
     }
     
-    void setDacVthreshold(dacs_t val){
+    void setDacVthreshold(const dacs_t val){
         auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
         det.setDAC(val, dac, 0, -1);
     }
@@ -557,32 +441,19 @@ public:
 
 
 
-    void setFileWrite(bool value){
-        if (value == true)
-            det.enableWriteToFile(1);
-        else
-            det.enableWriteToFile(0);
+    void setFileWrite(const bool value){
+        det.enableWriteToFile(value);
     }
-
     bool getFileWrite(){
-        auto r = det.enableWriteToFile(-1);
-        if (r==1)
-            return true;
-        else
-            return false;
+        return det.enableWriteToFile(-1);
     }
-
-
     void setAllTrimbits(int tb){
         det.setAllTrimbits(tb);
     }
-
     int getAllTrimbits(){
         return det.setAllTrimbits(-1);
     }
-    
     bool getRxDataStreamStatus(){
-        //can we implicitly convert?
         return det.enableDataStreamingFromReceiver();
     }
     
@@ -595,10 +466,8 @@ public:
     std::vector<std::string> getNetworkParameter(std::string par_name){
         auto p = networkNameToEnum(par_name);
         std::vector<std::string> par;
-        slsDetector* _d;
         for (int i=0; i<det.getNumberOfDetectors(); ++i){
-            _d = det.getSlsDetector(i);
-            par.push_back(_d->getNetworkParameter(p));
+            par.push_back(getSlsDetector(i)->getNetworkParameter(p));
         }
         return par;
     }
@@ -610,13 +479,8 @@ public:
         if (det_id == -1){
             det.setNetworkParameter(p, par);
         }else{
-            auto _d = det.getSlsDetector(det_id);
-            if (_d)
-                _d->setNetworkParameter(p, par);
-            else
-                throw std::runtime_error("could not get detector");
+            getSlsDetector(det_id)->setNetworkParameter(p, par);
         }
-
     }
 
 
@@ -627,67 +491,36 @@ public:
 
     //get frame delay of module (det_id) in ns
     int getDelayFrame(const int det_id){
-        auto _d = det.getSlsDetector(det_id);
-        if (_d){
-            auto r = _d->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_FRAME);
-            return std::stoi(r);
-
-        }else{
-            throw std::runtime_error("could not get detector");
-        }
+        auto r = getSlsDetector(det_id)->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_FRAME);
+        return std::stoi(r);
     }
     //set frame delay of module (det_id) in ns
     void setDelayFrame(const int det_id, const int delay){
         auto delay_str = std::to_string(delay);
-        auto _d = det.getSlsDetector(det_id);
-        if (_d){
-            _d->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_FRAME, delay_str);
-        }else{
-            throw std::runtime_error("could not get detector");
-        }
+        getSlsDetector(det_id)->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_FRAME, delay_str);
     }
 
     //get delay left of module (det_id) in ns
     int getDelayLeft(const int det_id){
-        auto _d = det.getSlsDetector(det_id);
-        if (_d){
-            auto r = _d->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT);
-            return std::stoi(r);
-
-        }else{
-            throw std::runtime_error("could not get detector");
-        }
+        auto r = getSlsDetector(det_id)->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT);
+        return std::stoi(r);
     }
     //set delay left of module (det_id) in ns
     void setDelayLeft(const int det_id, const int delay){
         auto delay_str = std::to_string(delay);
-        auto _d = det.getSlsDetector(det_id);
-        if (_d){
-            _d->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT, delay_str);
-        }else{
-            throw std::runtime_error("could not get detector");
-        }
+        getSlsDetector(det_id)->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT, delay_str);
     }
+
     //get delay right of module (det_id) in ns
     int getDelayRight(const int det_id){
-        auto _d = det.getSlsDetector(det_id);
-        if (_d){
-            auto r = _d->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT);
-            return std::stoi(r);
-
-        }else{
-            throw std::runtime_error("could not get detector");
-        }
+        auto r = getSlsDetector(det_id)->getNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT);
+        return std::stoi(r);
     }
+
     //set delay right of module (det_id) in ns
     void setDelayRight(const int det_id, const int delay){
         auto delay_str = std::to_string(delay);
-        auto _d = det.getSlsDetector(det_id);
-        if (_d){
-            _d->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT, delay_str);
-        }else{
-            throw std::runtime_error("could not get detector");
-        }
+        getSlsDetector(det_id)->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT, delay_str);
     }
 
 
@@ -707,30 +540,23 @@ public:
     }
 
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
+
 private:
     multiSlsDetector det;
+    slsDetector* getSlsDetector(int i);
 };
 
 
-//enum networkParameter {
-//  DETECTOR_MAC, 	    	/**< detector MAC */
-//  DETECTOR_IP,	 	    	/**< detector IP */
-//  RECEIVER_HOSTNAME,  		/**< receiver IP/hostname */
-//  RECEIVER_UDP_IP,			/**< receiever UDP IP */
-//  RECEIVER_UDP_PORT,		/**< receiever UDP Port */
-//  RECEIVER_UDP_MAC,			/**< receiever UDP MAC */
-//  RECEIVER_UDP_PORT2,		/**< receiever UDP Port of second half module for eiger */
-//  DETECTOR_TXN_DELAY_LEFT, 	/**< transmission delay on the (left) port for next frame */
-//  DETECTOR_TXN_DELAY_RIGHT,	/**< transmission delay on the right port for next frame  */
-//  DETECTOR_TXN_DELAY_FRAME, /**< transmission delay of a whole frame for all the ports */
-//  FLOW_CONTROL_10G,			/**< flow control for 10GbE */
-//  FLOW_CONTROL_WR_PTR,		/**< memory write pointer for flow control */
-//  FLOW_CONTROL_RD_PTR,		/**< memory read pointer for flow control */
-//  RECEIVER_STREAMING_PORT,	/**< receiever streaming TCP(ZMQ) port */
-//  CLIENT_STREAMING_PORT,	/**< client streaming TCP(ZMQ) port */
-//  RECEIVER_STREAMING_SRC_IP,/**< receiever streaming TCP(ZMQ) ip */
-//  CLIENT_STREAMING_SRC_IP	/**< client streaming TCP(ZMQ) ip */
-//};
+slsDetector* Detector::getSlsDetector(int i){
+    //Get a pointer to an slsDetector
+    //throw an exception to avoid accessing
+    //a null pointer
+    const auto d =  det(i);
+    if(d)
+        return d;
+    else
+        throw std::runtime_error("Could not get detector: " + std::to_string(i));
+}
 
 slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_name){
 
@@ -895,6 +721,64 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
 
 }
 
+
+std::vector<std::string> Detector::getReadoutFlags(){
+    std::vector<std::string> flags;
+    auto r = det.setReadOutFlags();
+    if(r & slsDetectorDefs::readOutFlags::STORE_IN_RAM)
+        flags.push_back("storeinram");
+    if(r & slsDetectorDefs::readOutFlags::TOT_MODE)
+        flags.push_back("tot");
+    if(r & slsDetectorDefs::readOutFlags::CONTINOUS_RO)
+        flags.push_back("continous");
+    if(r & slsDetectorDefs::readOutFlags::PARALLEL)
+        flags.push_back("parallel");
+    if(r & slsDetectorDefs::readOutFlags::NONPARALLEL)
+        flags.push_back("nonparallel");
+    if(r & slsDetectorDefs::readOutFlags::SAFE)
+        flags.push_back("safe");
+    if(r & slsDetectorDefs::readOutFlags::DIGITAL_ONLY)
+        flags.push_back("digital");
+    if(r & slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL)
+        flags.push_back("analog_digital");
+
+    return flags;
+}
+
+//note singular
+void Detector::setReadoutFlag(const string flag_name){
+    if(flag_name == "none")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::NORMAL_READOUT);
+    else if(flag_name == "storeinram")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::STORE_IN_RAM);
+    else if(flag_name == "tot")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::TOT_MODE);
+    else if(flag_name == "continous")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::CONTINOUS_RO);
+    else if(flag_name == "parallel")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::PARALLEL);
+    else if(flag_name == "nonparallel")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::NONPARALLEL);
+    else if(flag_name == "safe")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::SAFE);
+    else if(flag_name == "digital")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::DIGITAL_ONLY);
+    else if(flag_name == "analog_digital")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL);
+    else
+        throw std::runtime_error("Flag name not recognized");
+
+}
+
+std::vector<double> Detector::getRateCorrection(){
+    std::vector<double> rate_corr;
+    double tmp = 0;
+    for (int i=0; i<det.getNumberOfDetectors(); ++i){
+        getSlsDetector(i)->getRateCorrection(tmp);
+        rate_corr.push_back(tmp);
+    }
+    return rate_corr;
+}
 
 void Detector::pulseAllPixels(int n){
 //  int pulsePixelNMove(int n=0,int x=0,int y=0);

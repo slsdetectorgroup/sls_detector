@@ -364,19 +364,25 @@ class Detector:
         """Clear the error mask for the detector. Used to reset after checking."""
         self._api.clearErrorMask()
 
+
     @property
     @error_handling
-    def n_cycles(self):
-        """Number of cycles for the measurement (exp*n_frames)*cycles"""
-        return self._api.getCycles()
-    
-    @n_cycles.setter
-    @error_handling
-    def n_cycles(self, n_cycles):
-        if n_cycles > 0:
-            self._api.setCycles(n_cycles)
-        else:
-            raise DetectorValueError('Number of cycles must be positive')
+    def detector_number(self):
+        """
+        Get all detector numbers, return as list
+
+
+        Examples
+        ---------
+
+        ::
+
+            #for beb083 and beb098
+            detector.detector_number
+            >> [83, 98]
+
+        """
+        return [self._api.getDetectorNumber(i) for i in range(self.n_modules)]
 
     @property
     def dacs(self):
@@ -642,6 +648,32 @@ class Detector:
 
     @property
     def flags(self):
+        """Read and set flags. Accepts both single flag as
+        string or list of flags.
+
+        Raises
+        --------
+        RuntimeError
+            If flag not recognized
+
+
+        Examples
+        ----------
+
+        ::
+
+            #Eiger
+            detector.flags
+            >> ['storeinram', 'parallel']
+
+            detector.flags = 'nonparallel'
+            detector.flags
+            >> ['storeinram', 'nonparallel']
+
+            detector.flags = ['continous', 'parallel']
+
+
+        """
         return self._api.getReadoutFlags()
 
     @flags.setter
@@ -674,10 +706,12 @@ class Detector:
 
     @property
     def flipped_data_x(self):
+        """Flips data on x axis. Set for eiger bottom modules"""
         return self._flippeddatax
 
     @property
     def flipped_data_y(self):
+        """Flips data on y axis."""
         return self._flippeddatax
 
     @property
@@ -911,7 +945,44 @@ class Detector:
 
     @property
     @error_handling
+    def n_cycles(self):
+        """Number of cycles for the measurement (exp*n_frames)*n_cycles"""
+        return self._api.getCycles()
+
+    @n_cycles.setter
+    @error_handling
+    def n_cycles(self, n_cycles):
+        if n_cycles > 0:
+            self._api.setCycles(n_cycles)
+        else:
+            raise DetectorValueError('Number of cycles must be positive')
+
+    @property
+    @error_handling
     def n_measurements(self):
+        """
+        Number of times to repeat the programmed measurement.
+        This is the outer most part. Real time operation is not
+        guaranteed since this is software controlled.
+
+        Examples
+        ----------
+
+        ::
+
+            detector.n_frames = 1
+            detector.n_cycles = 1
+            detector.n_measurements = 3
+
+            detector.acq() # 1 frame 3 times
+
+            detector.n_frames = 5
+            detector.n_cycles = 3
+            detector.n_measurements = 2
+
+            detector.acq() # 5x3 frames 2 times total 30 frames
+
+        """
         return self._api.getNumberOfMeasurements()
 
     @n_measurements.setter
@@ -963,6 +1034,23 @@ class Detector:
     @property
     @error_handling
     def last_client_ip(self):
+        """Returns the ip address of the last client
+        that accessed the detector
+
+        Returns
+        -------
+
+        :obj:`str` last client ip
+
+        Examples
+        ----------
+
+        ::
+
+            detector.last_client_ip
+            >> '129.129.202.117'
+
+        """
         return self._api.getLastClientIP()
 
     @property
@@ -1177,23 +1265,22 @@ class Detector:
     @error_handling
     def rx_zmqport(self):
         """
-        Return the receiver zmq ports
+        Return the receiver zmq ports.
         
         ::
             
             detector.rx_zmqport
-            >> [30001, 30002, 30003, 30004]
+            >> [30001, 30002]
             
 
-        .. todo ::
 
-            also set
 
         """
         _s = self._api.getNetworkParameter('rx_zmqport')
         if _s == '':
             return []
-        return [int(_p)+i for _p in _s for i in range(2)]
+        else:
+            return [int(_p) for _p in _s]
 
     @rx_zmqport.setter
     @error_handling
@@ -1343,6 +1430,7 @@ class Detector:
         self._api.setThreadedProcessing(value)
 
     @property
+    @error_handling
     def threshold(self):
         """
         Detector threshold in eV
@@ -1350,6 +1438,7 @@ class Detector:
         return self._api.getThresholdEnergy()
         
     @threshold.setter
+    @error_handling
     def threshold(self, eV):
         self._api.setThresholdEnergy(eV)
 
@@ -1361,9 +1450,6 @@ class Detector:
         * **auto** Something
         * **trigger** Something else
 
-        .. todo ::
-
-            settinng and reading!
 
         """
         return self._api.getTimingMode()

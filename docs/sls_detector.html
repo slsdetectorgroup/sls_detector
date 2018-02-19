@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Documentation &mdash; sls_detector pre-alpha documentation</title>
+  <title>API Documentation &mdash; sls_detector 3.0.1 rc documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector pre-alpha documentation" href="index.html"/>
+    <link rel="top" title="sls_detector 3.0.1 rc documentation" href="index.html"/>
         <link rel="prev" title="Error handling" href="error-handling.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                pre-alpha
+                3.0.1
               </div>
             
           
@@ -173,7 +173,7 @@
 <dl class="class">
 <dt id="sls_detector.Detector">
 <em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
 derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API</p>
 <dl class="method">
@@ -195,7 +195,7 @@ leaves the detector with busy == True</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="xref py py-obj docutils literal"><span class="pre">True</span></code> if the detector is acquiring otherwise <code class="xref py py-obj docutils literal"><span class="pre">False</span></code></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> if the detector is acquiring otherwise <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -215,9 +215,9 @@ d.busy = False</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="sls_detector.Detector.cycles">
-<code class="descname">cycles</code><a class="headerlink" href="#sls_detector.Detector.cycles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of cycles for the measurement (exp*n_frames)*cycles</p>
+<dt id="sls_detector.Detector.client_zmqport">
+<code class="descname">client_zmqport</code><a class="headerlink" href="#sls_detector.Detector.client_zmqport" title="Permalink to this definition">¶</a></dt>
+<dd><p>zmq port of the client</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -226,7 +226,7 @@ d.busy = False</p>
 <dd><p>An instance of DetectorDacs used for accessing the dacs of a single
 or multi detector.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">sls</span><span class="o">.</span><span class="n">Detector</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">sls</span><span class="o">.</span><span class="n">Detector</span><span class="p">()</span>
 
 <span class="c1">#Set all vrf to 1500</span>
 <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span> <span class="o">=</span> <span class="mi">1500</span>
@@ -276,9 +276,21 @@ or multi detector.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.detector_number">
+<code class="descname">detector_number</code><a class="headerlink" href="#sls_detector.Detector.detector_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all detector numbers, return as list</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#for beb083 and beb098</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">detector_number</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">98</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.detector_type">
 <code class="descname">detector_type</code><a class="headerlink" href="#sls_detector.Detector.detector_type" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> Detector type</p>
+<dd><p>list if the type is different otherwise string</p>
 <ul class="simple">
 <li>Eiger</li>
 <li>Jungfrau</li>
@@ -289,7 +301,7 @@ or multi detector.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.dynamic_range">
 <code class="descname">dynamic_range</code><a class="headerlink" href="#sls_detector.Detector.dynamic_range" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> – Dynamic range of the detector.</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> – Dynamic range of the detector.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="9%" />
@@ -325,7 +337,7 @@ or multi detector.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – If the dynamic range is not available in the detector</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the dynamic range is not available in the detector</td>
 </tr>
 </tbody>
 </table>
@@ -346,23 +358,23 @@ or multi detector.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.exposure_time">
 <code class="descname">exposure_time</code><a class="headerlink" href="#sls_detector.Detector.exposure_time" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">double</span></code> Exposure time in [s] of a single frame.</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code> Exposure time in [s] of a single frame.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_index">
 <code class="descname">file_index</code><a class="headerlink" href="#sls_detector.Detector.file_index" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> Index for frames and file names</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Index for frames and file names</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – If the user tries to set an index less than zero</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the user tries to set an index less than zero</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_index</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_index</span>
 <span class="o">&gt;&gt;</span> <span class="mi">0</span>
 
 <span class="n">detector</span><span class="o">.</span><span class="n">file_index</span> <span class="o">=</span> <span class="mi">10</span>
@@ -375,14 +387,14 @@ or multi detector.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_name">
 <code class="descname">file_name</code><a class="headerlink" href="#sls_detector.Detector.file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – Base file name for writing images</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> – Base file name for writing images</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_name</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_name</span>
 <span class="o">&gt;&gt;</span> <span class="s1">&#39;run&#39;</span>
 
 <span class="n">detector</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;myrun&#39;</span>
 
-<span class="c1">#For a single acqusition the detector now writes</span>
+<span class="c1">#For a single acquisition the detector now writes</span>
 <span class="c1"># myrun_master_0.raw</span>
 <span class="c1"># myrun_d0_0.raw</span>
 <span class="c1"># myrun_d1_0.raw</span>
@@ -395,17 +407,17 @@ or multi detector.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_path">
 <code class="descname">file_path</code><a class="headerlink" href="#sls_detector.Detector.file_path" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – Path where images are written</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> – Path where images are written</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">FileNotFoundError</span></code> – If path does not exists</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FileNotFoundError</span></code> – If path does not exists</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_path</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_path</span>
 <span class="o">&gt;&gt;</span> <span class="s1">&#39;/path/to/files&#39;</span>
 
 <span class="n">detector</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;/new/path/to/other/files&#39;</span>
@@ -416,13 +428,52 @@ or multi detector.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_write">
 <code class="descname">file_write</code><a class="headerlink" href="#sls_detector.Detector.file_write" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">bool</span></code> If True write files to disk</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code> If True write files to disk</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.firmware_version">
 <code class="descname">firmware_version</code><a class="headerlink" href="#sls_detector.Detector.firmware_version" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> Firmware version of the detector</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Firmware version of the detector</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.flags">
+<code class="descname">flags</code><a class="headerlink" href="#sls_detector.Detector.flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read and set flags. Accepts both single flag as
+string or list of flags.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code> – If flag not recognized</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Eiger</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;storeinram&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel&#39;</span><span class="p">]</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="s1">&#39;nonparallel&#39;</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;storeinram&#39;</span><span class="p">,</span> <span class="s1">&#39;nonparallel&#39;</span><span class="p">]</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;continous&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.flipped_data_x">
+<code class="descname">flipped_data_x</code><a class="headerlink" href="#sls_detector.Detector.flipped_data_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flips data on x axis. Set for eiger bottom modules</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.flipped_data_y">
+<code class="descname">flipped_data_y</code><a class="headerlink" href="#sls_detector.Detector.flipped_data_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flips data on y axis.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -452,9 +503,9 @@ reconfigured</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.hostname">
 <code class="descname">hostname</code><a class="headerlink" href="#sls_detector.Detector.hostname" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">str</span></code> – hostnames of all connected detectors</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> – hostnames of all connected detectors</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">hostname</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">hostname</span>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;beb059&#39;</span><span class="p">,</span> <span class="s1">&#39;beb058&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -463,14 +514,14 @@ reconfigured</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.image_size">
 <code class="descname">image_size</code><a class="headerlink" href="#sls_detector.Detector.image_size" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">collections.namedtuple</span></code> with the image size of the detector
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.namedtuple</span></code> with the image size of the detector
 Also works setting using a normal tuple</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Follows the normal convention in Python of (rows, cols)</p>
 </div>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">image_size</span>
 <span class="o">&gt;&gt;</span> <span class="n">ImageSize</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
@@ -484,6 +535,28 @@ Also works setting using a normal tuple</p>
 </div>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="sls_detector.Detector.last_client_ip">
+<code class="descname">last_client_ip</code><a class="headerlink" href="#sls_detector.Detector.last_client_ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ip address of the last client
+that accessed the detector</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> last client ip</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">last_client_ip</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;129.129.202.117&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="sls_detector.Detector.load_config">
 <code class="descname">load_config</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.load_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.load_config" title="Permalink to this definition">¶</a></dt>
@@ -492,7 +565,7 @@ Also works setting using a normal tuple</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">FileNotFoundError</span></code> – If the file does not exists</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FileNotFoundError</span></code> – If the file does not exists</td>
 </tr>
 </tbody>
 </table>
@@ -512,7 +585,7 @@ parameters stored in a text file and the command line commands.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">FileNotFoundError</span></code> – If the file does not exists</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">FileNotFoundError</span></code> – If the file does not exists</td>
 </tr>
 </tbody>
 </table>
@@ -528,14 +601,14 @@ to try to load detector specific trimbit files</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fname</strong> – <code class="xref py py-obj docutils literal"><span class="pre">str</span></code> Filename (including path) to the trimbit files</li>
-<li><strong>idet</strong> – <code class="xref py py-obj docutils literal"><span class="pre">int</span></code> Detector to load trimbits to, -1 for all</li>
+<li><strong>fname</strong> – <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Filename (including path) to the trimbit files</li>
+<li><strong>idet</strong> – <code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Detector to load trimbits to, -1 for all</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Assuming 500k consisting of beb049 and beb048</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Assuming 500k consisting of beb049 and beb048</span>
 <span class="c1"># 0 is beb049</span>
 <span class="c1"># 1 is beb048</span>
 
@@ -549,12 +622,30 @@ to try to load detector specific trimbit files</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.lock">
+<code class="descname">lock</code><a class="headerlink" href="#sls_detector.Detector.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock the detector to this client</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.lock_receiver">
+<code class="descname">lock_receiver</code><a class="headerlink" href="#sls_detector.Detector.lock_receiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock the receivers to this client</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">lock_receiver</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.module_geometry">
 <code class="descname">module_geometry</code><a class="headerlink" href="#sls_detector.Detector.module_geometry" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">namedtuple</span></code> Geometry(horizontal=nx, vertical=ny)
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">namedtuple</span></code> Geometry(horizontal=nx, vertical=ny)
 of the detector modules.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">module_geometry</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">module_geometry</span>
 <span class="o">&gt;&gt;</span> <span class="n">Geometry</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">detector</span><span class="o">.</span><span class="n">module_geometry</span><span class="o">.</span><span class="n">vertical</span>
@@ -567,17 +658,45 @@ of the detector modules.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.n_cycles">
+<code class="descname">n_cycles</code><a class="headerlink" href="#sls_detector.Detector.n_cycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of cycles for the measurement (exp*n_frames)*n_cycles</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.n_frames">
 <code class="descname">n_frames</code><a class="headerlink" href="#sls_detector.Detector.n_frames" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> Number of frames per acquisition</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Number of frames per acquisition</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.n_measurements">
+<code class="descname">n_measurements</code><a class="headerlink" href="#sls_detector.Detector.n_measurements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of times to repeat the programmed measurement.
+This is the outer most part. Real time operation is not
+guaranteed since this is software controlled.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_measurements</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span> <span class="c1"># 1 frame 3 times</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_measurements</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span> <span class="c1"># 5x3 frames 2 times total 30 frames</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.n_modules">
 <code class="descname">n_modules</code><a class="headerlink" href="#sls_detector.Detector.n_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">int</span></code> Number of (half)modules in the detector</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Number of (half)modules in the detector</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">n_modules</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">n_modules</span>
 <span class="o">&gt;&gt;</span> <span class="mi">2</span>
 </pre></div>
 </div>
@@ -588,7 +707,7 @@ of the detector modules.</p>
 <code class="descname">online</code><a class="headerlink" href="#sls_detector.Detector.online" title="Permalink to this definition">¶</a></dt>
 <dd><p>Online flag for the detector</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">online</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">online</span>
 <span class="o">&gt;&gt;</span> <span class="kc">False</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span>
@@ -599,14 +718,14 @@ of the detector modules.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.period">
 <code class="descname">period</code><a class="headerlink" href="#sls_detector.Detector.period" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">double</span></code> Period between start of frames. Set to 0 for the detector
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code> Period between start of frames. Set to 0 for the detector
 to choose the shortest possible</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.rate_correction">
 <code class="descname">rate_correction</code><a class="headerlink" href="#sls_detector.Detector.rate_correction" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal"><span class="pre">double</span></code> Rate correction for all modules.
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code> Rate correction for all modules.
 Set to 0 for <strong>disabled</strong></p>
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
@@ -616,13 +735,13 @@ Set to 0 for <strong>disabled</strong></p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – If the passed list is not of the same length as the number of
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the passed list is not of the same length as the number of
 detectors</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">rate_correction</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">rate_correction</span>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mf">125.0</span><span class="p">,</span> <span class="mf">155.0</span><span class="p">]</span>
 
 <span class="n">detector</span><span class="o">.</span><span class="n">rate_correction</span> <span class="o">=</span> <span class="p">[</span><span class="mi">125</span><span class="p">,</span> <span class="mi">155</span><span class="p">]</span>
@@ -641,7 +760,7 @@ detectors</td>
 <li>Super Slow Speed</li>
 </ul>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">readout_clock</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">readout_clock</span>
 <span class="o">&gt;&gt;</span> <span class="s1">&#39;Half Speed&#39;</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">readout_clock</span> <span class="o">=</span> <span class="s1">&#39;Full Speed&#39;</span>
@@ -659,7 +778,7 @@ detectors</td>
 <code class="descname">receiver_online</code><a class="headerlink" href="#sls_detector.Detector.receiver_online" title="Permalink to this definition">¶</a></dt>
 <dd><p>Online flag for the receiver. Is set together with detector.online when creating the detector object</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">receiver_online</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">receiver_online</span>
 <span class="o">&gt;&gt;</span> <span class="kc">True</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">False</span>
@@ -680,9 +799,9 @@ detectors</td>
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_datastream">
 <code class="descname">rx_datastream</code><a class="headerlink" href="#sls_detector.Detector.rx_datastream" title="Permalink to this definition">¶</a></dt>
-<dd><p>Zmq datastream from receiver. <code class="xref py py-obj docutils literal"><span class="pre">True</span></code> if enabled and <code class="xref py py-obj docutils literal"><span class="pre">False</span></code>
+<dd><p>Zmq datastream from receiver. <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> if enabled and <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>
 otherwise</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Enable data streaming from receiver</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Enable data streaming from receiver</span>
 <span class="n">detector</span><span class="o">.</span><span class="n">rx_datastream</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="c1">#Check data streaming</span>
@@ -719,14 +838,10 @@ otherwise</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_zmqport">
 <code class="descname">rx_zmqport</code><a class="headerlink" href="#sls_detector.Detector.rx_zmqport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the receiver zmq ports</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">rx_zmqport</span>
-<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">,</span> <span class="mi">30003</span><span class="p">,</span> <span class="mi">30004</span><span class="p">]</span>
+<dd><p>Return the receiver zmq ports.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">rx_zmqport</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">]</span>
 </pre></div>
-</div>
-<div class="admonition-todo admonition" id="index-2">
-<p class="first admonition-title">Todo</p>
-<p class="last">also set</p>
 </div>
 </dd></dl>
 
@@ -735,7 +850,7 @@ otherwise</p>
 <code class="descname">settings</code><a class="headerlink" href="#sls_detector.Detector.settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detector settings used to control for example calibration or gain
 switching. For EIGER almost always standard</p>
-<div class="admonition-todo admonition" id="index-3">
+<div class="admonition-todo admonition" id="index-2">
 <p class="first admonition-title">Todo</p>
 <p class="last">check input depending on detector</p>
 </div>
@@ -762,8 +877,8 @@ with receiver start.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.status">
 <code class="descname">status</code><a class="headerlink" href="#sls_detector.Detector.status" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> Status of the detector – idle, running,</p>
-<div class="admonition-todo admonition" id="index-4">
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Status of the detector – idle, running,</p>
+<div class="admonition-todo admonition" id="index-3">
 <p class="first admonition-title">Todo</p>
 <p class="last">Check possible values</p>
 </div>
@@ -784,7 +899,7 @@ with receiver start.</p>
 <dt id="sls_detector.Detector.sub_exposure_time">
 <code class="descname">sub_exposure_time</code><a class="headerlink" href="#sls_detector.Detector.sub_exposure_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub frame exposure time in <em>seconds</em> for Eiger in 32bit autosumming mode</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span>
 <span class="o">&gt;&gt;</span> <span class="mf">0.0023</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span> <span class="o">=</span> <span class="mf">0.002</span>
@@ -798,7 +913,7 @@ with receiver start.</p>
 <dd><p>An instance of DetectorAdcs used to read the temperature
 of different components</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>detector.temp
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>detector.temp
 &gt;&gt;
 temp_fpga     :  36.90°C,  45.60°C
 temp_fpgaext  :  31.50°C,  32.50°C
@@ -821,7 +936,7 @@ a
 <code class="descname">threaded</code><a class="headerlink" href="#sls_detector.Detector.threaded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable parallel execution of commands to the different detector modules</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">threaded</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">threaded</span>
 <span class="o">&gt;&gt;</span> <span class="kc">True</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">threaded</span> <span class="o">=</span> <span class="kc">False</span>
@@ -838,12 +953,12 @@ a
 <dl class="attribute">
 <dt id="sls_detector.Detector.timing_mode">
 <code class="descname">timing_mode</code><a class="headerlink" href="#sls_detector.Detector.timing_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">str</span></code> Timing mode of the detector</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Timing mode of the detector</p>
 <ul class="simple">
 <li><strong>auto</strong> Something</li>
 <li><strong>trigger</strong> Something else</li>
 </ul>
-<div class="admonition-todo admonition" id="index-5">
+<div class="admonition-todo admonition" id="index-4">
 <p class="first admonition-title">Todo</p>
 <p class="last">settinng and reading!</p>
 </div>
@@ -854,7 +969,7 @@ a
 <code class="descname">trimbits</code><a class="headerlink" href="#sls_detector.Detector.trimbits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set or read trimbits of the detector.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Set all to 32</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Set all to 32</span>
 <span class="n">d</span><span class="o">.</span><span class="n">trimbits</span> <span class="o">=</span> <span class="mi">32</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">trimbits</span>
@@ -872,7 +987,7 @@ a
 <code class="descname">trimmed_energies</code><a class="headerlink" href="#sls_detector.Detector.trimmed_energies" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>EIGER</em> – the energies at which the detector was trimmed. This also sets
 the range for which the calibration of the detector is valid.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">trimmed_energies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5400</span><span class="p">,</span> <span class="mi">6400</span><span class="p">,</span> <span class="mi">8000</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">trimmed_energies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5400</span><span class="p">,</span> <span class="mi">6400</span><span class="p">,</span> <span class="mi">8000</span><span class="p">]</span>
 
 <span class="n">detector</span><span class="o">.</span><span class="n">trimmed_energies</span>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">5400</span><span class="p">,</span> <span class="mi">6400</span><span class="p">,</span> <span class="mi">8000</span><span class="p">]</span>
@@ -895,7 +1010,7 @@ all chips in the detector.</p>
 <dl class="class">
 <dt id="sls_detector.Eiger">
 <em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Eiger</code><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sls_detector.detector.Detector</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sls_detector.detector.Detector</span></code></p>
 <p>Subclassing Detector to set up correct dacs and detector specific
 functions.</p>
 <dl class="attribute">
@@ -904,7 +1019,7 @@ functions.</p>
 <dd><p>Is the detector active? Can be used to enable or disable a detector
 module</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">active</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">active</span>
 <span class="o">&gt;&gt;</span> <span class="n">active</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">active</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
@@ -916,39 +1031,23 @@ module</p>
 <dl class="method">
 <dt id="sls_detector.Eiger.default_settings">
 <code class="descname">default_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.default_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.default_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>reset the detector to some type of standard settings</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="sls_detector.Eiger.delay">
-<code class="descname">delay</code><a class="headerlink" href="#sls_detector.Eiger.delay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transmission delay of the modules to allow running the detector
-in a network not supporting the full speed of the detector.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">delay</span>
-<span class="o">&gt;&gt;</span>
-<span class="n">Transmission</span> <span class="n">delay</span> <span class="p">[</span><span class="n">ns</span><span class="p">]</span>
-               <span class="n">left</span>   <span class="n">right</span>   <span class="n">frame</span>
- <span class="mi">0</span><span class="p">:</span><span class="n">beb048</span>         <span class="mi">0</span>   <span class="mi">15000</span>       <span class="mi">0</span>
- <span class="mi">1</span><span class="p">:</span><span class="n">beb049</span>       <span class="mi">100</span>  <span class="mi">190000</span>     <span class="mi">100</span>
-
- <span class="n">d</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2000</span><span class="p">,</span><span class="mi">5000</span><span class="p">]</span>
-</pre></div>
-</div>
+<dd><p>reset the detector to some type of standard settings
+mostly used when testing</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Eiger.eiger_matrix_reset">
 <code class="descname">eiger_matrix_reset</code><a class="headerlink" href="#sls_detector.Eiger.eiger_matrix_reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Matrix reset bit for Eiger.</p>
-<p><code class="xref py py-obj docutils literal"><span class="pre">True</span></code> : Normal operation, the matrix is reset before each acq.
-<code class="xref py py-obj docutils literal"><span class="pre">False</span></code> : Matrix reset disabled. Used to not reset before
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> : Normal operation, the matrix is reset before each acq.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code> : Matrix reset disabled. Used to not reset before
 reading out analog test pulses.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Eiger.flowcontrol_10g">
 <code class="descname">flowcontrol_10g</code><a class="headerlink" href="#sls_detector.Eiger.flowcontrol_10g" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal"><span class="pre">True</span></code> - Flow control enabled <code class="xref py py-obj docutils literal"><span class="pre">False</span></code> flow control disabled.
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> - Flow control enabled <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code> flow control disabled.
 Sets for all moduels, if for some reason access to a single module is needed
 this can be done trough the C++ API.</p>
 </dd></dl>
@@ -959,7 +1058,7 @@ this can be done trough the C++ API.</p>
 <dd><p>Pulse each pixel of the chip <strong>n</strong> times using the analog test pulses.
 The pulse height is set using d.dacs.vcall with 4000 being 0 and 0 being
 the highest pulse.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Pulse all pixels ten times</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Pulse all pixels ten times</span>
 <span class="n">d</span><span class="o">.</span><span class="n">pulse_all_pixels</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="c1">#Avoid resetting before acq</span>
@@ -979,20 +1078,36 @@ the highest pulse.</p>
 <dd><p>Advance the counter by toggling enable. Gives 2*n+2 int the counter</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="sls_detector.Eiger.pulse_diagonal">
+<code class="descname">pulse_diagonal</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.pulse_diagonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.pulse_diagonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unsed for calibraiton</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="sls_detector.Eiger.rx_udpport">
 <code class="descname">rx_udpport</code><a class="headerlink" href="#sls_detector.Eiger.rx_udpport" title="Permalink to this definition">¶</a></dt>
 <dd><p>UDP port for the receiver. Each module has two ports referred to
 as rx_udpport and rx_udpport2 in the command line interface
 here they are grouped for each detector</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">rx_udpport</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">rx_udpport2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="n">rx_udpport</span> <span class="o">...</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">rx_udpport</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">rx_udpport2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="n">rx_udpport</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">50010</span><span class="p">,</span> <span class="mi">50011</span><span class="p">,</span> <span class="mi">50004</span><span class="p">,</span> <span class="mi">50005</span><span class="p">]</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50010</span><span class="p">,</span> <span class="mi">50011</span><span class="p">,</span> <span class="mi">50012</span><span class="p">,</span> <span class="mi">50013</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.rx_zmqport">
+<code class="descname">rx_zmqport</code><a class="headerlink" href="#sls_detector.Eiger.rx_zmqport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the receiver zmq ports. Note that Eiger has two ports per receiver!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">rx_zmqport</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">,</span> <span class="mi">30003</span><span class="p">,</span> <span class="mi">30004</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1008,10 +1123,27 @@ here they are grouped for each detector</p>
 <code class="descname">tengiga</code><a class="headerlink" href="#sls_detector.Eiger.tengiga" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable 10Gbit/s data output</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">tengiga</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">tengiga</span>
 <span class="o">&gt;&gt;</span> <span class="kc">False</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">tengiga</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.tx_delay">
+<code class="descname">tx_delay</code><a class="headerlink" href="#sls_detector.Eiger.tx_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmission delay of the modules to allow running the detector
+in a network not supporting the full speed of the detector.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">tx_delay</span>
+<span class="o">&gt;&gt;</span>
+<span class="n">Transmission</span> <span class="n">delay</span> <span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+               <span class="n">left</span>   <span class="n">right</span>   <span class="n">frame</span>
+ <span class="mi">0</span><span class="p">:</span><span class="n">beb048</span>         <span class="mi">0</span>   <span class="mi">15000</span>       <span class="mi">0</span>
+ <span class="mi">1</span><span class="p">:</span><span class="n">beb049</span>       <span class="mi">100</span>  <span class="mi">190000</span>     <span class="mi">100</span>
+
+ <span class="n">d</span><span class="o">.</span><span class="n">tx_delay</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2000</span><span class="p">,</span><span class="mi">5000</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1022,7 +1154,7 @@ here they are grouped for each detector</p>
 <dd><p>Convenience function to get and set the individual vcmp of chips
 Used mainly in the calibration code.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Reading</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Reading</span>
 <span class="n">d</span><span class="o">.</span><span class="n">vcmp</span><span class="p">[:]</span>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
 
@@ -1040,8 +1172,23 @@ Used mainly in the calibration code.</p>
 <dl class="class">
 <dt id="sls_detector.Jungfrau">
 <em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sls_detector.detector.Detector</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sls_detector.detector.Detector</span></code></p>
 <p>Right dacs, etc.</p>
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.delay">
+<code class="descname">delay</code><a class="headerlink" href="#sls_detector.Jungfrau.delay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.n_gates">
+<code class="descname">n_gates</code><a class="headerlink" href="#sls_detector.Jungfrau.n_gates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.n_probes">
+<code class="descname">n_probes</code><a class="headerlink" href="#sls_detector.Jungfrau.n_probes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.power_chip">
 <code class="descname">power_chip</code><a class="headerlink" href="#sls_detector.Jungfrau.power_chip" title="Permalink to this definition">¶</a></dt>
@@ -1052,7 +1199,7 @@ Used mainly in the calibration code.</p>
 <code class="descname">register</code><a class="headerlink" href="#sls_detector.Jungfrau.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Directly manipulate registers on the readout board</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">register</span><span class="p">[</span><span class="mh">0x5d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf00</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">register</span><span class="p">[</span><span class="mh">0x5d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf00</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1104,7 +1251,7 @@ Used mainly in the calibration code.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'pre-alpha',
+            VERSION:'3.0.1 rc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
