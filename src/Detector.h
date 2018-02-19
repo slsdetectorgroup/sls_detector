@@ -34,7 +34,7 @@ public:
         return image_size;
     }
 
-    void setImageSize(int rows, int cols){
+    void setImageSize(const int rows, const int cols){
         det.setMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::Y, rows);
         det.setMaxNumberOfChannelsPerDetector(slsDetectorDefs::dimension::X, cols);
     }
@@ -72,7 +72,7 @@ public:
     bool getThreadedProcessing(){
         return det.setThreadedProcessing();
     }
-    void setThreadedProcessing(bool value){
+    void setThreadedProcessing(const bool value){
         det.setThreadedProcessing(value);
     }
 
@@ -82,7 +82,7 @@ public:
     bool getTenGigabitEthernet(){
         return det.enableTenGigabitEthernet();
     }
-    void setTenGigabitEthernet(bool value){
+    void setTenGigabitEthernet(const bool value){
         det.enableTenGigabitEthernet(value);
     }
 
@@ -114,14 +114,14 @@ public:
     bool getReceiverOnline(){
         return det.setReceiverOnline();
     }
-    void setReceiverOnline(bool status){
+    void setReceiverOnline(const bool status){
         det.setReceiverOnline(status);
     }
 
     bool getOnline(){
         return det.setOnline();
     }
-    void setOnline(bool status){
+    void setOnline(const bool status){
         det.setOnline(status);
     }
 
@@ -129,23 +129,23 @@ public:
     bool isChipPowered(){
         return det.powerChip();
     }
-    void powerChip(bool value){
+    void powerChip(const bool value){
         det.powerChip(value);
     }
 
 
     //read register from readout system, used for low level control
-    int readRegister(int addr){
+    int readRegister(const int addr){
         return det.readRegister(addr);
     }
 
     //directly write to register in readout system
-    void writeRegister(int addr, int value){
+    void writeRegister(const int addr, const int value){
         det.writeRegister(addr, value);
     }
 
     //directly write to the ADC register
-    void writeAdcRegister(int addr, int value){
+    void writeAdcRegister(const int addr, const int value){
         det.writeAdcRegister(addr, value);
     }
 
@@ -153,7 +153,7 @@ public:
         return det.getAcquiringFlag();
     }
 
-    void setAcquiringFlag(bool flag){
+    void setAcquiringFlag(const bool flag){
         det.setAcquiringFlag(flag);
     }
 
@@ -196,29 +196,28 @@ public:
     int getDynamicRange(){
         return det.setDynamicRange(-1);
     }
-    void setDynamicRange(int dr){
+    void setDynamicRange(const int dr){
         det.setDynamicRange(dr);
     }
 
-    void pulseChip(int n){ det.pulseChip(n); }
-    void pulseAllPixels(int n);
-    void pulseDiagonal(int n);
+    void pulseChip(const int n){ det.pulseChip(n); }
+    void pulseAllPixels(const int n);
+    void pulseDiagonal(const int n);
 
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
     void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
     int getReadoutClockSpeed(){ return det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, -1); }
 
     int getFirmwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_FIRMWARE_VERSION); }
-    int getSoftwareVersion(){  return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
+    int getSoftwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
 
     int getDetectorNumber(const int i){
         return getSlsDetector(i)->getId(slsDetectorDefs::DETECTOR_SERIAL_NUMBER);
     }
 
-    void setReadoutClockSpeed(int speed){
+    void setReadoutClockSpeed(const int speed){
         det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, speed);
     }
-
 
     int getRxTcpport(const int i){
         return getSlsDetector(i)->setPort(slsDetectorDefs::portType::DATA_PORT);
@@ -277,7 +276,7 @@ public:
         auto n_trimen = det.getTrimEn();
         std::vector<int> trim_energies(n_trimen);
 
-        //second call to get the eneries
+        //second call to get the energies
         det.getTrimEn(trim_energies.data());
         return trim_energies;
     }
@@ -303,13 +302,13 @@ public:
 
     //name to enum translation on the c++ side
     //should we instead expose the enum to Python?
-    dacs_t getDac(std::string dac_name, int mod_id){
+    dacs_t getDac(std::string dac_name, const int mod_id){
         dacs_t val = -1;
         auto dac = dacNameToEnum(dac_name);
         return det.setDAC(val, dac, 0, mod_id);
     }
 
-    void setDac(std::string dac_name, int mod_id, dacs_t val){
+    void setDac(std::string dac_name, const int mod_id, dacs_t val){
         auto dac = dacNameToEnum(dac_name);
         det.setDAC(val, dac, 0, mod_id);
     }
@@ -338,7 +337,7 @@ public:
         return det.setDAC(val, dac, 0, -1);
     }
     
-    void setDacVthreshold(dacs_t val){
+    void setDacVthreshold(const dacs_t val){
         auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
         det.setDAC(val, dac, 0, -1);
     }
