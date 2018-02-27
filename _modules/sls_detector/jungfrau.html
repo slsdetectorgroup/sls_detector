@@ -200,7 +200,9 @@
 
 <div class="viewcode-block" id="Jungfrau"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Jungfrau">[docs]</a><span class="k">class</span> <span class="nc">Jungfrau</span><span class="p">(</span><span class="n">Detector</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Right dacs, etc.</span>
+<span class="sd">    Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized</span>
+<span class="sd">    class is needed to provide the correct dacs and unique functions.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_detector_dynamic_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
     
@@ -211,17 +213,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span> <span class="o">=</span> <span class="n">JungfrauDacs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;trimbit_limits&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])(</span><span class="mi">0</span><span class="p">,</span><span class="mi">63</span><span class="p">)</span>
+        <span class="c1"># self._trimbit_limits = namedtuple(&#39;trimbit_limits&#39;, [&#39;min&#39;, &#39;max&#39;])(0,63)</span>
         
-        <span class="c1">#Eiger specific adcs</span>
+        <span class="c1">#Jungfrau specific temps, this can be reduced to a single value?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span> <span class="o">=</span> <span class="n">DetectorAdcs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpga</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpga&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_register</span> <span class="o">=</span> <span class="n">Register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">power_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Power on or off the ASICs, True for on False for off&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">isChipPowered</span><span class="p">()</span>
     
     <span class="nd">@power_chip</span><span class="o">.</span><span class="n">setter</span>
@@ -233,6 +235,7 @@
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delay after trigger [s]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDelay</span><span class="p">()</span><span class="o">/</span><span class="mf">1e9</span>
 
     <span class="nd">@delay</span><span class="o">.</span><span class="n">setter</span>
@@ -263,6 +266,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">temperature_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Threshold for switching of chips&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getThresholdTemperature</span><span class="p">()</span>
 
     <span class="nd">@temperature_threshold</span><span class="o">.</span><span class="n">setter</span>
@@ -271,6 +275,24 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">temperature_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Monitor the temperature of the detector and switch off chips if temperature_threshold is</span>
+<span class="sd">        crossed</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            #activate</span>
+<span class="sd">            detector.temperature_control = True</span>
+
+<span class="sd">            #deactivate</span>
+<span class="sd">            detector.temperature_control = False</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getTemperatureControl</span><span class="p">()</span>
 
     <span class="nd">@temperature_control</span><span class="o">.</span><span class="n">setter</span>
@@ -279,9 +301,18 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">temperature_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Have the temperature threshold been crossed?</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">            :py:obj:`True` if the threshold have been crossed and temperature_control is active otherwise :py:obj:`False`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getTemperatureEvent</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Jungfrau.reset_temperature_event"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Jungfrau.reset_temperature_event">[docs]</a>    <span class="k">def</span> <span class="nf">reset_temperature_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Jungfrau.reset_temperature_event"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Jungfrau.reset_temperature_event">[docs]</a>    <span class="k">def</span> <span class="nf">reset_temperature_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reset the temperature_event. After reset temperature_event is False&quot;&quot;&quot;</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetTemperatureEvent</span><span class="p">()</span>
 
     <span class="nd">@property</span>
@@ -321,7 +352,7 @@
 <span class="sd">            d.rx_udpport</span>
 <span class="sd">            &gt;&gt; [50010]</span>
 
-<span class="sd">            d.rx_udpport = [50010, 50011, 50012, 50013]</span>
+<span class="sd">            d.rx_udpport = [50010]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport&#39;</span><span class="p">)</span>

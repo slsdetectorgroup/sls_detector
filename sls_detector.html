@@ -1174,11 +1174,13 @@ Used mainly in the calibration code.</p>
 <dt id="sls_detector.Jungfrau">
 <em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sls_detector.detector.Detector</span></code></p>
-<p>Right dacs, etc.</p>
+<p>Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
+class is needed to provide the correct dacs and unique functions.</p>
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.delay">
 <code class="descname">delay</code><a class="headerlink" href="#sls_detector.Jungfrau.delay" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Delay after trigger [s]</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.n_gates">
@@ -1193,7 +1195,8 @@ Used mainly in the calibration code.</p>
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.power_chip">
 <code class="descname">power_chip</code><a class="headerlink" href="#sls_detector.Jungfrau.power_chip" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Power on or off the ASICs, True for on False for off</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.register">
@@ -1208,7 +1211,8 @@ Used mainly in the calibration code.</p>
 <dl class="method">
 <dt id="sls_detector.Jungfrau.reset_temperature_event">
 <code class="descname">reset_temperature_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau.reset_temperature_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau.reset_temperature_event" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reset the temperature_event. After reset temperature_event is False</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.rx_udpport">
@@ -1222,7 +1226,7 @@ Note! Eiger has two ports</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">50010</span><span class="p">]</span>
 
-<span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50010</span><span class="p">,</span> <span class="mi">50011</span><span class="p">,</span> <span class="mi">50012</span><span class="p">,</span> <span class="mi">50013</span><span class="p">]</span>
+<span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50010</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1230,17 +1234,39 @@ Note! Eiger has two ports</p>
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.temperature_control">
 <code class="descname">temperature_control</code><a class="headerlink" href="#sls_detector.Jungfrau.temperature_control" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Monitor the temperature of the detector and switch off chips if temperature_threshold is
+crossed</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#activate</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">temperature_control</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1">#deactivate</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">temperature_control</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.temperature_event">
 <code class="descname">temperature_event</code><a class="headerlink" href="#sls_detector.Jungfrau.temperature_event" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Have the temperature threshold been crossed?</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> if the threshold have been crossed and temperature_control is active otherwise <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.temperature_threshold">
 <code class="descname">temperature_threshold</code><a class="headerlink" href="#sls_detector.Jungfrau.temperature_threshold" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Threshold for switching of chips</p>
+</dd></dl>
 
 </dd></dl>
 
