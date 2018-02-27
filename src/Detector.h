@@ -271,6 +271,7 @@ public:
     void setTrimEnergies(std::vector<int> energy){
         det.setTrimEn(energy.size(), energy.data());
     }
+
     std::vector<int> getTrimEnergies(){
         //initial call to get legth, energies defaults to NULL
         auto n_trimen = det.getTrimEn();
@@ -280,6 +281,34 @@ public:
         det.getTrimEn(trim_energies.data());
         return trim_energies;
     }
+
+
+
+    /*** Temperature control functions for Jungfrau ***/
+    void setThresholdTemperature(float t){
+        det.setThresholdTemperature(static_cast<int>(t*1000), -1);
+    }
+
+    float getThresholdTemperature(){
+        return static_cast<float>(det.setThresholdTemperature(-1,-1))/1000.0;
+    }
+
+    void setTemperatureControl(bool v){
+        det.setTemperatureControl(v);
+    }
+    bool getTemperatureControl(){
+        return det.setTemperatureControl();
+    }
+
+    bool getTemperatureEvent(){
+        return det.setTemperatureEvent();
+    }
+    void resetTemperatureEvent(){
+        det.setTemperatureEvent(0);
+    }
+    /*** END Temperature control functions for Jungfrau ***/
+
+
 
     void setThresholdEnergy(const int eV){
         det.setThresholdEnergy(eV);

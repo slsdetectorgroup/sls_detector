@@ -106,6 +106,29 @@ class Jungfrau(Detector):
         self._api.setNumberOfProbes()
 
     @property
+    def temperature_threshold(self):
+        return self._api.getThresholdTemperature()
+
+    @temperature_threshold.setter
+    def temperature_threshold(self, t):
+        self._api.setThresholdTemperature(t)
+
+    @property
+    def temperature_control(self):
+        return self._api.getTemperatureControl()
+
+    @temperature_control.setter
+    def temperature_control(self, v):
+        self._api.setTemperatureControl(v)
+
+    @property
+    def temperature_event(self):
+        return self._api.getTemperatureEvent()
+
+    def reset_temperature_event(self):
+        self._api.resetTemperatureEvent()
+
+    @property
     @error_handling
     def register(self):
         """Directly manipulate registers on the readout board
