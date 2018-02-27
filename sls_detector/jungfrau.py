@@ -136,3 +136,36 @@ class Jungfrau(Detector):
         
         
         return self._register
+
+
+    @property
+    @error_handling
+    def rx_udpport(self):
+        """
+        UDP port for the receiver. Each module have one port.
+        Note! Eiger has two ports
+
+        ::
+
+            [0:rx_udpport]
+
+        Examples
+        -----------
+
+        ::
+
+            d.rx_udpport
+            >> [50010]
+
+            d.rx_udpport = [50010, 50011, 50012, 50013]
+
+        """
+        return self._api.getNetworkParameter('rx_udpport')
+
+
+    @rx_udpport.setter
+    @error_handling
+    def rx_udpport(self, ports):
+        """Requires iterating over elements two and two for setting ports"""
+        for i, p in enumerate(ports):
+            self._api.setNetworkParameter('rx_udpport', str(p), i)
