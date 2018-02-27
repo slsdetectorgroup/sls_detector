@@ -1,22 +1,9 @@
 import pytest
 import config_test
-
+from fixtures import detector, eiger, jungfrau, eigertest, jungfrautest
 from sls_detector.errors import DetectorValueError
 
-from sls_detector import Detector
-detector_type = Detector().detector_type
-eigertest = pytest.mark.skipif(detector_type != 'Eiger', reason = 'Only valid for Eiger')
 
-@pytest.fixture
-def detector():
-    from sls_detector import Detector
-    d = Detector()
-    return d
-
-@pytest.fixture
-def eiger():
-    from sls_detector import Eiger
-    return Eiger()
 
 
 @eigertest

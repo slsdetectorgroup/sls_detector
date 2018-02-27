@@ -13,5 +13,11 @@ def eiger():
     return Eiger()
 
 
+@pytest.fixture
+def jungfrau():
+    from sls_detector import Jungfrau
+    return Jungfrau()
+
 detector_type = Detector().detector_type
 eigertest = pytest.mark.skipif(detector_type != 'Eiger', reason = 'Only valid for Eiger')
+jungfrautest = pytest.mark.skipif(detector_type != 'Jungfrau', reason = 'Only valid for Jungfrau')

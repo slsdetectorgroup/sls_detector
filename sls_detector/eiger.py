@@ -7,7 +7,7 @@ Created on Wed Dec  6 11:51:18 2017
 """
 
 from functools import partial
-from collections import namedtuple
+from collections import namedtuple, Iterable
 import socket
 
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, DetectorProperty, element_if_equal
