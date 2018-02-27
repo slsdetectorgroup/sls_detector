@@ -52,14 +52,6 @@ class Jungfrau(Detector):
         #Eiger specific adcs
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
-        self._temp.fpgaext = Adc('temp_fpgaext', self)
-        self._temp.t10ge = Adc('temp_10ge', self)
-        self._temp.dcdc = Adc('temp_dcdc', self)
-        self._temp.sodl = Adc('temp_sodl', self)
-        self._temp.sodr = Adc('temp_sodr', self)
-        self._temp.fpgafl = Adc('temp_fpgafl', self)
-        self._temp.fpgafr = Adc('temp_fpgafr', self)
-        
 
         self._register = Register(self)
         
