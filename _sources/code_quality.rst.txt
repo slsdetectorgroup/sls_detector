@@ -112,7 +112,7 @@ These tests require a detector connected. Performs simple tasks like setting
 exposure time and reading back to double check the value
 
 ::
-    
+
     ----------- coverage: platform linux, python 3.6.4-final-0 -----------
     Name                         Stmts   Miss  Cover
     ------------------------------------------------

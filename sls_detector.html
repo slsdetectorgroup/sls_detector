@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Documentation &mdash; sls_detector 3.0.1 rc documentation</title>
+  <title>API Documentation &mdash; sls_detector developer documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector 3.0.1 rc documentation" href="index.html"/>
+    <link rel="top" title="sls_detector developer documentation" href="index.html"/>
         <link rel="prev" title="Error handling" href="error-handling.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                3.0.1
+                developer
               </div>
             
           
@@ -276,6 +276,18 @@ or multi detector.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.detector_number">
+<code class="descname">detector_number</code><a class="headerlink" href="#sls_detector.Detector.detector_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all detector numbers, return as list</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#for beb083 and beb098</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">detector_number</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">98</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.detector_type">
 <code class="descname">detector_type</code><a class="headerlink" href="#sls_detector.Detector.detector_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>list if the type is different otherwise string</p>
@@ -428,17 +440,41 @@ or multi detector.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.flags">
 <code class="descname">flags</code><a class="headerlink" href="#sls_detector.Detector.flags" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read and set flags. Accepts both single flag as
+string or list of flags.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code> – If flag not recognized</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Eiger</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;storeinram&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel&#39;</span><span class="p">]</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="s1">&#39;nonparallel&#39;</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;storeinram&#39;</span><span class="p">,</span> <span class="s1">&#39;nonparallel&#39;</span><span class="p">]</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;continous&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.flipped_data_x">
 <code class="descname">flipped_data_x</code><a class="headerlink" href="#sls_detector.Detector.flipped_data_x" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flips data on x axis. Set for eiger bottom modules</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.flipped_data_y">
 <code class="descname">flipped_data_y</code><a class="headerlink" href="#sls_detector.Detector.flipped_data_y" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flips data on y axis.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.frames_caught">
@@ -502,7 +538,24 @@ Also works setting using a normal tuple</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.last_client_ip">
 <code class="descname">last_client_ip</code><a class="headerlink" href="#sls_detector.Detector.last_client_ip" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the ip address of the last client
+that accessed the detector</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> last client ip</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">last_client_ip</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;129.129.202.117&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="sls_detector.Detector.load_config">
@@ -607,7 +660,7 @@ of the detector modules.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.n_cycles">
 <code class="descname">n_cycles</code><a class="headerlink" href="#sls_detector.Detector.n_cycles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of cycles for the measurement (exp*n_frames)*cycles</p>
+<dd><p>Number of cycles for the measurement (exp*n_frames)*n_cycles</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -619,7 +672,24 @@ of the detector modules.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.n_measurements">
 <code class="descname">n_measurements</code><a class="headerlink" href="#sls_detector.Detector.n_measurements" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Number of times to repeat the programmed measurement.
+This is the outer most part. Real time operation is not
+guaranteed since this is software controlled.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_measurements</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span> <span class="c1"># 1 frame 3 times</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">detector</span><span class="o">.</span><span class="n">n_measurements</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span> <span class="c1"># 5x3 frames 2 times total 30 frames</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.n_modules">
@@ -757,6 +827,11 @@ otherwise</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.rx_udpmac">
+<code class="descname">rx_udpmac</code><a class="headerlink" href="#sls_detector.Detector.rx_udpmac" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.rx_zmqip">
 <code class="descname">rx_zmqip</code><a class="headerlink" href="#sls_detector.Detector.rx_zmqip" title="Permalink to this definition">¶</a></dt>
 <dd><div class="admonition-todo admonition" id="index-1">
@@ -768,14 +843,10 @@ otherwise</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_zmqport">
 <code class="descname">rx_zmqport</code><a class="headerlink" href="#sls_detector.Detector.rx_zmqport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the receiver zmq ports</p>
+<dd><p>Return the receiver zmq ports.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">rx_zmqport</span>
-<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">,</span> <span class="mi">30003</span><span class="p">,</span> <span class="mi">30004</span><span class="p">]</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">]</span>
 </pre></div>
-</div>
-<div class="admonition-todo admonition" id="index-2">
-<p class="first admonition-title">Todo</p>
-<p class="last">also set</p>
 </div>
 </dd></dl>
 
@@ -784,7 +855,7 @@ otherwise</p>
 <code class="descname">settings</code><a class="headerlink" href="#sls_detector.Detector.settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detector settings used to control for example calibration or gain
 switching. For EIGER almost always standard</p>
-<div class="admonition-todo admonition" id="index-3">
+<div class="admonition-todo admonition" id="index-2">
 <p class="first admonition-title">Todo</p>
 <p class="last">check input depending on detector</p>
 </div>
@@ -812,7 +883,7 @@ with receiver start.</p>
 <dt id="sls_detector.Detector.status">
 <code class="descname">status</code><a class="headerlink" href="#sls_detector.Detector.status" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Status of the detector – idle, running,</p>
-<div class="admonition-todo admonition" id="index-4">
+<div class="admonition-todo admonition" id="index-3">
 <p class="first admonition-title">Todo</p>
 <p class="last">Check possible values</p>
 </div>
@@ -892,10 +963,6 @@ a
 <li><strong>auto</strong> Something</li>
 <li><strong>trigger</strong> Something else</li>
 </ul>
-<div class="admonition-todo admonition" id="index-5">
-<p class="first admonition-title">Todo</p>
-<p class="last">settinng and reading!</p>
-</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -1036,6 +1103,16 @@ here they are grouped for each detector</p>
 </div>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="sls_detector.Eiger.rx_zmqport">
+<code class="descname">rx_zmqport</code><a class="headerlink" href="#sls_detector.Eiger.rx_zmqport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the receiver zmq ports. Note that Eiger has two ports per receiver!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">rx_zmqport</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">,</span> <span class="mi">30003</span><span class="p">,</span> <span class="mi">30004</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="sls_detector.Eiger.setup500k">
 <code class="descname">setup500k</code><span class="sig-paren">(</span><em>hostnames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.setup500k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.setup500k" title="Permalink to this definition">¶</a></dt>
@@ -1128,6 +1205,43 @@ Used mainly in the calibration code.</p>
 </div>
 </dd></dl>
 
+<dl class="method">
+<dt id="sls_detector.Jungfrau.reset_temperature_event">
+<code class="descname">reset_temperature_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau.reset_temperature_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau.reset_temperature_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.rx_udpport">
+<code class="descname">rx_udpport</code><a class="headerlink" href="#sls_detector.Jungfrau.rx_udpport" title="Permalink to this definition">¶</a></dt>
+<dd><p>UDP port for the receiver. Each module have one port.
+Note! Eiger has two ports</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">rx_udpport</span><span class="p">]</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">50010</span><span class="p">]</span>
+
+<span class="n">d</span><span class="o">.</span><span class="n">rx_udpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50010</span><span class="p">,</span> <span class="mi">50011</span><span class="p">,</span> <span class="mi">50012</span><span class="p">,</span> <span class="mi">50013</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.temperature_control">
+<code class="descname">temperature_control</code><a class="headerlink" href="#sls_detector.Jungfrau.temperature_control" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.temperature_event">
+<code class="descname">temperature_event</code><a class="headerlink" href="#sls_detector.Jungfrau.temperature_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.temperature_threshold">
+<code class="descname">temperature_threshold</code><a class="headerlink" href="#sls_detector.Jungfrau.temperature_threshold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -1175,7 +1289,7 @@ Used mainly in the calibration code.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'3.0.1 rc',
+            VERSION:'developer',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

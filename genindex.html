@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; sls_detector 3.0.1 rc documentation</title>
+  <title>Index &mdash; sls_detector developer documentation</title>
   
 
   
@@ -36,7 +36,7 @@
         <link rel="index" title="Index"
               href="#"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector 3.0.1 rc documentation" href="index.html"/> 
+    <link rel="top" title="sls_detector developer documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                3.0.1
+                developer
               </div>
             
           
@@ -227,6 +227,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Detector">Detector (class in sls_detector)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Detector.detector_number">detector_number (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.detector_type">detector_type (sls_detector.Detector attribute)</a>
 </li>
@@ -400,22 +402,34 @@
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.reset_frames_caught">reset_frames_caught() (sls_detector.Detector method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sls_detector.html#sls_detector.Jungfrau.reset_temperature_event">reset_temperature_event() (sls_detector.Jungfrau method)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_datastream">rx_datastream (sls_detector.Detector attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_hostname">rx_hostname (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_tcpport">rx_tcpport (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_udpip">rx_udpip (sls_detector.Detector attribute)</a>
 </li>
-      <li><a href="sls_detector.html#sls_detector.Eiger.rx_udpport">rx_udpport (sls_detector.Eiger attribute)</a>
+      <li><a href="sls_detector.html#sls_detector.Detector.rx_udpmac">rx_udpmac (sls_detector.Detector attribute)</a>
 </li>
+      <li><a href="sls_detector.html#sls_detector.Eiger.rx_udpport">rx_udpport (sls_detector.Eiger attribute)</a>
+
+      <ul>
+        <li><a href="sls_detector.html#sls_detector.Jungfrau.rx_udpport">(sls_detector.Jungfrau attribute)</a>
+</li>
+      </ul></li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_zmqip">rx_zmqip (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_zmqport">rx_zmqport (sls_detector.Detector attribute)</a>
+
+      <ul>
+        <li><a href="sls_detector.html#sls_detector.Eiger.rx_zmqport">(sls_detector.Eiger attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -450,14 +464,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Detector.temp">temp (sls_detector.Detector attribute)</a>
 </li>
+      <li><a href="sls_detector.html#sls_detector.Jungfrau.temperature_control">temperature_control (sls_detector.Jungfrau attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Jungfrau.temperature_event">temperature_event (sls_detector.Jungfrau attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Jungfrau.temperature_threshold">temperature_threshold (sls_detector.Jungfrau attribute)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Eiger.tengiga">tengiga (sls_detector.Eiger attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Detector.threaded">threaded (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.threshold">threshold (sls_detector.Detector attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Detector.timing_mode">timing_mode (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.trimbits">trimbits (sls_detector.Detector attribute)</a>
@@ -517,7 +537,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'3.0.1 rc',
+            VERSION:'developer',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
