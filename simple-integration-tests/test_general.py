@@ -13,17 +13,6 @@ from fixtures import detector
 from sls_detector.errors import DetectorValueError, DetectorError
 
 
-# @pytest.fixture
-# def detector():
-#     from sls_detector import Detector
-#     d = Detector()
-#     yield d
-#     #Reset to a good state
-#     d.busy = False
-#     d.period = 0
-
-
-
 
 def test_error_handling(detector):
     with pytest.raises(DetectorError):
@@ -198,20 +187,4 @@ def test_set_timing_mode(detector):
     detector.timing_mode = 'auto'
     assert detector.timing_mode == 'auto'
 
-
-#     def test_one_frame(self):
-#         self.detector.exposure_time = 0.1
-#         self.detector.n_frames = 1
-#         self.detector.acq()
-#         self.assertEqual(self.detector.frames_caught, 1)
-#
-#     def test_ten_single_frames(self):
-#         self.detector.exposure_time = 0.1
-#         self.detector.n_frames = 1
-#         for i in range(10):
-#             self.detector.acq()
-#             self.assertEqual(self.detector.frames_caught, 1)
-#
-# if __name__ == '__main__':
-#     unittest.main()
 

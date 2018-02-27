@@ -5,14 +5,9 @@ Tests for hostname related functions of the detector
 """
 import pytest
 import config_test
-
+from fixtures import detector, eiger, jungfrau, eigertest, jungfrautest
 from sls_detector.errors import DetectorValueError
 
-@pytest.fixture
-def detector():
-    from sls_detector import Detector
-    d = Detector()
-    return d
 
 
 def test_firmware_version(detector):

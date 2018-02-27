@@ -5,26 +5,9 @@ Tests for trimbit and dac related functions
 """
 import pytest
 import config_test
-
+from fixtures import detector, eiger, jungfrau, eigertest, jungfrautest
 from sls_detector.errors import DetectorValueError
 
-from sls_detector import Detector
-detector_type = Detector().detector_type
-
-
-
-@pytest.fixture
-def eiger():
-    from sls_detector import Eiger
-    return Eiger()
-
-@pytest.fixture
-def jungfrau():
-    from sls_detector import Jungfrau
-    return Jungfrau()
-
-eigertest = pytest.mark.skipif(detector_type != 'Eiger', reason = 'Only valid for Eiger')
-jungfrautest = pytest.mark.skipif(detector_type != 'Jungfrau', reason = 'Only valid for Jungfrau')
 
 @eigertest
 def test_set_trimbits(eiger):

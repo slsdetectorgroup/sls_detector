@@ -114,6 +114,12 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("getDetectorType", &Detector::getDetectorType)
 
+            .def("setThresholdTemperature", &Detector::setThresholdTemperature)
+            .def("getThresholdTemperature", &Detector::getThresholdTemperature)
+            .def("setTemperatureControl", &Detector::setTemperatureControl)
+            .def("getTemperatureControl", &Detector::getTemperatureControl)
+            .def("getTemperatureEvent", &Detector::getTemperatureEvent)
+            .def("resetTemperatureEvent", &Detector::resetTemperatureEvent)
 
             .def("getRxDataStreamStatus", &Detector::getRxDataStreamStatus)
             .def("setRxDataStreamStatus", &Detector::setRxDataStreamStatus)

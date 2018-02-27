@@ -36,7 +36,9 @@ class JungfrauDacs(DetectorDacs):
 
 class Jungfrau(Detector):
     """
-    Right dacs, etc.
+    Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
+    class is needed to provide the correct dacs and unique functions.
+
     """
     _detector_dynamic_range = [4, 8, 16, 32]
     
@@ -47,25 +49,17 @@ class Jungfrau(Detector):
 
         self._dacs = JungfrauDacs(self)
         
-        self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
+        # self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
         
-        #Eiger specific adcs
+        #Jungfrau specific temps, this can be reduced to a single value?
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
-        self._temp.fpgaext = Adc('temp_fpgaext', self)
-        self._temp.t10ge = Adc('temp_10ge', self)
-        self._temp.dcdc = Adc('temp_dcdc', self)
-        self._temp.sodl = Adc('temp_sodl', self)
-        self._temp.sodr = Adc('temp_sodr', self)
-        self._temp.fpgafl = Adc('temp_fpgafl', self)
-        self._temp.fpgafr = Adc('temp_fpgafr', self)
-        
-
         self._register = Register(self)
         
     @property
     @error_handling
     def power_chip(self):
+        """Power on or off the ASICs, True for on False for off"""
         return self._api.isChipPowered()
     
     @power_chip.setter
@@ -77,6 +71,7 @@ class Jungfrau(Detector):
     @property
     @error_handling
     def delay(self):
+        """Delay after trigger [s]"""
         return self._api.getDelay()/1e9
 
     @delay.setter
@@ -106,6 +101,57 @@ class Jungfrau(Detector):
         self._api.setNumberOfProbes()
 
     @property
+    def temperature_threshold(self):
+        """Threshold for switching of chips"""
+        return self._api.getThresholdTemperature()
+
+    @temperature_threshold.setter
+    def temperature_threshold(self, t):
+        self._api.setThresholdTemperature(t)
+
+    @property
+    def temperature_control(self):
+        """
+        Monitor the temperature of the detector and switch off chips if temperature_threshold is
+        crossed
+
+
+        Examples
+        ---------
+
+        ::
+
+            #activate
+            detector.temperature_control = True
+
+            #deactivate
+            detector.temperature_control = False
+
+
+        """
+        return self._api.getTemperatureControl()
+
+    @temperature_control.setter
+    def temperature_control(self, v):
+        self._api.setTemperatureControl(v)
+
+    @property
+    def temperature_event(self):
+        """Have the temperature threshold been crossed?
+
+        Returns
+        ---------
+
+            :py:obj:`True` if the threshold have been crossed and temperature_control is active otherwise :py:obj:`False`
+
+        """
+        return self._api.getTemperatureEvent()
+
+    def reset_temperature_event(self):
+        """Reset the temperature_event. After reset temperature_event is False"""
+        self._api.resetTemperatureEvent()
+
+    @property
     @error_handling
     def register(self):
         """Directly manipulate registers on the readout board
@@ -121,3 +167,36 @@ class Jungfrau(Detector):
         
         
         return self._register
+
+
+    @property
+    @error_handling
+    def rx_udpport(self):
+        """
+        UDP port for the receiver. Each module have one port.
+        Note! Eiger has two ports
+
+        ::
+
+            [0:rx_udpport]
+
+        Examples
+        -----------
+
+        ::
+
+            d.rx_udpport
+            >> [50010]
+
+            d.rx_udpport = [50010]
+
+        """
+        return self._api.getNetworkParameter('rx_udpport')
+
+
+    @rx_udpport.setter
+    @error_handling
+    def rx_udpport(self, ports):
+        """Requires iterating over elements two and two for setting ports"""
+        for i, p in enumerate(ports):
+            self._api.setNetworkParameter('rx_udpport', str(p), i)

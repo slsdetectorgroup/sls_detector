@@ -1224,7 +1224,14 @@ class Detector:
     def rx_udpip(self):
         s = self._api.getNetworkParameter('rx_udpip')
         return element_if_equal(s)
-    
+
+    @rx_udpip.setter
+    def rx_udpip(self, ip):
+        if isinstance(ip, list):
+            for i, addr in enumerate(ip):
+                self._api.setNetworkParameter('rx_udpip', addr, i)
+        else:
+            self._api.setNetworkParameter('rx_udpip', ip, -1)
     
     @rx_hostname.setter
     @error_handling
@@ -1234,6 +1241,18 @@ class Detector:
             names = '+'.join(n for n in names)+'+'
 
         self._api.setNetworkParameter('rx_hostname', names, -1)
+
+    @property
+    def rx_udpmac(self):
+        return element_if_equal(self._api.getNetworkParameter('rx_udpmac'))
+
+    @rx_udpmac.setter
+    def rx_udpmac(self, mac):
+        if isinstance(mac, list):
+            for i, m in enumerate(mac):
+                self._api.setNetworkParameter('rx_udpmac', m, i)
+        else:
+            self._api.setNetworkParameter('rx_udpmac', mac, -1)
 
     @property
     @error_handling
