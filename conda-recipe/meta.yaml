@@ -1,6 +1,6 @@
 package:
     name: sls_detector
-    version: 3.1.0-rc
+    version: 3.1.0rc
 
 build:
   number: 0
@@ -15,14 +15,14 @@ requirements:
         - cmake
         - setuptools
         - pybind11
-        - sls_detector_software 3.1.0-rc
+        - sls_detector_software 3.1.0rc
         - pyzmq 16.0.2
     run:
         - python
         - gcc
         - cmake
         - numpy
-        - sls_detector_software 3.1.0-rc
+        - sls_detector_software 3.1.0rc
         - pyzmq 16.0.2
 
 
