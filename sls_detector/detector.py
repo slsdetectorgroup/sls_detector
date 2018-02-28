@@ -1555,6 +1555,14 @@ class Detector:
     def _provoke_error(self):
         self._api.setErrorMask(1)
 
+
+    def config_network(self):
+        """
+        Configures the detector source and destination MAC addresses, IP addresses
+        and UDP ports, and computes the IP header checksum for such parameters
+        """
+        self._api.configureNetworkParameters()
+
 def free_shared_memory():
     """
     Function to free the shared memory. After this

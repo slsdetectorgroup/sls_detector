@@ -12,6 +12,15 @@ from collections import namedtuple
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
 from .decorators import error_handling
 
+def all_equal(mylist):
+    return all(x == mylist[0] for x in mylist)
+
+def element_if_equal(mylist):
+    if all_equal(mylist):
+        return mylist[0]
+    else:
+        return mylist
+
 class Register:
     def __init__(self, detector):
         self._detector = detector
@@ -21,14 +30,14 @@ class Register:
         self._detector._api.writeRegister(key, value)
 
 class JungfrauDacs(DetectorDacs):
-    _dacs = [('vb_comp',    0, 4000,    1220),
-             ('vdd_prot',   0, 4000,    3000),
-             ('vin_com',    0, 4000,    1053),
-             ('vref_prech', 0, 4000,    1450),
-             ('vb_pixbuff', 0, 4000,     750),
-             ('vb_ds',      0, 4000,    1000),
-             ('vref_ds',    0, 4000,     480),
-             ('vref_comp',  0, 4000,     420),
+    _dacs = [('vb_comp',    0, 4095,    1220),
+             ('vdd_prot',   0, 4095,    3000),
+             ('vin_com',    0, 4095,    1053),
+             ('vref_prech', 0, 4095,    1450),
+             ('vb_pixbuff', 0, 4095,     750),
+             ('vb_ds',      0, 4095,    1000),
+             ('vref_ds',    0, 4095,     480),
+             ('vref_comp',  0, 4095,     420),
              ]
     _dacnames = [_d[0] for _d in _dacs]
     
@@ -40,8 +49,6 @@ class Jungfrau(Detector):
     class is needed to provide the correct dacs and unique functions.
 
     """
-    _detector_dynamic_range = [4, 8, 16, 32]
-    
     def __init__(self):
         #Init on base calss
         super().__init__()
@@ -200,3 +207,33 @@ class Jungfrau(Detector):
         """Requires iterating over elements two and two for setting ports"""
         for i, p in enumerate(ports):
             self._api.setNetworkParameter('rx_udpport', str(p), i)
+
+
+    @property
+    def detector_mac(self):
+        s = self._api.getNetworkParameter('detectormac')
+        return element_if_equal(s)
+
+
+    @detector_mac.setter
+    def detector_mac(self, mac):
+        if isinstance(mac, list):
+            for i, m in enumerate(mac):
+                self._api.setNetworkParameter('detectormac', m, i)
+        else:
+            self._api.setNetworkParameter('detectormac', mac, -1)
+
+
+    @property
+    @error_handling
+    def detector_ip(self):
+        s = self._api.getNetworkParameter('detectorip')
+        return element_if_equal(s)
+
+    @detector_ip.setter
+    def detector_ip(self, ip):
+        if isinstance(ip, list):
+            for i, addr in enumerate(ip):
+                self._api.setNetworkParameter('detectorip', addr, i)
+        else:
+            self._api.setNetworkParameter('detectorip', ip, -1)
