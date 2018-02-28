@@ -21,6 +21,7 @@ install:
   - conda config --add channels slsdetectorgroup
   - conda update conda
   - conda install pytest
+  - conda install pytest-mock
   - conda update --all
   - conda install conda-build anaconda-client
 
