@@ -28,7 +28,7 @@ def test_set_trimbits_raises_on_negative(eiger):
         eiger.trimbits = -5
 
 
-@jungfrautest
-def test_jungfrau(jungfrau):
-    """Example of a test that is not run with Eiger connected"""
-    pass
+# @jungfrautest
+# def test_jungfrau(jungfrau):
+#     """Example of a test that is not run with Eiger connected"""
+#     pass
