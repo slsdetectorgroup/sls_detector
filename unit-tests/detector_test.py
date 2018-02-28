@@ -11,13 +11,40 @@ import sys
 sys.path.append('/home/l_frojdh/slsdetectorgrup/sls_detector')
 
 import _sls_detector
-from sls_detector.errors import DetectorValueError
-
+from sls_detector.errors import DetectorValueError, DetectorError
+from sls_detector.detector import all_equal, element_if_equal
 @pytest.fixture
 def d():
     from sls_detector import Detector
     return Detector()
 
+
+def test_all_equal_int():
+    assert all_equal([5,5]) == True
+
+def test_all_equal_fails():
+    assert all_equal([5,6])  == False
+
+def test_all_equal_tuple():
+    assert all_equal(('a', 'a', 'a')) == True
+
+def test_all_equal_str():
+    assert all_equal('aaa') == True
+
+def test_all_equal_str_fails():
+    assert all_equal('aaab') == False
+
+def test_length_zero(d):
+    assert len(d) == 0
+
+def test_element_if_equal_int():
+    assert element_if_equal([5,5]) == 5
+
+def test_element_if_equal_str():
+    assert element_if_equal('hhh') == 'h'
+
+def test_element_if_equal_int_fails():
+    assert element_if_equal([5, 6, 7]) == [5, 6, 7]
 
 def test_acq_call(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.acq')
@@ -29,6 +56,22 @@ def test_busy_call(d, mocker):
     m.return_value = False
     assert d.busy == False
 
+def test_set_busy(d):
+    d.busy = True
+    assert d.busy == True
+    assert d._api.getAcquiringFlag() == True
+    d.busy = False
+    assert d.busy == False
+    assert d._api.getAcquiringFlag() == False
+
+def test_error_mask(d):
+    d._api.setErrorMask(1)
+    assert d.error_mask == 1
+    d.clear_errors()
+
+def test_error_handling(d):
+    with pytest.raises(DetectorError):
+        d._provoke_error()
 
 def test_assign_to_detector_type(d):
     with pytest.raises(AttributeError):

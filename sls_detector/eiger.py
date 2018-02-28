@@ -208,6 +208,67 @@ class Eiger(Detector):
 #        self._api.setGapPixels(value)
 
     @property
+    def dacs(self):
+        """
+
+        An instance of DetectorDacs used for accessing the dacs of a single
+        or multi detector.
+
+        Examples
+        ---------
+
+        ::
+
+            d = sls.Detector()
+
+            #Set all vrf to 1500
+            d.dacs.vrf = 1500
+
+            #Check vrf
+            d.dacs.vrf
+            >> vrf       :  1500,  1500
+
+            #Set a single vtr
+            d.dacs.vtr[0] = 1800
+
+            #Set vrf with multiple values
+            d.dacs.vrf = [3500,3700]
+            d.dacs.vrf
+            >> vrf       :  3500,  3700
+
+            #read into a variable
+            var = d.dacs.vrf[:]
+
+            #set multiple with multiple values, mostly used for large systems
+            d.dacs.vcall[0,1] = [3500,3600]
+            d.dacs.vcall
+            >> vcall     :  3500,  3600
+
+            d.dacs
+            >>
+            ========== DACS =========
+            vsvp      :     0,     0
+            vtr       :  4000,  4000
+            vrf       :  1900,  1900
+            vrs       :  1400,  1400
+            vsvn      :  4000,  4000
+            vtgstv    :  2556,  2556
+            vcmp_ll   :  1500,  1500
+            vcmp_lr   :  1500,  1500
+            vcall     :  4000,  4000
+            vcmp_rl   :  1500,  1500
+            rxb_rb    :  1100,  1100
+            rxb_lb    :  1100,  1100
+            vcmp_rr   :  1500,  1500
+            vcp       :  1500,  1500
+            vcn       :  2000,  2000
+            vis       :  1550,  1550
+            iodelay   :   660,   660
+
+        """
+        return self._dacs
+
+    @property
     @error_handling
     def tx_delay(self):
         """
@@ -416,6 +477,36 @@ class Eiger(Detector):
                 self._api.setNetworkParameter('rx_zmqport', str(p), i)
         else:
             self._api.setNetworkParameter('rx_zmqport', str(port), -1)
+
+    @property
+    def temp(self):
+        """
+        An instance of DetectorAdcs used to read the temperature
+        of different components
+
+        Examples
+        -----------
+
+        ::
+
+            detector.temp
+            >>
+            temp_fpga     :  36.90°C,  45.60°C
+            temp_fpgaext  :  31.50°C,  32.50°C
+            temp_10ge     :   0.00°C,   0.00°C
+            temp_dcdc     :  36.00°C,  36.00°C
+            temp_sodl     :  33.00°C,  34.50°C
+            temp_sodr     :  33.50°C,  34.00°C
+            temp_fpgafl   :  33.81°C,  30.93°C
+            temp_fpgafr   :  27.88°C,  29.15°C
+
+            a = detector.temp.fpga[:]
+            a
+            >> [36.568, 45.542]
+
+
+        """
+        return self._temp
 
     @property
     @error_handling
