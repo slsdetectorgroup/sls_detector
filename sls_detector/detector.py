@@ -6,26 +6,29 @@ Python - sls
 
 """
 import os
+import numpy as np
 from collections import namedtuple, Iterable
 from functools import partial
-import numpy as np
-from multiprocessing import Process
-from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
+from _sls_detector import DetectorApi  # c++ api wrapping multiSlsDetector
 from .decorators import error_handling
 from .errors import DetectorError, DetectorValueError
 
+
 def all_equal(mylist):
+    """If all elements are equal return true otherwise false"""
     return all(x == mylist[0] for x in mylist)
 
+
 def element_if_equal(mylist):
+    """If all elements are equal return only one element"""
     if all_equal(mylist):
-        return mylist[0]
+        if len(mylist) == 0:
+            return None
+        else:
+            return mylist[0]
     else:
         return mylist
-
-
-
 
 
 class DetectorProperty:
@@ -35,7 +38,7 @@ class DetectorProperty:
     """
     def __init__(self, get_func, set_func, nmod_func, name):
         
-        #functions to get and set the parameter
+        # functions to get and set the parameter
         self.get = get_func
         self.set = set_func
         self.get_nmod = nmod_func
@@ -67,21 +70,22 @@ class DetectorProperty:
 
         elif isinstance(key, Iterable):
             if isinstance(value, Iterable):
-                for k,v in zip(key, value):
-                    self.set(k,v)
+                for k, v in zip(key, value):
+                    self.set(k, v)
 
             elif isinstance(value, int):
                 for k in key:
                     self.set(k, value)
 
-
         elif isinstance(key, int):
             self.set(key, value)
-    def __repr__(self):
-       s = ', '.join(str(v) for v in self[:])
-       return '{}: [{}]'.format(self.__name__, s)
 
-        
+    def __repr__(self):
+        s = ', '.join(str(v) for v in self[:])
+        return '{}: [{}]'.format(self.__name__, s)
+
+
+# noinspection PyProtectedMember
 class Dac(DetectorProperty):
     """
     This class represents a dac on the detector. One instance handles all
@@ -102,28 +106,27 @@ class Dac(DetectorProperty):
         self.max_value = high
         self.default = default
 
-        #Local copy to avoid calling the detector class every time
+        # Local copy to avoid calling the detector class every time
         self.get_nmod = self._detector._api.getNumberOfDetectors
 
-        #Bind functions to get and set the dac
+        # Bind functions to get and set the dac
         self.get = partial(self._detector._api.getDac, self.name)
         self.set = partial(self._detector._api.setDac, self.name)
-
 
     def __repr__(self):
         """String representation for a single dac in all modules"""
         r_str = ['{:10s}: '.format(self.name)]
-        r_str += [ '{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
+        r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
+
 
 class Adc:
     def __init__(self, name, detector):
         self.name = name
         self._detector = detector
         self._n_modules = self._detector.n_modules
-        #Bind functions to get and set the dac
+        # Bind functions to get and set the dac
         self.get = partial(self._detector._api.getAdc, self.name)
-
 
     def __getitem__(self, key):
         """
@@ -138,11 +141,10 @@ class Adc:
 
     def __repr__(self):
         """String representation for a single adc in all modules"""
-        degree_sign= u'\N{DEGREE SIGN}'
+        degree_sign = u'\N{DEGREE SIGN}'
         r_str = ['{:14s}: '.format(self.name)]
-        r_str += [ '{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self._n_modules)]
+        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self._n_modules)]
         return ''.join(r_str).strip(', ')
-
 
 
 class DetectorAdcs:
@@ -178,19 +180,18 @@ class DetectorDacs:
     _dacnames = [_d[0] for _d in _dacs]
 
     def __init__(self, detector):
-        #We need to at least initially know which detector we are connected to
+        # We need to at least initially know which detector we are connected to
         self._detector = detector
 
-        #Index to support iteration
+        # Index to support iteration
         self._current = 0
 
-        #Popolate the dacs
+        # Populate the dacs
         for _d in self._dacs:
             setattr(self, '_'+_d[0], Dac(*_d, detector))
 
     def __getattr__(self, name):
         return self.__getattribute__('_' + name)
-
 
     def __setattr__(self, name, value):
         if name in self._dacnames:
@@ -220,7 +221,7 @@ class DetectorDacs:
         """
         dac_array = np.zeros((len(self._dacs), self._detector.n_modules))
         for i, _d in enumerate(self):
-            dac_array[i,:] = _d[:]
+            dac_array[i, :] = _d[:]
         return dac_array
 
     def set_from_array(self, dac_array):
@@ -247,8 +248,6 @@ class DetectorDacs:
             _d._n_modules = self._detector.n_modules
 
 
-
-
 class Detector:
     """
     Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
@@ -260,7 +259,8 @@ class Detector:
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
 
     def __init__(self):
-        #C++ API interfacing slsDetector and multiSlsDetector
+        # C++ API interfacing slsDetector and multiSlsDetector
+
         self._api = DetectorApi()
 
         self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,
@@ -277,22 +277,17 @@ class Detector:
         except DetectorError:
             print('Waring cannot connect to detector')
 
-
     def __len__(self):
         return self._api.getNumberOfDetectors()
     
     def __repr__(self):
         return '{}()'.format(self.__class__.__name__)
 
-
     def acq(self):
         """
         Blocking command. Acquire the number of frames specified by frames, cycles etc.
         """
         self._api.acq()
-
-
-
 
     @property
     @error_handling
@@ -328,42 +323,11 @@ class Detector:
     def busy(self, value):
         self._api.setAcquiringFlag(value)
 
-    @property
-    def temp(self):
-        """
-        An instance of DetectorAdcs used to read the temperature
-        of different components
-        
-        Examples
-        -----------
-        
-        :: 
-            
-            detector.temp
-            >>
-            temp_fpga     :  36.90°C,  45.60°C
-            temp_fpgaext  :  31.50°C,  32.50°C
-            temp_10ge     :   0.00°C,   0.00°C
-            temp_dcdc     :  36.00°C,  36.00°C
-            temp_sodl     :  33.00°C,  34.50°C
-            temp_sodr     :  33.50°C,  34.00°C
-            temp_fpgafl   :  33.81°C,  30.93°C
-            temp_fpgafr   :  27.88°C,  29.15°C
-        
-            a = detector.temp.fpga[:]
-            a
-            >> [36.568, 45.542]
-            
-        
-        """
-        return self._temp
-
 
 
     def clear_errors(self):
         """Clear the error mask for the detector. Used to reset after checking."""
         self._api.clearErrorMask()
-
 
     @property
     @error_handling
@@ -384,66 +348,6 @@ class Detector:
         """
         return [self._api.getDetectorNumber(i) for i in range(self.n_modules)]
 
-    @property
-    def dacs(self):
-        """
-
-        An instance of DetectorDacs used for accessing the dacs of a single
-        or multi detector.
-
-        Examples
-        ---------
-
-        ::
-
-            d = sls.Detector()
-
-            #Set all vrf to 1500
-            d.dacs.vrf = 1500
-
-            #Check vrf
-            d.dacs.vrf
-            >> vrf       :  1500,  1500
-
-            #Set a single vtr
-            d.dacs.vtr[0] = 1800
-
-            #Set vrf with multiple values
-            d.dacs.vrf = [3500,3700]
-            d.dacs.vrf
-            >> vrf       :  3500,  3700
-
-            #read into a variable
-            var = d.dacs.vrf[:]
-
-            #set multiple with multiple values, mostly used for large systems
-            d.dacs.vcall[0,1] = [3500,3600]
-            d.dacs.vcall
-            >> vcall     :  3500,  3600
-
-            d.dacs
-            >>
-            ========== DACS =========
-            vsvp      :     0,     0
-            vtr       :  4000,  4000
-            vrf       :  1900,  1900
-            vrs       :  1400,  1400
-            vsvn      :  4000,  4000
-            vtgstv    :  2556,  2556
-            vcmp_ll   :  1500,  1500
-            vcmp_lr   :  1500,  1500
-            vcall     :  4000,  4000
-            vcmp_rl   :  1500,  1500
-            rxb_rb    :  1100,  1100
-            rxb_lb    :  1100,  1100
-            vcmp_rr   :  1500,  1500
-            vcp       :  1500,  1500
-            vcn       :  2000,  2000
-            vis       :  1550,  1550
-            iodelay   :   660,   660
-
-        """
-        return self._dacs
 
 
     @property
@@ -457,9 +361,6 @@ class Detector:
 
         """
         return element_if_equal(self._api.getDetectorType())
-
-
-
 
     @property
     @error_handling
@@ -496,8 +397,7 @@ class Detector:
             return
         else:
             raise DetectorValueError('Cannot set dynamic range to: {:d} availble options: '.format(dr),
-                             self._detector_dynamic_range)
-
+                                    self._detector_dynamic_range)
 
     @property
     def error_mask(self):
@@ -515,8 +415,7 @@ class Detector:
         """
         :obj:`double` Exposure time in [s] of a single frame.
         """
-        return self._api.getExposureTime() /1e9
-
+        return self._api.getExposureTime() / 1e9
 
     @exposure_time.setter
     @error_handling
@@ -623,7 +522,6 @@ class Detector:
         else:
             raise FileNotFoundError('File path does not exists')
 
-
     @property
     @error_handling
     def file_write(self):
@@ -644,7 +542,6 @@ class Detector:
         :py:obj:`int` Firmware version of the detector
         """
         return self._api.getFirmwareVersion()
-
 
     @property
     def flags(self):
@@ -730,7 +627,6 @@ class Detector:
             raise DetectorValueError('High voltage {:d}V is out of range.  Should be between 0-200V'.format(voltage))
         self._api.setDac('vhighvoltage', -1, voltage)
 
-
     @property
     @error_handling
     def hostname(self):
@@ -750,7 +646,6 @@ class Detector:
         if _hm == '':
             return []
         return _hm.strip('+').split('+')
-
 
     @hostname.setter
     @error_handling
@@ -865,7 +760,6 @@ class Detector:
         """
         self._api.loadTrimbitFile(fname, idet)
 
-
     @property
     @error_handling
     def lock(self):
@@ -924,7 +818,7 @@ class Detector:
         """
         _t = self._api.getDetectorGeometry()
         Geometry = namedtuple('Geometry', ['horizontal', 'vertical'])
-        return Geometry(horizontal=_t[0], vertical =_t[1])
+        return Geometry(horizontal=_t[0], vertical=_t[1])
 
     @property
     @error_handling
@@ -1030,7 +924,6 @@ class Detector:
     def online(self, value):
         self._api.setOnline(value)
 
-
     @property
     @error_handling
     def last_client_ip(self):
@@ -1077,7 +970,6 @@ class Detector:
     def receiver_online(self, value):
         self._api.setReceiverOnline(value)
 
-
     def reset_frames_caught(self):
         """
         Reset the number of frames caught by the receiver. 
@@ -1107,11 +999,6 @@ class Detector:
         if ns_time < 0:
             raise ValueError('Period must be 0 or larger')
         self._api.setPeriod(ns_time)
-
-
-
-
-
 
     @property
     @error_handling
@@ -1151,7 +1038,6 @@ class Detector:
             raise ValueError('List of tau needs the same length')
         self._api.setRateCorrection(tau_list)
 
-
     @property
     @error_handling
     def readout_clock(self):
@@ -1184,7 +1070,6 @@ class Detector:
         speed = self._speed_int[value]
         self._api.setReadoutClockSpeed(speed)
 
-
     @property
     def receiver_frame_index(self):
         return self._api.getReceiverCurrentFrameIndex()
@@ -1212,7 +1097,6 @@ class Detector:
     def rx_datastream(self, status):
         self._api.setRxDataStreamStatus(status)
 
-
     @property
     @error_handling
     def rx_hostname(self):
@@ -1236,7 +1120,7 @@ class Detector:
     @rx_hostname.setter
     @error_handling
     def rx_hostname(self, names):
-        #if we pass a list join the list
+        # if we pass a list join the list
         if isinstance(names, list):
             names = '+'.join(n for n in names)+'+'
 
@@ -1266,7 +1150,7 @@ class Detector:
             raise ValueError('Number of ports: {} not equal to number of '
                              'detectors: {}'.format(len(ports), len(self)))
         else:
-            for i,p in enumerate(ports):
+            for i, p in enumerate(ports):
                 self._api.setRxTcpport(i, p)
 
     @property
@@ -1310,7 +1194,7 @@ class Detector:
         else:
             self._api.setNetworkParameter('rx_zmqport', str(port), -1)
 
-#Add back when versioning is defined
+# Add back when versioning is defined
 #    @property
 #    def software_version(self):
 #        return self._api.getSoftwareVersion();
@@ -1348,7 +1232,7 @@ class Detector:
     @settings.setter
     @error_handling
     def settings(self, s):
-        #check input!
+        # check input!
         self._api.setSettings(s)
         
     @property
@@ -1394,7 +1278,6 @@ class Detector:
         """
         self._api.stopAcquisition()
 
-
     def start_receiver(self):
         self._api.startReceiver()
         
@@ -1414,7 +1297,7 @@ class Detector:
             d.sub_exposure_time = 0.002
 
         """
-        return self._api.getSubExposureTime() /1e9
+        return self._api.getSubExposureTime() / 1e9
 
     @sub_exposure_time.setter
     def sub_exposure_time(self, t):
@@ -1423,8 +1306,6 @@ class Detector:
             self._api.setSubExposureTime(ns_time)
         else:
             raise ValueError('Sub exposure time must be larger than 0')
-
-
 
     @property
     def threaded(self):
@@ -1477,7 +1358,6 @@ class Detector:
     def timing_mode(self, mode):
         self._api.setTimingMode(mode)
 
-
     @property
     def trimmed_energies(self):
         """
@@ -1506,7 +1386,7 @@ class Detector:
         Threshold in DAC units for the detector. Sets the individual vcmp of 
         all chips in the detector.
         """
-        return self._api.getDac('vthreshold',-1)
+        return self._api.getDac('vthreshold', -1)
 
     @vthreshold.setter
     def vthreshold(self, th):
@@ -1554,6 +1434,7 @@ class Detector:
     @error_handling
     def _provoke_error(self):
         self._api.setErrorMask(1)
+
 
 def free_shared_memory():
     """

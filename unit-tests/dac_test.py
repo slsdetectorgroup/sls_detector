@@ -7,10 +7,8 @@ from unittest.mock import Mock, call
 import pytest
 from pytest_mock import mocker
 import numpy as np
-import sys
-sys.path.append('/home/l_frojdh/slsdetectorgrup/sls_detector')
+
 from sls_detector import Eiger
-import _sls_detector
 from sls_detector import DetectorApi
 
 

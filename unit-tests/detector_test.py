@@ -11,13 +11,40 @@ import sys
 sys.path.append('/home/l_frojdh/slsdetectorgrup/sls_detector')
 
 import _sls_detector
-from sls_detector.errors import  DetectorValueError
-
+from sls_detector.errors import DetectorValueError, DetectorError
+from sls_detector.detector import all_equal, element_if_equal
 @pytest.fixture
 def d():
     from sls_detector import Detector
     return Detector()
 
+
+def test_all_equal_int():
+    assert all_equal([5,5]) == True
+
+def test_all_equal_fails():
+    assert all_equal([5,6])  == False
+
+def test_all_equal_tuple():
+    assert all_equal(('a', 'a', 'a')) == True
+
+def test_all_equal_str():
+    assert all_equal('aaa') == True
+
+def test_all_equal_str_fails():
+    assert all_equal('aaab') == False
+
+def test_length_zero(d):
+    assert len(d) == 0
+
+def test_element_if_equal_int():
+    assert element_if_equal([5,5]) == 5
+
+def test_element_if_equal_str():
+    assert element_if_equal('hhh') == 'h'
+
+def test_element_if_equal_int_fails():
+    assert element_if_equal([5, 6, 7]) == [5, 6, 7]
 
 def test_acq_call(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.acq')
@@ -29,8 +56,24 @@ def test_busy_call(d, mocker):
     m.return_value = False
     assert d.busy == False
 
+def test_set_busy(d):
+    d.busy = True
+    assert d.busy == True
+    assert d._api.getAcquiringFlag() == True
+    d.busy = False
+    assert d.busy == False
+    assert d._api.getAcquiringFlag() == False
 
-def test_assign_to_detector_type(d,mocker):
+def test_error_mask(d):
+    d._api.setErrorMask(1)
+    assert d.error_mask == 1
+    d.clear_errors()
+
+def test_error_handling(d):
+    with pytest.raises(DetectorError):
+        d._provoke_error()
+
+def test_assign_to_detector_type(d):
     with pytest.raises(AttributeError):
         d.detector_type = 'Eiger'
 
@@ -51,7 +94,7 @@ def test_set_exposure_time(d, mocker):
     m.assert_called_once_with(1500000000)
 
 def test_set_exposure_time_less_than_zero(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setExposureTime')
+    mocker.patch('_sls_detector.DetectorApi.setExposureTime')
     with pytest.raises(DetectorValueError):
         d.exposure_time = -7
 
@@ -68,14 +111,14 @@ def test_set_file_index(d, mocker):
 
 
 def test_set_file_index_raises_on_neg(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setFileIndex')
+    mocker.patch('_sls_detector.DetectorApi.setFileIndex')
     with pytest.raises(ValueError):
         d.file_index = -9
 
 
 def test_get_file_name(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getFileName')
-    fn = d.file_name
+    d.file_name
     m.assert_called_once_with()
 
 def test_set_file_name(d, mocker):
@@ -85,7 +128,7 @@ def test_set_file_name(d, mocker):
 
 def test_get_file_path(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getFilePath')
-    fp = d.file_path
+    d.file_path
     m.assert_called_once_with()
 
 def test_set_file_path_when_path_exists(d, mocker):
@@ -97,7 +140,7 @@ def test_set_file_path_when_path_exists(d, mocker):
     m.assert_called_once_with('/path/to/something/')
 
 def test_set_file_path_raises_when_not_exists(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setFilePath')
+    mocker.patch('_sls_detector.DetectorApi.setFilePath')
     mock_os = mocker.patch('os.path.exists')
     mock_os.return_value = False
     with pytest.raises(FileNotFoundError):
@@ -119,13 +162,13 @@ def test_get_firmware_version(d, mocker):
     m.return_value = 20
     assert d.firmware_version == 20
 
-def test_cannot_set_fw_version(d, mocker):
+def test_cannot_set_fw_version(d):
     with pytest.raises(AttributeError):
         d.firmware_version = 20
 
 def test_get_high_voltage_call_signature(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getDac')
-    hv = d.high_voltage
+    d.high_voltage
     m.assert_called_once_with('vhighvoltage', -1)
 
 def test_get_high_voltage(d, mocker):
@@ -172,7 +215,7 @@ def test_load_config(d, mocker):
     m.assert_called_once_with('/path/to/my/file.config')
 
 def test_load_config_raises_when_file_is_not_found(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.readConfigurationFile')
+    mocker.patch('_sls_detector.DetectorApi.readConfigurationFile')
     mock_os = mocker.patch('os.path.isfile')
     mock_os.return_value = False
     with pytest.raises(FileNotFoundError):
@@ -187,7 +230,7 @@ def test_load_parameters(d, mocker):
     m.assert_called_once_with('/path/to/my/file.par')
 
 def test_load_parameters_raises_when_file_is_not_found(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.readParametersFile')
+    mocker.patch('_sls_detector.DetectorApi.readParametersFile')
     mock_os = mocker.patch('os.path.isfile')
     mock_os.return_value = False
     with pytest.raises(FileNotFoundError):
@@ -220,12 +263,12 @@ def test_set_n_frames(d, mocker):
     m.assert_called_once_with(9)
 
 def test_set_n_frames_raises_on_neg(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setNumberOfFrames')
+    mocker.patch('_sls_detector.DetectorApi.setNumberOfFrames')
     with pytest.raises(ValueError):
         d.n_frames = -1
 
 def test_set_n_frames_raises_on_zero(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setNumberOfFrames')
+    mocker.patch('_sls_detector.DetectorApi.setNumberOfFrames')
     with pytest.raises(ValueError):
         d.n_frames = 0
 
@@ -245,7 +288,7 @@ def test_set_period_time(d, mocker):
     m.assert_called_once_with(1953000000)
 
 def test_set_period_time_less_than_zero(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setPeriod')
+    mocker.patch('_sls_detector.DetectorApi.setPeriod')
     with pytest.raises(ValueError):
         d.period = -7
 
@@ -264,7 +307,7 @@ def test_set_rate_correction(d, mocker):
     m.assert_called_once_with([123,90,50])
 
 def test_set_rate_correction_raises_on_wrong_number_of_values(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setRateCorrection')
+    mocker.patch('_sls_detector.DetectorApi.setRateCorrection')
     mock_n = mocker.patch('_sls_detector.DetectorApi.getNumberOfDetectors')
     mock_n.return_value = 4
     with pytest.raises(ValueError):
@@ -324,18 +367,18 @@ def test_set_rx_datastream(d, mocker):
 
 def test_get_rx_zmqip(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNetworkParameter')
-    ip = d.rx_zmqip
+    d.rx_zmqip
     m.assert_called_once_with('rx_zmqip')
 
 def test_get_rx_zmqport_call(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNetworkParameter')
-    port = d.rx_zmqport
+    d.rx_zmqport
     m.assert_called_once_with('rx_zmqport')
 
 def test_get_rx_zmqport_decode(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNetworkParameter')
     m.return_value = ['30001', '30003']
-    assert d.rx_zmqport == [30001, 30002, 30003, 30004]
+    assert d.rx_zmqport == [30001, 30003]
 
 def test_get_rx_zmqport_empty(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNetworkParameter')
@@ -346,7 +389,7 @@ def test_get_rx_zmqport_empty(d, mocker):
 #--------------------------------------------------------------------status
 def test_status_call(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getRunStatus')
-    s = d.status
+    d.status
     m.assert_called_once_with()
 
 def test_start_detecor(d, mocker):
@@ -372,14 +415,14 @@ def test_set_sub_exposure_time(d, mocker):
     m.assert_called_once_with(2000000)
 
 def test_set_sub_exposure_time_raises_on_zero(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setSubExposureTime')
+    mocker.patch('_sls_detector.DetectorApi.setSubExposureTime')
     with pytest.raises(ValueError):
         d.sub_exposure_time = 0
 
 #------------------------------------------------------------------timing mode
 def test_get_timing_mode(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getTimingMode')
-    t = d.timing_mode
+    d.timing_mode
     m.assert_called_once_with()
 
 def test_set_timing_mode(d, mocker):
@@ -390,7 +433,7 @@ def test_set_timing_mode(d, mocker):
 #----------------------------------------------------------------vthreshold
 def test_get_vthreshold(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getDac')
-    t = d.vthreshold
+    d.vthreshold
     m.assert_called_once_with('vthreshold', -1)
 
 def test_set_vthreshold(d, mocker):

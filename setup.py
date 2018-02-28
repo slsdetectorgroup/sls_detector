@@ -79,7 +79,6 @@ ext_modules = [
 ]
 
 
-
 # As of Python 3.6, CCompiler has a `has_flag` method.
 # cf http://bugs.python.org/issue26689
 def has_flag(compiler, flagname):
@@ -132,6 +131,7 @@ class BuildExt(build_ext):
         for ext in self.extensions:
             ext.extra_compile_args = opts
         build_ext.build_extensions(self)
+
 
 setup(
     name='sls_detector',

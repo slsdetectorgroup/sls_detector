@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Dec  6 11:51:18 2017
-
-@author: l_frojdh
+Jungfrau detector class and support functions.
+Inherits from Detector.
 """
-
-from functools import partial
-from collections import namedtuple
 
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
 from .decorators import error_handling
 
+
 class Register:
     def __init__(self, detector):
         self._detector = detector
+
     def __getitem__(self, key):
         return hex(self._detector._api.readRegister(key))
+
     def __setitem__(self, key, value):
         self._detector._api.writeRegister(key, value)
+
 
 class JungfrauDacs(DetectorDacs):
     _dacs = [('vb_comp',    0, 4000,    1220),
@@ -33,7 +33,6 @@ class JungfrauDacs(DetectorDacs):
     _dacnames = [_d[0] for _d in _dacs]
     
 
-
 class Jungfrau(Detector):
     """
     Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
@@ -43,19 +42,33 @@ class Jungfrau(Detector):
     _detector_dynamic_range = [4, 8, 16, 32]
     
     def __init__(self):
-        #Init on base calss
         super().__init__()
-        
-
         self._dacs = JungfrauDacs(self)
-        
-        # self._trimbit_limits = namedtuple('trimbit_limits', ['min', 'max'])(0,63)
-        
+
         #Jungfrau specific temps, this can be reduced to a single value?
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
         self._register = Register(self)
-        
+
+
+    @property
+    def dacs(self):
+        """
+
+        An instance of DetectorDacs used for accessing the dacs of a single
+        or multi detector.
+
+        Examples
+        ---------
+
+        ::
+
+            #Jungfrau
+
+
+        """
+        return self._dacs
+
     @property
     @error_handling
     def power_chip(self):
@@ -65,8 +78,7 @@ class Jungfrau(Detector):
     @power_chip.setter
     @error_handling
     def power_chip(self, value):
-        return self._api.powerChip(value)
-
+        self._api.powerChip(value)
 
     @property
     @error_handling
@@ -88,17 +100,40 @@ class Jungfrau(Detector):
     @n_gates.setter
     @error_handling
     def n_gates(self, n):
-        self._api.setNumberOfGates()
+        self._api.setNumberOfGates(n)
 
     @property
     @error_handling
     def n_probes(self):
         return self._api.getNumberOfProbes()
 
-    @n_gates.setter
+    @n_probes.setter
     @error_handling
     def n_probes(self, n):
-        self._api.setNumberOfProbes()
+        self._api.setNumberOfProbes(n)
+
+    @property
+    def temp(self):
+        """
+        An instance of DetectorAdcs used to read the temperature
+        of different components
+
+        Examples
+        -----------
+
+        ::
+
+            detector.temp
+            >>
+            temp_fpga     :  36.90°C,  45.60°C
+
+            a = detector.temp.fpga[:]
+            a
+            >> [36.568, 45.542]
+
+
+        """
+        return self._temp
 
     @property
     def temperature_threshold(self):
@@ -142,7 +177,8 @@ class Jungfrau(Detector):
         Returns
         ---------
 
-            :py:obj:`True` if the threshold have been crossed and temperature_control is active otherwise :py:obj:`False`
+            :py:obj:`True` if the threshold have been crossed and temperature_control is active
+            otherwise :py:obj:`False`
 
         """
         return self._api.getTemperatureEvent()
@@ -164,10 +200,7 @@ class Jungfrau(Detector):
             d.register[0x5d] = 0xf00
         
         """
-        
-        
         return self._register
-
 
     @property
     @error_handling
@@ -192,7 +225,6 @@ class Jungfrau(Detector):
 
         """
         return self._api.getNetworkParameter('rx_udpport')
-
 
     @rx_udpport.setter
     @error_handling
