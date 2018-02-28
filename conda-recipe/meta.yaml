@@ -28,7 +28,11 @@ requirements:
 
 test:
       imports:
-         - sls_detector
+        - sls_detector
+      requires:
+        - pytest
+      commands:
+        - py.test
 
 
 about:

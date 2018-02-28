@@ -11,7 +11,7 @@ import sys
 sys.path.append('/home/l_frojdh/slsdetectorgrup/sls_detector')
 
 import _sls_detector
-from sls_detector.errors import  DetectorValueError
+from sls_detector.errors import DetectorValueError
 
 @pytest.fixture
 def d():
@@ -335,7 +335,7 @@ def test_get_rx_zmqport_call(d, mocker):
 def test_get_rx_zmqport_decode(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNetworkParameter')
     m.return_value = ['30001', '30003']
-    assert d.rx_zmqport == [30001, 30002, 30003, 30004]
+    assert d.rx_zmqport == [30001, 30003]
 
 def test_get_rx_zmqport_empty(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNetworkParameter')

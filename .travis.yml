@@ -29,9 +29,11 @@ install:
   - conda create -q -n test-environment python=$CONDA_PY
   - source activate test-environment
   - conda-build .
+  - conda install --use-local sls_detector
 
 script:
  - echo "No test scripts to be run!"
+ - py.test unit-tests
 
 deploy:
   provider: script
