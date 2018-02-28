@@ -20,8 +20,6 @@ install:
   - conda config --add channels conda-forge
   - conda config --add channels slsdetectorgroup
   - conda update conda
-  - conda install pytest
-  - conda install pytest-mock
   - conda update --all
   - conda install conda-build anaconda-client
 
@@ -31,11 +29,15 @@ install:
   - conda create -q -n test-environment python=$CONDA_PY
   - source activate test-environment
   - conda-build .
+
   - conda install --use-local sls_detector
+  - conda install pytest
+  - conda install pytest-mock
+  - conda install numpy
 
 script:
  - echo "No test scripts to be run!"
- - py.test unit-tests
+ - python -m pytest unit-tests
 
 deploy:
   provider: script
