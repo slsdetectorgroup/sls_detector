@@ -241,3 +241,32 @@ class Jungfrau(Detector):
         """Requires iterating over elements two and two for setting ports"""
         for i, p in enumerate(ports):
             self._api.setNetworkParameter('rx_udpport', str(p), i)
+
+    @property
+    def detector_mac(self):
+        s = self._api.getNetworkParameter('detectormac')
+        return element_if_equal(s)
+
+
+    @detector_mac.setter
+    def detector_mac(self, mac):
+        if isinstance(mac, list):
+            for i, m in enumerate(mac):
+                self._api.setNetworkParameter('detectormac', m, i)
+        else:
+            self._api.setNetworkParameter('detectormac', mac, -1)
+
+
+    @property
+    @error_handling
+    def detector_ip(self):
+        s = self._api.getNetworkParameter('detectorip')
+        return element_if_equal(s)
+
+    @detector_ip.setter
+    def detector_ip(self, ip):
+        if isinstance(ip, list):
+            for i, addr in enumerate(ip):
+                self._api.setNetworkParameter('detectorip', addr, i)
+        else:
+            self._api.setNetworkParameter('detectorip', ip, -1)
