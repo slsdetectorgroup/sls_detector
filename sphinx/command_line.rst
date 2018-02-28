@@ -223,8 +223,8 @@ rx_udpip              :py:attr:`Detector.rx_udpip`
 rx_udpmac
 rx_udpport            :py:attr:`Detector.rx_udpport`
 rx_udpport2           :py:attr:`Detector.rx_udpport`
-detectormac
-detectorip
+detectormac           :py:attr:`Jungfrau.detector_mac`         OK
+detectorip            :py:attr:`Jungfrau.detector_ip`          OK
 txndelay_left         :py:attr:`Eiger.delay`.left              OK
 txndelay_right        :py:attr:`Eiger.delay`.right             OK
 txndelay_frame        :py:attr:`Eiger.delay`.frame             OK
@@ -234,7 +234,7 @@ rx_zmqport              :py:attr:`Detector.rx_zmqport`             Read
 rx_datastream           |rxd|                                   OK
 zmqip
 rx_zmqip                :py:attr:`Detector.rx_zmqip`            Read
-configuremac
+configuremac            :py:attr:`Detector.config_network`    OK
 rx_tcpport             :py:attr:`Detector.rx_tcpport`
 port
 stopport

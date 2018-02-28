@@ -5,6 +5,9 @@ Jungfrau detector class and support functions.
 Inherits from Detector.
 """
 
+from functools import partial
+from collections import namedtuple
+
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
 from .decorators import error_handling
 
@@ -33,6 +36,7 @@ class JungfrauDacs(DetectorDacs):
     _dacnames = [_d[0] for _d in _dacs]
     
 
+
 class Jungfrau(Detector):
     """
     Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
@@ -42,6 +46,7 @@ class Jungfrau(Detector):
     _detector_dynamic_range = [4, 8, 16, 32]
     
     def __init__(self):
+        #Init on base calss
         super().__init__()
         self._dacs = JungfrauDacs(self)
 
@@ -200,7 +205,10 @@ class Jungfrau(Detector):
             d.register[0x5d] = 0xf00
         
         """
+        
+        
         return self._register
+
 
     @property
     @error_handling
@@ -225,6 +233,7 @@ class Jungfrau(Detector):
 
         """
         return self._api.getNetworkParameter('rx_udpport')
+
 
     @rx_udpport.setter
     @error_handling

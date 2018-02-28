@@ -512,6 +512,7 @@ public:
         }
     }
 
+    void configureNetworkParameters(){ det.configureMAC(); }
 
     std::string getLastClientIP(){
         return det.getLastClientIP();
@@ -589,10 +590,10 @@ slsDetector* Detector::getSlsDetector(int i){
 
 slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_name){
 
-    if(par_name == "detector_mac"){
+    if(par_name == "detectormac"){
         return slsDetectorDefs::networkParameter::DETECTOR_MAC;
     }
-    else if(par_name == "detector_ip"){
+    else if(par_name == "detectorip"){
         return slsDetectorDefs::networkParameter::DETECTOR_IP;
     }
     else if(par_name == "rx_hostname"){

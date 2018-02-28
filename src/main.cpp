@@ -126,6 +126,7 @@ PYBIND11_MODULE(_sls_detector, m) {
             
             .def("getNetworkParameter", &Detector::getNetworkParameter)
             .def("setNetworkParameter", &Detector::setNetworkParameter)
+            .def("configureNetworkParameters", &Detector::configureNetworkParameters)
             .def("getDelayFrame", &Detector::getDelayFrame)
             .def("setDelayFrame", &Detector::setDelayFrame)
             .def("getDelayLeft", &Detector::getDelayLeft)
