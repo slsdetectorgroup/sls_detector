@@ -131,7 +131,11 @@ class Eiger(Detector):
     functions. 
     """
     _detector_dynamic_range = [4, 8, 16, 32]
-    
+
+
+    _settings = ['standard', 'highgain', 'lowgain', 'veryhighgain', 'verylowgain']
+    """available settings for Eiger, not almost always standard"""
+
     def __init__(self):
         # Init on base calss
         super().__init__()

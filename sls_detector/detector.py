@@ -268,11 +268,13 @@ class Detector:
 
     _speed_names = {0: 'Full Speed', 1: 'Half Speed', 2: 'Quarter Speed', 3: 'Super Slow Speed'}
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
+    _settings = []
 
     def __init__(self):
         # C++ API interfacing slsDetector and multiSlsDetector
 
         self._api = DetectorApi()
+
 
         self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,
                                               self._api.setFlippedDataX,
@@ -861,7 +863,7 @@ class Detector:
         if n >= 1:
             self._api.setNumberOfFrames(n)
         else:
-            raise ValueError('Invalid value for n_frames: {:d}. Number of'\
+            raise DetectorValueError('Invalid value for n_frames: {:d}. Number of'\
                              ' frames should be an integer greater than 0'.format(n))
 
     @property
@@ -909,7 +911,10 @@ class Detector:
     @n_measurements.setter
     @error_handling
     def n_measurements(self, value):
-        self._api.setNumberOfMeasurements(value)
+        if value > 0:
+            self._api.setNumberOfMeasurements(value)
+        else:
+            raise DetectorValueError('Number of measurements must be positive')
 
     @property
     @error_handling
@@ -1258,10 +1263,7 @@ class Detector:
         """
         Detector settings used to control for example calibration or gain
         switching. For EIGER almost always standard
-        
-        .. todo::
-            
-            check input depending on detector
+
         
         """
         return self._api.getSettings()
@@ -1269,8 +1271,11 @@ class Detector:
     @settings.setter
     @error_handling
     def settings(self, s):
-        #check input!
-        self._api.setSettings(s)
+        if s in self._settings:
+            self._api.setSettings(s)
+        else:
+            raise DetectorValueError('Settings: {:s}, not defined for this detector'.format(s))
+
         
     @property
     @error_handling

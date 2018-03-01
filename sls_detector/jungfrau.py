@@ -44,6 +44,9 @@ class Jungfrau(Detector):
 
     """
     _detector_dynamic_range = [4, 8, 16, 32]
+
+    _settings = []
+    """Available settings for Jungfrau"""
     
     def __init__(self):
         #Init on base calss
