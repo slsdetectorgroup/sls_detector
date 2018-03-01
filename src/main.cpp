@@ -21,6 +21,7 @@ PYBIND11_MODULE(_sls_detector, m) {
     DetectorApi
             .def(py::init<int>())
             .def("freeSharedMemory", &Detector::freeSharedMemory)
+            .def("getMultiDetectorId", &Detector::getMultiDetectorId)
             .def("acq", &Detector::acquire, "Acqire")
             .def("getAcquiringFlag", &Detector::getAcquiringFlag)
             .def("setAcquiringFlag", &Detector::setAcquiringFlag)

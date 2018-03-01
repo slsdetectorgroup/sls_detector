@@ -17,14 +17,16 @@
 class Detector{
 public:
     Detector(int i):det(i){
-        //added default arg to cope with branch
-        //removed when going back to developer
 
+        //id of the multi detector instance
+        multi_detector_id = i;
 
         //Disable any output from std::cout
         std::cout.setstate(std::ios_base::failbit);
 
     }
+
+    int getMultiDetectorId(){ return multi_detector_id; }
 
     //get image size as [nrow, ncols] return as a pair of ints
     std::pair<int, int> getImageSize(){
@@ -574,6 +576,7 @@ public:
 private:
     multiSlsDetector det;
     slsDetector* getSlsDetector(int i);
+    int multi_detector_id = 0;
 };
 
 

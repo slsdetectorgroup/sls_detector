@@ -95,13 +95,13 @@ set it defaults to 0.
 
 ::
 
-    d0 = Eiger(0)
+    d0 = Eiger() #id is now 0
     d1 = Jungfrau(1)
 
     #Or explicitly
     d1 = Jungfrau(id = 0)
 
-
+The detectors now operate independently of each other but can be synchronized using a hardware trigger.
 
 ::
 
@@ -110,11 +110,13 @@ set it defaults to 0.
     d0 = Eiger(0)
     d1 = Eiger(1)
 
-    d0.load_config('/home/l_frojdh/T45.config')
-    d1.load_config('/home/l_frojdh/T62.config')
+    d0.load_config('/some/path/T45.config')
+    d1.load_config('/some/path/T62.config')
 
-    d0.settings_path = '/home/l_frojdh/settings'
-    d0.trimmed_energies = [5000,6000,8000,9900]
+    d0.n_frames = 1
+    d0.exposure_time = 1
+    d0.timing_mode = 'trigger'
 
-    d1.settings_path = '/home/l_frojdh/settings'
-    d1.trimmed_energies = [5000,6000,8000,9900]
+    d1.n_frames = 5
+    d1.exposure_time = 0.2
+    d1.timing_mode = 'trigger'

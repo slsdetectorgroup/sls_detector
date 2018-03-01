@@ -295,7 +295,8 @@ class Detector:
         return self._api.getNumberOfDetectors()
     
     def __repr__(self):
-        return '{}()'.format(self.__class__.__name__)
+        return '{}(id = {})'.format(self.__class__.__name__,
+                                    self._api.getMultiDetectorId())
 
 
     def acq(self):
@@ -326,11 +327,13 @@ class Detector:
         Examples
         ----------
 
-        d.busy
-        >> True
+        ::
 
-        #If the detector is stuck
-        d.busy = False
+            d.busy
+            >> True
+
+            #If the detector is stuck
+            d.busy = False
 
 
         """

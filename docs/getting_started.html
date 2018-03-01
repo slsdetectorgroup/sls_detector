@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Getting started &mdash; sls_detector developer documentation</title>
+  <title>Getting started &mdash; sls_detector 3.1.0rc documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector developer documentation" href="index.html"/>
+    <link rel="top" title="sls_detector 3.1.0rc documentation" href="index.html"/>
         <link rel="next" title="Code quality" href="code_quality.html"/>
         <link rel="prev" title="Installation" href="installation.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                developer
+                3.1.0rc
               </div>
             
           
@@ -249,26 +249,29 @@ works for other detector sizes and models.</p>
 <h2>Operating multiple detectors<a class="headerlink" href="#operating-multiple-detectors" title="Permalink to this headline">¶</a></h2>
 <p>Operating multiple detectors is supported by assigning an id when creating the object. If no id is
 set it defaults to 0.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d0</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d0</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span> <span class="c1">#id is now 0</span>
 <span class="n">d1</span> <span class="o">=</span> <span class="n">Jungfrau</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#Or explicitly</span>
 <span class="n">d1</span> <span class="o">=</span> <span class="n">Jungfrau</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The detectors now operate independently of each other but can be synchronized using a hardware trigger.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span>
 
 <span class="n">d0</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">d1</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">d0</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;/home/l_frojdh/T45.config&#39;</span><span class="p">)</span>
-<span class="n">d1</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;/home/l_frojdh/T62.config&#39;</span><span class="p">)</span>
+<span class="n">d0</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;/some/path/T45.config&#39;</span><span class="p">)</span>
+<span class="n">d1</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;/some/path/T62.config&#39;</span><span class="p">)</span>
 
-<span class="n">d0</span><span class="o">.</span><span class="n">settings_path</span> <span class="o">=</span> <span class="s1">&#39;/home/l_frojdh/settings&#39;</span>
-<span class="n">d0</span><span class="o">.</span><span class="n">trimmed_energies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5000</span><span class="p">,</span><span class="mi">6000</span><span class="p">,</span><span class="mi">8000</span><span class="p">,</span><span class="mi">9900</span><span class="p">]</span>
+<span class="n">d0</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">d0</span><span class="o">.</span><span class="n">exposure_time</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">d0</span><span class="o">.</span><span class="n">timing_mode</span> <span class="o">=</span> <span class="s1">&#39;trigger&#39;</span>
 
-<span class="n">d1</span><span class="o">.</span><span class="n">settings_path</span> <span class="o">=</span> <span class="s1">&#39;/home/l_frojdh/settings&#39;</span>
-<span class="n">d1</span><span class="o">.</span><span class="n">trimmed_energies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5000</span><span class="p">,</span><span class="mi">6000</span><span class="p">,</span><span class="mi">8000</span><span class="p">,</span><span class="mi">9900</span><span class="p">]</span>
+<span class="n">d1</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">d1</span><span class="o">.</span><span class="n">exposure_time</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">d1</span><span class="o">.</span><span class="n">timing_mode</span> <span class="o">=</span> <span class="s1">&#39;trigger&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -318,7 +321,7 @@ set it defaults to 0.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'developer',
+            VERSION:'3.1.0rc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
