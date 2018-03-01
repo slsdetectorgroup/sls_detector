@@ -298,10 +298,9 @@
 
 
     <span class="n">_settings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="s1">&#39;highgain&#39;</span><span class="p">,</span> <span class="s1">&#39;lowgain&#39;</span><span class="p">,</span> <span class="s1">&#39;veryhighgain&#39;</span><span class="p">,</span> <span class="s1">&#39;verylowgain&#39;</span><span class="p">]</span>
-    <span class="sd">&quot;&quot;&quot;available settings for Eiger, not almost always standard&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;available settings for Eiger, note almost always standard&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="c1"># Init on base calss</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getActive</span><span class="p">,</span>
@@ -387,7 +386,7 @@
 
 <span class="sd">        ::</span>
 
-<span class="sd">            d = sls.Detector()</span>
+<span class="sd">            d = Eiger()</span>
 
 <span class="sd">            #Set all vrf to 1500</span>
 <span class="sd">            d.dacs.vrf = 1500</span>
@@ -534,7 +533,8 @@
 <div class="viewcode-block" id="Eiger.pulse_diagonal"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_diagonal">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">pulse_diagonal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Unsed for calibraiton</span>
+<span class="sd">        Pulse pixels in super colums in a diagonal fashion. Used for calibration</span>
+<span class="sd">        of vcall. Saves time compared to pulsing all pixels.</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseDiagonal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 

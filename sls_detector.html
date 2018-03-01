@@ -202,10 +202,13 @@ leaves the detector with busy == True</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<p>d.busy
-&gt;&gt; True</p>
-<p>#If the detector is stuck
-d.busy = False</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">busy</span>
+<span class="o">&gt;&gt;</span> <span class="kc">True</span>
+
+<span class="c1">#If the detector is stuck</span>
+<span class="n">d</span><span class="o">.</span><span class="n">busy</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -964,7 +967,7 @@ module</p>
 <dd><p>An instance of DetectorDacs used for accessing the dacs of a single
 or multi detector.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">sls</span><span class="o">.</span><span class="n">Detector</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
 
 <span class="c1">#Set all vrf to 1500</span>
 <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span> <span class="o">=</span> <span class="mi">1500</span>
@@ -1066,7 +1069,8 @@ the highest pulse.</p>
 <dl class="method">
 <dt id="sls_detector.Eiger.pulse_diagonal">
 <code class="descname">pulse_diagonal</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.pulse_diagonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.pulse_diagonal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unsed for calibraiton</p>
+<dd><p>Pulse pixels in super colums in a diagonal fashion. Used for calibration
+of vcall. Saves time compared to pulsing all pixels.</p>
 </dd></dl>
 
 <dl class="attribute">
