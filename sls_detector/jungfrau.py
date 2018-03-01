@@ -45,7 +45,12 @@ class Jungfrau(Detector):
     """
     _detector_dynamic_range = [4, 8, 16, 32]
 
-    _settings = []
+    _settings = ['dynamichg0',
+                 'dynamicgain',
+                 'fixgain1',
+                 'fixgain2',
+                 'forceswitchg1',
+                 'forceswitchg2']
     """Available settings for Jungfrau"""
     
     def __init__(self):

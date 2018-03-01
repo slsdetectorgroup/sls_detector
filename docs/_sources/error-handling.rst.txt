@@ -63,3 +63,5 @@ this does not impact performance.
 
     %timeit d.decorated_exposure_time
     >> 1.53 ms ± 3.18 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+
+

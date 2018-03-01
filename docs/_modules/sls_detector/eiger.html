@@ -171,11 +171,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">Iterable</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="kn">from</span> <span class="nn">.detector</span> <span class="k">import</span> <span class="n">Detector</span><span class="p">,</span> <span class="n">DetectorDacs</span><span class="p">,</span> <span class="n">DetectorAdcs</span><span class="p">,</span> <span class="n">Adc</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">,</span> <span class="n">element_if_equal</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
+
 
 <span class="k">class</span> <span class="nc">EigerVcmp</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -196,13 +197,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">n_modules</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">i</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">_names</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">_names</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">partial</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDac</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">partial</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDac</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDac</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDac</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
     
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
@@ -234,32 +235,33 @@
     <span class="n">_dacnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">_d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_d</span> <span class="ow">in</span> <span class="n">_dacs</span><span class="p">]</span>
 
 
+<span class="c1"># noinspection PyProtectedMember</span>
 <span class="k">class</span> <span class="nc">DetectorDelays</span><span class="p">:</span>
     <span class="n">_delaynames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
-        <span class="c1">#We need to at least initially know which detector we are connected to</span>
+        <span class="c1"># We need to at least initially know which detector we are connected to</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
         
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_frame&#39;</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDelayFrame</span><span class="p">,</span>
-                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayFrame</span><span class="p">,</span>
-                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
-                                        <span class="s1">&#39;frame&#39;</span><span class="p">))</span>
+                                                 <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayFrame</span><span class="p">,</span>
+                                                 <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                                 <span class="s1">&#39;frame&#39;</span><span class="p">))</span>
 
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_left&#39;</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDelayLeft</span><span class="p">,</span>
-                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayLeft</span><span class="p">,</span>
-                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
-                                        <span class="s1">&#39;left&#39;</span><span class="p">))</span>
+                                                <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayLeft</span><span class="p">,</span>
+                                                <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                                <span class="s1">&#39;left&#39;</span><span class="p">))</span>
 
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_right&#39;</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDelayRight</span><span class="p">,</span>
-                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayRight</span><span class="p">,</span>
-                                        <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
-                                        <span class="s1">&#39;right&#39;</span><span class="p">))</span>
-        <span class="c1">#Index to support iteration</span>
+                                                 <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDelayRight</span><span class="p">,</span>
+                                                 <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                                 <span class="s1">&#39;right&#39;</span><span class="p">))</span>
+        <span class="c1"># Index to support iteration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
-
 
     <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delaynames</span><span class="p">:</span>
@@ -283,7 +285,7 @@
         <span class="n">r_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Transmission delay [ns]</span><span class="se">\n</span><span class="s1">&#39;</span>
                  <span class="s1">&#39;</span><span class="si">{:11s}{:&gt;8s}{:&gt;8s}{:&gt;8s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;frame&#39;</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">n_modules</span><span class="p">):</span>
-            <span class="n">r_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s1">&#39;</span><span class="si">{:2d}</span><span class="s1">:</span><span class="si">{:8s}{:&gt;8d}{:&gt;8d}{:&gt;8d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">hn</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">r_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:2d}</span><span class="s1">:</span><span class="si">{:8s}{:&gt;8d}{:&gt;8d}{:&gt;8d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">hn</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r_str</span><span class="p">)</span>
 
 
@@ -293,22 +295,26 @@
 <span class="sd">    functions. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_detector_dynamic_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
-    
+
+
+    <span class="n">_settings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="s1">&#39;highgain&#39;</span><span class="p">,</span> <span class="s1">&#39;lowgain&#39;</span><span class="p">,</span> <span class="s1">&#39;veryhighgain&#39;</span><span class="p">,</span> <span class="s1">&#39;verylowgain&#39;</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;available settings for Eiger, not almost always standard&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#Init on base calss</span>
+        <span class="c1"># Init on base calss</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getActive</span><span class="p">,</span>
-                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setActive</span><span class="p">,</span>
-                                              <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
-                                              <span class="s1">&#39;active&#39;</span><span class="p">)</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setActive</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                                        <span class="s1">&#39;active&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_vcmp</span> <span class="o">=</span> <span class="n">EigerVcmp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span> <span class="o">=</span> <span class="n">EigerDacs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;trimbit_limits&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])(</span><span class="mi">0</span><span class="p">,</span><span class="mi">63</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trimbit_limits</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;trimbit_limits&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">63</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_delay</span> <span class="o">=</span> <span class="n">DetectorDelays</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         
-        <span class="c1">#Eiger specific adcs</span>
+        <span class="c1"># Eiger specific adcs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span> <span class="o">=</span> <span class="n">DetectorAdcs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpga</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpga&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgaext</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgaext&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
@@ -318,7 +324,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">sodr</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_sodr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgafl</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgafl&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpgafr</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpgafr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-   
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -370,7 +375,66 @@
 <span class="c1">#    def add_gappixels(self, value):</span>
 <span class="c1">#        self._api.setGapPixels(value)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dacs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="sd">        An instance of DetectorDacs used for accessing the dacs of a single</span>
+<span class="sd">        or multi detector.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d = sls.Detector()</span>
+
+<span class="sd">            #Set all vrf to 1500</span>
+<span class="sd">            d.dacs.vrf = 1500</span>
+
+<span class="sd">            #Check vrf</span>
+<span class="sd">            d.dacs.vrf</span>
+<span class="sd">            &gt;&gt; vrf       :  1500,  1500</span>
+
+<span class="sd">            #Set a single vtr</span>
+<span class="sd">            d.dacs.vtr[0] = 1800</span>
+
+<span class="sd">            #Set vrf with multiple values</span>
+<span class="sd">            d.dacs.vrf = [3500,3700]</span>
+<span class="sd">            d.dacs.vrf</span>
+<span class="sd">            &gt;&gt; vrf       :  3500,  3700</span>
+
+<span class="sd">            #read into a variable</span>
+<span class="sd">            var = d.dacs.vrf[:]</span>
+
+<span class="sd">            #set multiple with multiple values, mostly used for large systems</span>
+<span class="sd">            d.dacs.vcall[0,1] = [3500,3600]</span>
+<span class="sd">            d.dacs.vcall</span>
+<span class="sd">            &gt;&gt; vcall     :  3500,  3600</span>
+
+<span class="sd">            d.dacs</span>
+<span class="sd">            &gt;&gt;</span>
+<span class="sd">            ========== DACS =========</span>
+<span class="sd">            vsvp      :     0,     0</span>
+<span class="sd">            vtr       :  4000,  4000</span>
+<span class="sd">            vrf       :  1900,  1900</span>
+<span class="sd">            vrs       :  1400,  1400</span>
+<span class="sd">            vsvn      :  4000,  4000</span>
+<span class="sd">            vtgstv    :  2556,  2556</span>
+<span class="sd">            vcmp_ll   :  1500,  1500</span>
+<span class="sd">            vcmp_lr   :  1500,  1500</span>
+<span class="sd">            vcall     :  4000,  4000</span>
+<span class="sd">            vcmp_rl   :  1500,  1500</span>
+<span class="sd">            rxb_rb    :  1100,  1100</span>
+<span class="sd">            rxb_lb    :  1100,  1100</span>
+<span class="sd">            vcmp_rr   :  1500,  1500</span>
+<span class="sd">            vcp       :  1500,  1500</span>
+<span class="sd">            vcn       :  2000,  2000</span>
+<span class="sd">            vis       :  1550,  1550</span>
+<span class="sd">            iodelay   :   660,   660</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dacs</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -393,7 +457,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delay</span>
 
-        
 <div class="viewcode-block" id="Eiger.default_settings"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.default_settings">[docs]</a>    <span class="k">def</span> <span class="nf">default_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        reset the detector to some type of standard settings</span>
@@ -402,9 +465,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_frames</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exposure_time</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">period</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_cycles</span> <span class="o">=</span><span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_measurements</span> <span class="o">=</span> <span class="mi">1</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_range</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_cycles</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_measurements</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_range</span> <span class="o">=</span> <span class="mi">16</span></div>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -422,7 +485,6 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">eiger_matrix_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setCounterBit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -466,15 +528,15 @@
 <span class="sd">            d.eiger_matrix_reset = True</span>
 <span class="sd">        </span>
 <span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseAllPixels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseAllPixels</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
         
 <div class="viewcode-block" id="Eiger.pulse_diagonal"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_diagonal">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">pulse_diagonal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unsed for calibraiton</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseDiagonal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseDiagonal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Eiger.pulse_chip"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.pulse_chip">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">pulse_chip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -483,11 +545,10 @@
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">n</span><span class="o">&gt;=-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">pulseChip</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span></div>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n must be equal or larger than -1&#39;</span><span class="p">)</span>
-
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n must be equal or larger than -1&#39;</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">vcmp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -515,14 +576,12 @@
     <span class="nd">@vcmp</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">vcmp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vcmp</span><span class="o">.</span><span class="n">set</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vcmp</span><span class="o">.</span><span class="n">set</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_vcmp</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">v</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;vcmp only compatible with setting all&#39;</span><span class="p">)</span>
 
-
-     
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_udpport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -548,14 +607,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">p0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport&#39;</span><span class="p">)</span>
         <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport2&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span><span class="n">p1</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">pair</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">pair</span><span class="p">]</span>
     
     <span class="nd">@rx_udpport</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_udpport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ports</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Requires iterating over elements two and two for setting ports&quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">ports</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">i</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpport2&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">i</span><span class="p">)</span>
 
@@ -588,6 +647,36 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An instance of DetectorAdcs used to read the temperature</span>
+<span class="sd">        of different components</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        -----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            detector.temp</span>
+<span class="sd">            &gt;&gt;</span>
+<span class="sd">            temp_fpga     :  36.90°C,  45.60°C</span>
+<span class="sd">            temp_fpgaext  :  31.50°C,  32.50°C</span>
+<span class="sd">            temp_10ge     :   0.00°C,   0.00°C</span>
+<span class="sd">            temp_dcdc     :  36.00°C,  36.00°C</span>
+<span class="sd">            temp_sodl     :  33.00°C,  34.50°C</span>
+<span class="sd">            temp_sodr     :  33.50°C,  34.00°C</span>
+<span class="sd">            temp_fpgafl   :  33.81°C,  30.93°C</span>
+<span class="sd">            temp_fpgafr   :  27.88°C,  29.15°C</span>
+
+<span class="sd">            a = detector.temp.fpga[:]</span>
+<span class="sd">            a</span>
+<span class="sd">            &gt;&gt; [36.568, 45.542]</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span>
+
+    <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">tengiga</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Enable 10Gbit/s data output</span>
@@ -617,15 +706,14 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostnames</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_write</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="mi">1024</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rx_tcpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1954</span><span class="p">,</span><span class="mi">1955</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rx_tcpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1954</span><span class="p">,</span> <span class="mi">1955</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rx_udpport</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50010</span><span class="p">,</span> <span class="mi">50011</span><span class="p">,</span> <span class="mi">50004</span><span class="p">,</span> <span class="mi">50005</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rx_hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rx_datastream</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_write</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span></div></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">True</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">True</span></div></div>
 </pre></div>
 
            </div>

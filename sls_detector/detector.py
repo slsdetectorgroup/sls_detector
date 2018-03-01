@@ -1262,7 +1262,12 @@ class Detector:
     def settings(self):
         """
         Detector settings used to control for example calibration or gain
-        switching. For EIGER almost always standard
+        switching. For EIGER almost always standard standard.
+
+        .. warning ::
+
+            For Eiger setting settings should be followed by setting the threshold
+            otherwise reading of the settings will overwrite the set value
 
         
         """
@@ -1274,7 +1279,8 @@ class Detector:
         if s in self._settings:
             self._api.setSettings(s)
         else:
-            raise DetectorValueError('Settings: {:s}, not defined for this detector'.format(s))
+            raise DetectorValueError('Settings: {:s}, not defined for {:s}. '
+                                     'Valid options are: [{:s}]'.format(s, self.detector_type, ', '.join(self._settings)))
 
         
     @property

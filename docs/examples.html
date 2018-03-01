@@ -174,7 +174,7 @@
 <h2>Simple threshold scan<a class="headerlink" href="#simple-threshold-scan" title="Permalink to this headline">¶</a></h2>
 <p>Assuming you have set up your detector with exposure time, period, enabled
 file writing etc.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sls_detector</span> <span class="kn">import</span> <span class="n">Eiger</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sls_detector</span> <span class="kn">import</span> <span class="n">Eiger</span>
 
 <span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
 <span class="n">threshold</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
@@ -186,7 +186,7 @@ file writing etc.</p>
 <p>If we want to control the shutter of for example, the big X-ray box we can add
 this line in our code. It then opens the shutter just before the measurement
 and closes is afterwards.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">xrf_shutter_open</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="s1">&#39;Fe&#39;</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">xrf_shutter_open</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="s1">&#39;Fe&#39;</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">threshold</span><span class="p">:</span>
         <span class="n">d</span><span class="o">.</span><span class="n">vthreshold</span> <span class="o">=</span> <span class="n">th</span>
         <span class="n">d</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span>
@@ -195,7 +195,7 @@ and closes is afterwards.</p>
 </div>
 <div class="section" id="reading-temperatures">
 <h2>Reading temperatures<a class="headerlink" href="#reading-temperatures" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>d.temp
+<div class="highlight-default"><div class="highlight"><pre><span></span>d.temp
 &gt;&gt;
 temp_fpga     :  43.19°C,  51.83°C
 temp_fpgaext  :  38.50°C,  38.50°C
@@ -225,7 +225,7 @@ t
 the detector and the second one is to launch the normal acquire from a different process. Depending on your measurement
 it might also be better to run the other task in a seperate process and use acq in the main thread.
 But lets start looking at the at the manual way:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
 
@@ -262,7 +262,7 @@ But lets start looking at the at the manual way:</p>
 <p>Instead launching d.acq() from a different process is a bit easier since the control of receiver and detector
 is handled in the acq call. However, you need to join the process used otherwise a lot of zombie processes would
 hang around until the main process exits.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">Process</span>
 <span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span>
 
