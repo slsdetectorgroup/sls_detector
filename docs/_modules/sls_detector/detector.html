@@ -434,10 +434,10 @@
     <span class="n">_speed_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Full Speed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
     <span class="n">_settings</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="c1"># C++ API interfacing slsDetector and multiSlsDetector</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_flippeddatax</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFlippedDataX</span><span class="p">,</span>
@@ -465,8 +465,8 @@
 <div class="viewcode-block" id="Detector.acq"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.acq">[docs]</a>    <span class="k">def</span> <span class="nf">acq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Blocking command. Acquire the number of frames specified by frames, cycles etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span>
 
 
 
@@ -509,8 +509,8 @@
 
 
 <div class="viewcode-block" id="Detector.clear_errors"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.clear_errors">[docs]</a>    <span class="k">def</span> <span class="nf">clear_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clear the error mask for the detector. Used to reset after checking.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">clearErrorMask</span><span class="p">()</span></div>
+        <span class="sd">&quot;&quot;&quot;Clear the error mask for the detector. Used to reset after checking.&quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">clearErrorMask</span><span class="p">()</span>
 
 
     <span class="nd">@property</span>
@@ -788,8 +788,8 @@
 <span class="sd">            After doing this you can&#39;t access the detector until it is</span>
 <span class="sd">            reconfigured</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">freeSharedMemory</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">freeSharedMemory</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">flipped_data_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -896,8 +896,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readConfigurationFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find settings file&#39;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find settings file&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Detector.load_parameters"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.load_parameters">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">load_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
@@ -919,8 +919,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readParametersFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find parameters file&#39;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Cannot find parameters file&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Detector.load_trimbits"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.load_trimbits">[docs]</a>    <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">load_trimbits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
@@ -949,8 +949,8 @@
 <span class="sd">            #Load one file to a specific detector</span>
 <span class="sd">            detector.load_trimbits(&#39;/path/to/dir/name.sn049&#39;, 0)</span>
 <span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">loadTrimbitFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="p">)</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">loadTrimbitFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="p">)</span>
 
 
     <span class="nd">@property</span>
@@ -1177,8 +1177,8 @@
 <span class="sd">            Automatically done when using d.acq()</span>
 <span class="sd">            </span>
 <span class="sd">            </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetFramesCaught</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetFramesCaught</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1443,7 +1443,8 @@
         <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setSettings</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Settings: </span><span class="si">{:s}</span><span class="s1">, not defined for this detector&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Settings: </span><span class="si">{:s}</span><span class="s1">, not defined for </span><span class="si">{:s}</span><span class="s1">. &#39;</span>
+                                     <span class="s1">&#39;Valid options are: [</span><span class="si">{:s}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector_type</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">)))</span>
 
         
     <span class="nd">@property</span>
@@ -1480,21 +1481,21 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Non blocking command to star acquisition. Needs to be used in combination</span>
 <span class="sd">        with receiver start.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startAcquisition</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startAcquisition</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Detector.stop_detector"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_detector">[docs]</a>    <span class="k">def</span> <span class="nf">stop_detector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop acquisition early or if the detector hangs</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopAcquisition</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopAcquisition</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="Detector.start_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.start_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">start_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startReceiver</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Detector.start_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.start_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">start_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startReceiver</span><span class="p">()</span>
         
-<div class="viewcode-block" id="Detector.stop_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">stop_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopReceiver</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Detector.stop_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">stop_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopReceiver</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sub_exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1655,8 +1656,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configures the detector source and destination MAC addresses, IP addresses</span>
 <span class="sd">        and UDP ports, and computes the IP header checksum for such parameters</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">configureNetworkParameters</span><span class="p">()</span></div></div>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">configureNetworkParameters</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">free_shared_memory</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>

@@ -84,3 +84,37 @@ works for other detector sizes and models.
     
     #Set dacs iterating on index and values
     d.dacs.vrf[0,1] = 1300,1400
+
+
+---------------------------------
+Operating multiple detectors
+---------------------------------
+
+Operating multiple detectors is supported by assigning an id when creating the object. If no id is
+set it defaults to 0.
+
+::
+
+    d0 = Eiger(0)
+    d1 = Jungfrau(1)
+
+    #Or explicitly
+    d1 = Jungfrau(id = 0)
+
+
+
+::
+
+    from sls_detector import Eiger
+
+    d0 = Eiger(0)
+    d1 = Eiger(1)
+
+    d0.load_config('/home/l_frojdh/T45.config')
+    d1.load_config('/home/l_frojdh/T62.config')
+
+    d0.settings_path = '/home/l_frojdh/settings'
+    d0.trimmed_energies = [5000,6000,8000,9900]
+
+    d1.settings_path = '/home/l_frojdh/settings'
+    d1.trimmed_energies = [5000,6000,8000,9900]

@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-the-detector">Setting up the detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-and-getting-attributes">Setting and getting attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#working-with-dacs">Working with DACs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#operating-multiple-detectors">Operating multiple detectors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="code_quality.html">Code quality</a></li>
@@ -183,7 +184,7 @@ recommended to run the receivers seperate.</p>
 in the Detector class. When something is assigned it is also set
 in the detector and when the attribute is called using dot notation it
 it looked up from the detector.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Currently Eiger and Jungfrau but Detector should work for all</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Currently Eiger and Jungfrau but Detector should work for all</span>
 <span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span><span class="p">()</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
 
@@ -202,7 +203,7 @@ it looked up from the detector.</p>
 <h2>Working with DACs<a class="headerlink" href="#working-with-dacs" title="Permalink to this headline">¶</a></h2>
 <p>The following examples assumes an Eiger500k detector. But the same syntax
 works for other detector sizes and models.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">dacs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">dacs</span>
 <span class="o">&gt;&gt;</span>
 <span class="o">==========</span> <span class="n">DACS</span> <span class="o">=========</span>
 <span class="n">vsvp</span>      <span class="p">:</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span>
@@ -241,6 +242,33 @@ works for other detector sizes and models.</p>
 
 <span class="c1">#Set dacs iterating on index and values</span>
 <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1300</span><span class="p">,</span><span class="mi">1400</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="operating-multiple-detectors">
+<h2>Operating multiple detectors<a class="headerlink" href="#operating-multiple-detectors" title="Permalink to this headline">¶</a></h2>
+<p>Operating multiple detectors is supported by assigning an id when creating the object. If no id is
+set it defaults to 0.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d0</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">Jungfrau</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Or explicitly</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">Jungfrau</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Eiger</span>
+
+<span class="n">d0</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">d0</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;/home/l_frojdh/T45.config&#39;</span><span class="p">)</span>
+<span class="n">d1</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;/home/l_frojdh/T62.config&#39;</span><span class="p">)</span>
+
+<span class="n">d0</span><span class="o">.</span><span class="n">settings_path</span> <span class="o">=</span> <span class="s1">&#39;/home/l_frojdh/settings&#39;</span>
+<span class="n">d0</span><span class="o">.</span><span class="n">trimmed_energies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5000</span><span class="p">,</span><span class="mi">6000</span><span class="p">,</span><span class="mi">8000</span><span class="p">,</span><span class="mi">9900</span><span class="p">]</span>
+
+<span class="n">d1</span><span class="o">.</span><span class="n">settings_path</span> <span class="o">=</span> <span class="s1">&#39;/home/l_frojdh/settings&#39;</span>
+<span class="n">d1</span><span class="o">.</span><span class="n">trimmed_energies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5000</span><span class="p">,</span><span class="mi">6000</span><span class="p">,</span><span class="mi">8000</span><span class="p">,</span><span class="mi">9900</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>

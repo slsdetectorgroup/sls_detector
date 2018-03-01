@@ -180,7 +180,7 @@ guaranteed regarding Python and slsDetectorPackage.</p>
 <p>Binaries are available using conda. This is from our experience the easiest and
 most convenient way to install both the slsDetectorPackage and the Python API.
 To install both run the following commands after having installed Anaconda/Miniconda.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Add conda channels</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Add conda channels</span>
 <span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
 <span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">slsdetectorgroup</span>
 
@@ -199,7 +199,7 @@ To install both run the following commands after having installed Anaconda/Minic
 <h2>Local build using conda-build<a class="headerlink" href="#local-build-using-conda-build" title="Permalink to this headline">¶</a></h2>
 <p>Needs the <a class="reference external" href="https://github.com/slsdetectorgroup/sls_detector_software">sls_detector_software</a> installed  in order to automatically find headers
 and shared libraries.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Clone source code</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Clone source code</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">slsdetectorgroup</span><span class="o">/</span><span class="n">sls_detector</span><span class="o">.</span><span class="n">git</span>
 
 <span class="c1">#Checkout the branch needed</span>
@@ -216,12 +216,12 @@ and shared libraries.</p>
 <p>IF you if you are developing and are making constant changes to the code it’s a bit cumbersome
 to build with conda and install. Then an easier way is to build the C/C++ parts in the package
 directory and temporary add this to the path</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#in path/to/sls_detector</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#in path/to/sls_detector</span>
 <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build_ext</span> <span class="o">--</span><span class="n">inplace</span>
 </pre></div>
 </div>
 <p>Then in your Python script</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/path/to/sls_detector&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">sls_detector</span> <span class="k">import</span> <span class="n">Detector</span>
 </pre></div>

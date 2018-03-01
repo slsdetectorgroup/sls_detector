@@ -178,14 +178,14 @@ them.</p>
 <p>When using classes and functions from the
 package it should feel like you are using Python tools and be forces
 to write C++ style code with Python syntax.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">xray_box</span><span class="o">.</span><span class="n">shutter_open</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">xray_box</span><span class="o">.</span><span class="n">shutter_open</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">threshold</span><span class="p">:</span>
         <span class="n">d</span><span class="o">.</span><span class="n">vthreshold</span> <span class="o">=</span> <span class="n">th</span>
         <span class="n">d</span><span class="o">.</span><span class="n">acq</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>should be preferred over</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
 <span class="n">xray_box</span><span class="o">.</span><span class="n">open_shutter</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">set_dac</span><span class="p">(</span><span class="s1">&#39;vthreshold&#39;</span><span class="p">,</span> <span class="n">threshold</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -200,7 +200,7 @@ to write C++ style code with Python syntax.</p>
 <p>Classes and functions should be documented with doc-strings
 in the source code. Preferably with examples. The syntax to be used
 is numpy-sphinx.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a function that does something</span>
 
@@ -239,7 +239,7 @@ add an exception.</p>
 All code that goes in should have adequate tests. If a new function does not
 have a minimum of one test it does not get added.</p>
 <p><strong>Unit-tests with pytest and mocker</strong></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
 <span class="n">Name</span>                         <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
 <span class="o">------------------------------------------------</span>
 <span class="n">sls_detector</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>         <span class="mi">4</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
@@ -258,7 +258,7 @@ have a minimum of one test it does not get added.</p>
 <p><strong>Simple integration tests</strong></p>
 <p>These tests require a detector connected. Performs simple tasks like setting
 exposure time and reading back to double check the value</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-----------</span> <span class="n">coverage</span><span class="p">:</span> <span class="n">platform</span> <span class="n">linux</span><span class="p">,</span> <span class="n">python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">4</span><span class="o">-</span><span class="n">final</span><span class="o">-</span><span class="mi">0</span> <span class="o">-----------</span>
 <span class="n">Name</span>                         <span class="n">Stmts</span>   <span class="n">Miss</span>  <span class="n">Cover</span>
 <span class="o">------------------------------------------------</span>
 <span class="n">sls_detector</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>         <span class="mi">4</span>      <span class="mi">0</span>   <span class="mi">100</span><span class="o">%</span>
