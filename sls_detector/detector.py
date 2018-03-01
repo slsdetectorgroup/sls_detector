@@ -9,7 +9,6 @@ import os
 from collections import namedtuple, Iterable
 from functools import partial
 import numpy as np
-from multiprocessing import Process
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
 
