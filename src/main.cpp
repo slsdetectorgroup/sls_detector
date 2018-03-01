@@ -19,8 +19,9 @@ PYBIND11_MODULE(_sls_detector, m) {
 
     py::class_<Detector> DetectorApi(m, "DetectorApi");
     DetectorApi
-            .def(py::init<>())
+            .def(py::init<int>())
             .def("freeSharedMemory", &Detector::freeSharedMemory)
+            .def("getMultiDetectorId", &Detector::getMultiDetectorId)
             .def("acq", &Detector::acquire, "Acqire")
             .def("getAcquiringFlag", &Detector::getAcquiringFlag)
             .def("setAcquiringFlag", &Detector::setAcquiringFlag)
@@ -126,6 +127,7 @@ PYBIND11_MODULE(_sls_detector, m) {
             
             .def("getNetworkParameter", &Detector::getNetworkParameter)
             .def("setNetworkParameter", &Detector::setNetworkParameter)
+            .def("configureNetworkParameters", &Detector::configureNetworkParameters)
             .def("getDelayFrame", &Detector::getDelayFrame)
             .def("setDelayFrame", &Detector::setDelayFrame)
             .def("getDelayLeft", &Detector::getDelayLeft)

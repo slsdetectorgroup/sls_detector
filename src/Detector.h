@@ -16,15 +16,17 @@
 
 class Detector{
 public:
-    Detector(int i=0):det(i){
-        //added default arg to cope with branch
-        //removed when going back to developer
+    Detector(int i):det(i){
 
+        //id of the multi detector instance
+        multi_detector_id = i;
 
         //Disable any output from std::cout
         std::cout.setstate(std::ios_base::failbit);
 
     }
+
+    int getMultiDetectorId(){ return multi_detector_id; }
 
     //get image size as [nrow, ncols] return as a pair of ints
     std::pair<int, int> getImageSize(){
@@ -512,6 +514,7 @@ public:
         }
     }
 
+    void configureNetworkParameters(){ det.configureMAC(); }
 
     std::string getLastClientIP(){
         return det.getLastClientIP();
@@ -573,6 +576,7 @@ public:
 private:
     multiSlsDetector det;
     slsDetector* getSlsDetector(int i);
+    int multi_detector_id = 0;
 };
 
 
@@ -589,10 +593,10 @@ slsDetector* Detector::getSlsDetector(int i){
 
 slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_name){
 
-    if(par_name == "detector_mac"){
+    if(par_name == "detectormac"){
         return slsDetectorDefs::networkParameter::DETECTOR_MAC;
     }
-    else if(par_name == "detector_ip"){
+    else if(par_name == "detectorip"){
         return slsDetectorDefs::networkParameter::DETECTOR_IP;
     }
     else if(par_name == "rx_hostname"){

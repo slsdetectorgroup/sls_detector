@@ -51,6 +51,8 @@ def test_acq_call(d, mocker):
     d.acq()
     m.assert_called_once_with()
 
+
+
 def test_busy_call(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getAcquiringFlag')
     m.return_value = False
@@ -109,6 +111,12 @@ def test_set_file_index(d, mocker):
     d.file_index = 9
     m.assert_called_with(9)
 
+
+def file_index_with_no_detector(d):
+    assert d.file_index == -100
+
+def dr_with_no_detector(d):
+    assert d.dynamic_range == -100
 
 def test_set_file_index_raises_on_neg(d, mocker):
     mocker.patch('_sls_detector.DetectorApi.setFileIndex')
@@ -252,6 +260,11 @@ def test_get_module_geometry_access(d, mocker):
     assert d.module_geometry.vertical == 3
     assert d.module_geometry.horizontal == 12
 
+def test_module_geometry_without_detectors(d):
+    t = d.module_geometry
+    assert t.horizontal == 0
+    assert t.vertical == 0
+
 def test_get_n_frames(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNumberOfFrames')
     m.return_value = 3
@@ -262,15 +275,49 @@ def test_set_n_frames(d, mocker):
     d.n_frames = 9
     m.assert_called_once_with(9)
 
+def test_nframes_without_detector(d):
+    assert d.n_frames == -100
+
 def test_set_n_frames_raises_on_neg(d, mocker):
     mocker.patch('_sls_detector.DetectorApi.setNumberOfFrames')
-    with pytest.raises(ValueError):
+    with pytest.raises(DetectorValueError):
         d.n_frames = -1
 
 def test_set_n_frames_raises_on_zero(d, mocker):
     mocker.patch('_sls_detector.DetectorApi.setNumberOfFrames')
-    with pytest.raises(ValueError):
+    with pytest.raises(DetectorValueError):
         d.n_frames = 0
+
+def test_n_cycles_without_detector(d):
+    assert d.n_cycles == -100
+
+def test_set_n_cycles_raises_on_zero(d, mocker):
+    mocker.patch('_sls_detector.DetectorApi.setCycles')
+    with pytest.raises(DetectorValueError):
+        d.n_cycles = 0
+
+def test_set_n_cycles(d, mocker):
+    m = mocker.patch('_sls_detector.DetectorApi.setCycles')
+    d.n_cycles = 56
+    m.assert_called_once_with(56)
+
+
+
+def test_n_measurements_without_detector(d):
+    assert d.n_measurements == -100
+
+def test_set_n_measurements_raises_on_zero(d, mocker):
+    mocker.patch('_sls_detector.DetectorApi.setNumberOfMeasurements')
+    with pytest.raises(DetectorValueError):
+        d.n_measurements = 0
+
+def test_set_n_measurements(d, mocker):
+    m = mocker.patch('_sls_detector.DetectorApi.setNumberOfMeasurements')
+    d.n_measurements = 560
+    m.assert_called_once_with(560)
+
+def test_get_n_modules_no_detector(d):
+    assert d.n_modules == 0
 
 def test_get_n_modules(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.getNumberOfDetectors')
@@ -292,6 +339,24 @@ def test_set_period_time_less_than_zero(d, mocker):
     with pytest.raises(ValueError):
         d.period = -7
 
+
+def test_get_online(d, mocker):
+    m = mocker.patch('_sls_detector.DetectorApi.getOnline')
+    d.online
+    m.assert_called_once_with()
+
+def test_set_online(d, mocker):
+    m = mocker.patch('_sls_detector.DetectorApi.setOnline')
+    d.online = True
+    m.assert_called_once_with(True)
+
+def test_last_client_ip_no_detector(d):
+    assert d.last_client_ip == ''
+
+def test_last_cliten_ip_call(d, mocker):
+    m = mocker.patch('_sls_detector.DetectorApi.getLastClientIP')
+    d.last_client_ip
+    m.assert_called_once_with()
 
 #-------------------------------------------------------------Rate correction
 def test_get_rate_correction(d, mocker):

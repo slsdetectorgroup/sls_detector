@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Documentation &mdash; sls_detector developer documentation</title>
+  <title>API Documentation &mdash; sls_detector 3.1.0rc documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector developer documentation" href="index.html"/>
+    <link rel="top" title="sls_detector 3.1.0rc documentation" href="index.html"/>
         <link rel="prev" title="Error handling" href="error-handling.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                developer
+                3.1.0rc
               </div>
             
           
@@ -172,7 +172,7 @@
 <h2>Detector<a class="headerlink" href="#detector" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Detector">
-<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
 derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API</p>
@@ -202,10 +202,13 @@ leaves the detector with busy == True</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<p>d.busy
-&gt;&gt; True</p>
-<p>#If the detector is stuck
-d.busy = False</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">busy</span>
+<span class="o">&gt;&gt;</span> <span class="kc">True</span>
+
+<span class="c1">#If the detector is stuck</span>
+<span class="n">d</span><span class="o">.</span><span class="n">busy</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -220,59 +223,11 @@ d.busy = False</p>
 <dd><p>zmq port of the client</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="sls_detector.Detector.dacs">
-<code class="descname">dacs</code><a class="headerlink" href="#sls_detector.Detector.dacs" title="Permalink to this definition">¶</a></dt>
-<dd><p>An instance of DetectorDacs used for accessing the dacs of a single
-or multi detector.</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">sls</span><span class="o">.</span><span class="n">Detector</span><span class="p">()</span>
-
-<span class="c1">#Set all vrf to 1500</span>
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span> <span class="o">=</span> <span class="mi">1500</span>
-
-<span class="c1">#Check vrf</span>
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span>
-<span class="o">&gt;&gt;</span> <span class="n">vrf</span>       <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
-
-<span class="c1">#Set a single vtr</span>
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vtr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1800</span>
-
-<span class="c1">#Set vrf with multiple values</span>
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3500</span><span class="p">,</span><span class="mi">3700</span><span class="p">]</span>
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span>
-<span class="o">&gt;&gt;</span> <span class="n">vrf</span>       <span class="p">:</span>  <span class="mi">3500</span><span class="p">,</span>  <span class="mi">3700</span>
-
-<span class="c1">#read into a variable</span>
-<span class="n">var</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span><span class="p">[:]</span>
-
-<span class="c1">#set multiple with multiple values, mostly used for large systems</span>
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vcall</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3500</span><span class="p">,</span><span class="mi">3600</span><span class="p">]</span>
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vcall</span>
-<span class="o">&gt;&gt;</span> <span class="n">vcall</span>     <span class="p">:</span>  <span class="mi">3500</span><span class="p">,</span>  <span class="mi">3600</span>
-
-<span class="n">d</span><span class="o">.</span><span class="n">dacs</span>
-<span class="o">&gt;&gt;</span>
-<span class="o">==========</span> <span class="n">DACS</span> <span class="o">=========</span>
-<span class="n">vsvp</span>      <span class="p">:</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span>
-<span class="n">vtr</span>       <span class="p">:</span>  <span class="mi">4000</span><span class="p">,</span>  <span class="mi">4000</span>
-<span class="n">vrf</span>       <span class="p">:</span>  <span class="mi">1900</span><span class="p">,</span>  <span class="mi">1900</span>
-<span class="n">vrs</span>       <span class="p">:</span>  <span class="mi">1400</span><span class="p">,</span>  <span class="mi">1400</span>
-<span class="n">vsvn</span>      <span class="p">:</span>  <span class="mi">4000</span><span class="p">,</span>  <span class="mi">4000</span>
-<span class="n">vtgstv</span>    <span class="p">:</span>  <span class="mi">2556</span><span class="p">,</span>  <span class="mi">2556</span>
-<span class="n">vcmp_ll</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
-<span class="n">vcmp_lr</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
-<span class="n">vcall</span>     <span class="p">:</span>  <span class="mi">4000</span><span class="p">,</span>  <span class="mi">4000</span>
-<span class="n">vcmp_rl</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
-<span class="n">rxb_rb</span>    <span class="p">:</span>  <span class="mi">1100</span><span class="p">,</span>  <span class="mi">1100</span>
-<span class="n">rxb_lb</span>    <span class="p">:</span>  <span class="mi">1100</span><span class="p">,</span>  <span class="mi">1100</span>
-<span class="n">vcmp_rr</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
-<span class="n">vcp</span>       <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
-<span class="n">vcn</span>       <span class="p">:</span>  <span class="mi">2000</span><span class="p">,</span>  <span class="mi">2000</span>
-<span class="n">vis</span>       <span class="p">:</span>  <span class="mi">1550</span><span class="p">,</span>  <span class="mi">1550</span>
-<span class="n">iodelay</span>   <span class="p">:</span>   <span class="mi">660</span><span class="p">,</span>   <span class="mi">660</span>
-</pre></div>
-</div>
+<dl class="method">
+<dt id="sls_detector.Detector.config_network">
+<code class="descname">config_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.config_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.config_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the detector source and destination MAC addresses, IP addresses
+and UDP ports, and computes the IP header checksum for such parameters</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -854,10 +809,11 @@ otherwise</p>
 <dt id="sls_detector.Detector.settings">
 <code class="descname">settings</code><a class="headerlink" href="#sls_detector.Detector.settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detector settings used to control for example calibration or gain
-switching. For EIGER almost always standard</p>
-<div class="admonition-todo admonition" id="index-2">
-<p class="first admonition-title">Todo</p>
-<p class="last">check input depending on detector</p>
+switching. For EIGER almost always standard standard.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">For Eiger setting settings should be followed by setting the threshold
+otherwise reading of the settings will overwrite the set value</p>
 </div>
 </dd></dl>
 
@@ -883,7 +839,7 @@ with receiver start.</p>
 <dt id="sls_detector.Detector.status">
 <code class="descname">status</code><a class="headerlink" href="#sls_detector.Detector.status" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Status of the detector – idle, running,</p>
-<div class="admonition-todo admonition" id="index-3">
+<div class="admonition-todo admonition" id="index-2">
 <p class="first admonition-title">Todo</p>
 <p class="last">Check possible values</p>
 </div>
@@ -908,30 +864,6 @@ with receiver start.</p>
 <span class="o">&gt;&gt;</span> <span class="mf">0.0023</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span> <span class="o">=</span> <span class="mf">0.002</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="sls_detector.Detector.temp">
-<code class="descname">temp</code><a class="headerlink" href="#sls_detector.Detector.temp" title="Permalink to this definition">¶</a></dt>
-<dd><p>An instance of DetectorAdcs used to read the temperature
-of different components</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>detector.temp
-&gt;&gt;
-temp_fpga     :  36.90°C,  45.60°C
-temp_fpgaext  :  31.50°C,  32.50°C
-temp_10ge     :   0.00°C,   0.00°C
-temp_dcdc     :  36.00°C,  36.00°C
-temp_sodl     :  33.00°C,  34.50°C
-temp_sodr     :  33.50°C,  34.00°C
-temp_fpgafl   :  33.81°C,  30.93°C
-temp_fpgafr   :  27.88°C,  29.15°C
-
-a = detector.temp.fpga[:]
-a
-&gt;&gt; [36.568, 45.542]
 </pre></div>
 </div>
 </dd></dl>
@@ -1010,7 +942,7 @@ all chips in the detector.</p>
 <h2>Eiger<a class="headerlink" href="#eiger" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Eiger">
-<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Eiger</code><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Eiger</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sls_detector.detector.Detector</span></code></p>
 <p>Subclassing Detector to set up correct dacs and detector specific
 functions.</p>
@@ -1025,6 +957,61 @@ module</p>
 
 <span class="n">d</span><span class="o">.</span><span class="n">active</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="o">&gt;&gt;</span> <span class="n">active</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.dacs">
+<code class="descname">dacs</code><a class="headerlink" href="#sls_detector.Eiger.dacs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of DetectorDacs used for accessing the dacs of a single
+or multi detector.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">sls</span><span class="o">.</span><span class="n">Detector</span><span class="p">()</span>
+
+<span class="c1">#Set all vrf to 1500</span>
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span> <span class="o">=</span> <span class="mi">1500</span>
+
+<span class="c1">#Check vrf</span>
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span>
+<span class="o">&gt;&gt;</span> <span class="n">vrf</span>       <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
+
+<span class="c1">#Set a single vtr</span>
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vtr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1800</span>
+
+<span class="c1">#Set vrf with multiple values</span>
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3500</span><span class="p">,</span><span class="mi">3700</span><span class="p">]</span>
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span>
+<span class="o">&gt;&gt;</span> <span class="n">vrf</span>       <span class="p">:</span>  <span class="mi">3500</span><span class="p">,</span>  <span class="mi">3700</span>
+
+<span class="c1">#read into a variable</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span><span class="p">[:]</span>
+
+<span class="c1">#set multiple with multiple values, mostly used for large systems</span>
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vcall</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3500</span><span class="p">,</span><span class="mi">3600</span><span class="p">]</span>
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vcall</span>
+<span class="o">&gt;&gt;</span> <span class="n">vcall</span>     <span class="p">:</span>  <span class="mi">3500</span><span class="p">,</span>  <span class="mi">3600</span>
+
+<span class="n">d</span><span class="o">.</span><span class="n">dacs</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">==========</span> <span class="n">DACS</span> <span class="o">=========</span>
+<span class="n">vsvp</span>      <span class="p">:</span>     <span class="mi">0</span><span class="p">,</span>     <span class="mi">0</span>
+<span class="n">vtr</span>       <span class="p">:</span>  <span class="mi">4000</span><span class="p">,</span>  <span class="mi">4000</span>
+<span class="n">vrf</span>       <span class="p">:</span>  <span class="mi">1900</span><span class="p">,</span>  <span class="mi">1900</span>
+<span class="n">vrs</span>       <span class="p">:</span>  <span class="mi">1400</span><span class="p">,</span>  <span class="mi">1400</span>
+<span class="n">vsvn</span>      <span class="p">:</span>  <span class="mi">4000</span><span class="p">,</span>  <span class="mi">4000</span>
+<span class="n">vtgstv</span>    <span class="p">:</span>  <span class="mi">2556</span><span class="p">,</span>  <span class="mi">2556</span>
+<span class="n">vcmp_ll</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
+<span class="n">vcmp_lr</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
+<span class="n">vcall</span>     <span class="p">:</span>  <span class="mi">4000</span><span class="p">,</span>  <span class="mi">4000</span>
+<span class="n">vcmp_rl</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
+<span class="n">rxb_rb</span>    <span class="p">:</span>  <span class="mi">1100</span><span class="p">,</span>  <span class="mi">1100</span>
+<span class="n">rxb_lb</span>    <span class="p">:</span>  <span class="mi">1100</span><span class="p">,</span>  <span class="mi">1100</span>
+<span class="n">vcmp_rr</span>   <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
+<span class="n">vcp</span>       <span class="p">:</span>  <span class="mi">1500</span><span class="p">,</span>  <span class="mi">1500</span>
+<span class="n">vcn</span>       <span class="p">:</span>  <span class="mi">2000</span><span class="p">,</span>  <span class="mi">2000</span>
+<span class="n">vis</span>       <span class="p">:</span>  <span class="mi">1550</span><span class="p">,</span>  <span class="mi">1550</span>
+<span class="n">iodelay</span>   <span class="p">:</span>   <span class="mi">660</span><span class="p">,</span>   <span class="mi">660</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1120,6 +1107,30 @@ here they are grouped for each detector</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Eiger.temp">
+<code class="descname">temp</code><a class="headerlink" href="#sls_detector.Eiger.temp" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of DetectorAdcs used to read the temperature
+of different components</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>detector.temp
+&gt;&gt;
+temp_fpga     :  36.90°C,  45.60°C
+temp_fpgaext  :  31.50°C,  32.50°C
+temp_10ge     :   0.00°C,   0.00°C
+temp_dcdc     :  36.00°C,  36.00°C
+temp_sodl     :  33.00°C,  34.50°C
+temp_sodr     :  33.50°C,  34.00°C
+temp_fpgafl   :  33.81°C,  30.93°C
+temp_fpgafr   :  27.88°C,  29.15°C
+
+a = detector.temp.fpga[:]
+a
+&gt;&gt; [36.568, 45.542]
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Eiger.tengiga">
 <code class="descname">tengiga</code><a class="headerlink" href="#sls_detector.Eiger.tengiga" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable 10Gbit/s data output</p>
@@ -1172,15 +1183,36 @@ Used mainly in the calibration code.</p>
 <h2>Jungfrau<a class="headerlink" href="#jungfrau" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Jungfrau">
-<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sls_detector.detector.Detector</span></code></p>
 <p>Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
 class is needed to provide the correct dacs and unique functions.</p>
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.dacs">
+<code class="descname">dacs</code><a class="headerlink" href="#sls_detector.Jungfrau.dacs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of DetectorDacs used for accessing the dacs of a single
+or multi detector.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Jungfrau</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.delay">
 <code class="descname">delay</code><a class="headerlink" href="#sls_detector.Jungfrau.delay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delay after trigger [s]</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.detector_ip">
+<code class="descname">detector_ip</code><a class="headerlink" href="#sls_detector.Jungfrau.detector_ip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Jungfrau.detector_mac">
+<code class="descname">detector_mac</code><a class="headerlink" href="#sls_detector.Jungfrau.detector_mac" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.n_gates">
@@ -1232,6 +1264,23 @@ Note! Eiger has two ports</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Jungfrau.temp">
+<code class="descname">temp</code><a class="headerlink" href="#sls_detector.Jungfrau.temp" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of DetectorAdcs used to read the temperature
+of different components</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>detector.temp
+&gt;&gt;
+temp_fpga     :  36.90°C,  45.60°C
+
+a = detector.temp.fpga[:]
+a
+&gt;&gt; [36.568, 45.542]
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Jungfrau.temperature_control">
 <code class="descname">temperature_control</code><a class="headerlink" href="#sls_detector.Jungfrau.temperature_control" title="Permalink to this definition">¶</a></dt>
 <dd><p>Monitor the temperature of the detector and switch off chips if temperature_threshold is
@@ -1254,9 +1303,11 @@ crossed</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> if the threshold have been crossed and temperature_control is active otherwise <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> if the threshold have been crossed and temperature_control is active</li>
+<li>otherwise <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1315,7 +1366,7 @@ crossed</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'developer',
+            VERSION:'3.1.0rc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

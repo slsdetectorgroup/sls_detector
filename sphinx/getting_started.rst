@@ -84,3 +84,39 @@ works for other detector sizes and models.
     
     #Set dacs iterating on index and values
     d.dacs.vrf[0,1] = 1300,1400
+
+
+---------------------------------
+Operating multiple detectors
+---------------------------------
+
+Operating multiple detectors is supported by assigning an id when creating the object. If no id is
+set it defaults to 0.
+
+::
+
+    d0 = Eiger() #id is now 0
+    d1 = Jungfrau(1)
+
+    #Or explicitly
+    d1 = Jungfrau(id = 0)
+
+The detectors now operate independently of each other but can be synchronized using a hardware trigger.
+
+::
+
+    from sls_detector import Eiger
+
+    d0 = Eiger(0)
+    d1 = Eiger(1)
+
+    d0.load_config('/some/path/T45.config')
+    d1.load_config('/some/path/T62.config')
+
+    d0.n_frames = 1
+    d0.exposure_time = 1
+    d0.timing_mode = 'trigger'
+
+    d1.n_frames = 5
+    d1.exposure_time = 0.2
+    d1.timing_mode = 'trigger'
