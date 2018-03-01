@@ -270,10 +270,10 @@ class Detector:
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
     _settings = []
 
-    def __init__(self):
+    def __init__(self, id = 0):
         # C++ API interfacing slsDetector and multiSlsDetector
 
-        self._api = DetectorApi()
+        self._api = DetectorApi(id)
 
 
         self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,

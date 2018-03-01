@@ -19,7 +19,7 @@ PYBIND11_MODULE(_sls_detector, m) {
 
     py::class_<Detector> DetectorApi(m, "DetectorApi");
     DetectorApi
-            .def(py::init<>())
+            .def(py::init<int>())
             .def("freeSharedMemory", &Detector::freeSharedMemory)
             .def("acq", &Detector::acquire, "Acqire")
             .def("getAcquiringFlag", &Detector::getAcquiringFlag)

@@ -16,7 +16,7 @@
 
 class Detector{
 public:
-    Detector(int i=0):det(i){
+    Detector(int i):det(i){
         //added default arg to cope with branch
         //removed when going back to developer
 
