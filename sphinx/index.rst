@@ -18,7 +18,7 @@ expose the API and a Python class to offer a more Pythonic interface.
    error-handling
    
    sls_detector
-
+   cpp_api
 
 
 

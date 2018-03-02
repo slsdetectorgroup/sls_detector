@@ -17,12 +17,41 @@ PYBIND11_MODULE(_sls_detector, m) {
 
     )pbdoc";
 
-    py::class_<Detector> DetectorApi(m, "DetectorApi");
+    py::class_<Detector> DetectorApi(m, "DetectorApi", R"pbdoc(
+    Interface to the multiSlsDetector class through Detector.h These functions
+    are used by the python classes Eiger and Jungfrau and normally it is better
+    to use them than to directly access functions here.
+
+    However it is possible to access these functions...
+
+    ::
+
+        #Using the python class
+        from sls_detector import Eiger
+        d = Eiger()
+        d._api.getThresholdEnergy()
+
+        #creating a DetectorApi object (remember to set online flags)
+        from _sls_detector import DetectorApi
+        api = DetectorApi(0)
+        api.setOnline(True)
+        api.setReceiverOnline(True)
+        api.getNumberOfFrames()
+
+        #But the Pythonic way is almost alway simpler
+        d = Eiger()
+        d.n_frames
+        >> 10
+
+
+
+
+    )pbdoc");
     DetectorApi
             .def(py::init<int>())
             .def("freeSharedMemory", &Detector::freeSharedMemory)
             .def("getMultiDetectorId", &Detector::getMultiDetectorId)
-            .def("acq", &Detector::acquire, "Acqire")
+            .def("acq", &Detector::acquire)
             .def("getAcquiringFlag", &Detector::getAcquiringFlag)
             .def("setAcquiringFlag", &Detector::setAcquiringFlag)
 
@@ -87,8 +116,12 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("stopAcquisition", &Detector::stopAcquisition)
             .def("startReceiver", &Detector::startReceiver)
             .def("stopReceiver", &Detector::stopReceiver)
-            .def("getFilePath", &Detector::getFilePath)
-            .def("setFilePath", &Detector::setFilePath)
+
+            .def("getFilePath", (std::string (Detector::*)()) &Detector::getFilePath, "Using multiSlsDetector")
+            .def("getFilePath", (std::string (Detector::*)(const int)) &Detector::getFilePath, "File path for individual detector")
+            .def("setFilePath", (void (Detector::*)(std::string)) &Detector::setFilePath)
+            .def("setFilePath", (void (Detector::*)(std::string, const int)) &Detector::setFilePath)
+
             .def("setFileName", &Detector::setFileName)
             .def("getFileName", &Detector::getFileName)
             .def("setFileIndex", &Detector::setFileIndex)
@@ -143,8 +176,12 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setDacVthreshold", &Detector::setDacVthreshold)
             .def("setNumberOfFrames", &Detector::setNumberOfFrames)
             .def("getNumberOfFrames", &Detector::getNumberOfFrames)
-            .def("getFramesCaughtByReceiver", &Detector::getFramesCaughtByReceiver)
-            .def("getFramesCaughtByReceiverSingleDetector", &Detector::getFramesCaughtByReceiverSingleDetector)
+
+            //Overloaded calls
+            .def("getFramesCaughtByReceiver", (int (Detector::*)()) &Detector::getFramesCaughtByReceiver)
+            .def("getFramesCaughtByReceiver", (int (Detector::*)(const int)) &Detector::getFramesCaughtByReceiver)
+
+
             .def("resetFramesCaught", &Detector::resetFramesCaught)
             .def("getReceiverCurrentFrameIndex", &Detector::getReceiverCurrentFrameIndex)
             .def("getGapPixels", &Detector::getGapPixels)

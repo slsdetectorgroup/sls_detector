@@ -104,24 +104,29 @@ class Dac(DetectorProperty):
 
     """
     def __init__(self, name, low, high, default, detector):
-        self.name = name
-        self._detector = detector
+        # def __init__(self, get_func, set_func, nmod_func, name):
+        super().__init__(partial(detector._api.getDac, name),
+                         partial(detector._api.setDac, name),
+                         detector._api.getNumberOfDetectors,
+                         name)
+        # self.name = name
+        # self._detector = detector
 
         self.min_value = low
         self.max_value = high
         self.default = default
 
         # Local copy to avoid calling the detector class every time
-        self.get_nmod = self._detector._api.getNumberOfDetectors
+        # self.get_nmod = self._detector._api.getNumberOfDetectors
 
         # Bind functions to get and set the dac
-        self.get = partial(self._detector._api.getDac, self.name)
-        self.set = partial(self._detector._api.setDac, self.name)
+        # self.get = partial(self._detector._api.getDac, self.name)
+        # self.set = partial(self._detector._api.setDac, self.name)
 
 
     def __repr__(self):
         """String representation for a single dac in all modules"""
-        r_str = ['{:10s}: '.format(self.name)]
+        r_str = ['{:10s}: '.format(self.__name__)]
         r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
 
@@ -538,7 +543,11 @@ class Detector:
 
             detector.file_path = '/new/path/to/other/files'
         """
-        return self._api.getFilePath()
+        fp = self._api.getFilePath()
+        if fp == '':
+            return [self._api.getFilePath(i) for i in range(len(self))]
+        else:
+            return fp
 
     @file_path.setter
     @error_handling
@@ -620,14 +629,12 @@ class Detector:
     def free_shared_memory(self):
         """
         Free the shared memory that contains the detector settings
-
-        .. warning ::
-
-            After doing this you can't access the detector until it is
-            reconfigured
+        and reinitialized with 0 detectors so that you can keep
+        using the same object.
 
         """
         self._api.freeSharedMemory()
+        self.__init__(self._api.getMultiDetectorId())
 
     @property
     def flipped_data_x(self):
@@ -1497,10 +1504,10 @@ class Detector:
         """
         self._api.configureNetworkParameters()
 
-def free_shared_memory():
+def free_shared_memory(id = 0):
     """
-    Function to free the shared memory. After this
-    we need to create a new detector object. 
+    Function to free the shared memory but do not initialize with new
+    0 size detector
     """
-    d = Detector()
-    d.free_shared_memory()
+    api = DetectorApi(id)
+    api.freeSharedMemory()

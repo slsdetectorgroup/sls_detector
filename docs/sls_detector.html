@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Documentation &mdash; sls_detector 3.1.0rc documentation</title>
+  <title>Python classes &mdash; sls_detector 3.1.0rc documentation</title>
   
 
   
@@ -36,6 +36,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="sls_detector 3.1.0rc documentation" href="index.html"/>
+        <link rel="next" title="C++ API" href="cpp_api.html"/>
         <link rel="prev" title="Error handling" href="error-handling.html"/> 
 
   
@@ -97,12 +98,13 @@
 <li class="toctree-l1"><a class="reference internal" href="command_line.html">Command line to Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="error-handling.html">Error handling</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python classes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#detector">Detector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#eiger">Eiger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#jungfrau">Jungfrau</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_api.html">C++ API</a></li>
 </ul>
 
             
@@ -147,7 +149,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>API Documentation</li>
+      <li>Python classes</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,8 +168,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="api-documentation">
-<h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="python-classes">
+<h1>Python classes<a class="headerlink" href="#python-classes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="detector">
 <h2>Detector<a class="headerlink" href="#detector" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -967,7 +969,7 @@ module</p>
 <dd><p>An instance of DetectorDacs used for accessing the dacs of a single
 or multi detector.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">sls</span><span class="o">.</span><span class="n">Detector</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">Eiger</span><span class="p">()</span>
 
 <span class="c1">#Set all vrf to 1500</span>
 <span class="n">d</span><span class="o">.</span><span class="n">dacs</span><span class="o">.</span><span class="n">vrf</span> <span class="o">=</span> <span class="mi">1500</span>
@@ -1069,7 +1071,8 @@ the highest pulse.</p>
 <dl class="method">
 <dt id="sls_detector.Eiger.pulse_diagonal">
 <code class="descname">pulse_diagonal</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.pulse_diagonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.pulse_diagonal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unsed for calibraiton</p>
+<dd><p>Pulse pixels in super colums in a diagonal fashion. Used for calibration
+of vcall. Saves time compared to pulsing all pixels.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1333,6 +1336,8 @@ crossed</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cpp_api.html" class="btn btn-neutral float-right" title="C++ API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="error-handling.html" class="btn btn-neutral" title="Error handling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

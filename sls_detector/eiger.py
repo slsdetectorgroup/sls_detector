@@ -49,6 +49,9 @@ class EigerVcmp:
     def __setitem__(self, i, value):
         self.set[i](value)
 
+    def __repr__(self):
+        return 'vcmp: '+ str(self[:])
+
 
 class EigerDacs(DetectorDacs):
     _dacs = [('vsvp',    0, 4000,    0),

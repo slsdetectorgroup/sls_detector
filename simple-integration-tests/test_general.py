@@ -142,7 +142,7 @@ def test_set_n_measurements(detector):
     assert detector.n_measurements == 1
 
 def test_negative_nframes_raises(detector):
-    with pytest.raises(ValueError):
+    with pytest.raises(DetectorValueError):
         detector.n_frames = -2
 
 def test_nmodules(detector):
