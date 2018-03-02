@@ -443,12 +443,9 @@ package loss.</p>
 <dl class="method">
 <dt id="sls_detector.Detector.free_shared_memory">
 <code class="descname">free_shared_memory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.free_shared_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.free_shared_memory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Free the shared memory that contains the detector settings</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">After doing this you can’t access the detector until it is
-reconfigured</p>
-</div>
+<dd><p>Free the shared memory that contains the detector settings
+and reinitialized with 0 detectors so that you can keep
+using the same object.</p>
 </dd></dl>
 
 <dl class="attribute">
