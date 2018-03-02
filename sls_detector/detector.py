@@ -104,7 +104,7 @@ class Dac(DetectorProperty):
 
     """
     def __init__(self, name, low, high, default, detector):
-        # def __init__(self, get_func, set_func, nmod_func, name):
+
         super().__init__(partial(detector._api.getDac, name),
                          partial(detector._api.setDac, name),
                          detector._api.getNumberOfDetectors,
@@ -134,7 +134,7 @@ class Adc:
     def __init__(self, name, detector):
         self.name = name
         self._detector = detector
-        self._n_modules = self._detector.n_modules
+        self.get_nmod = self._detector._api.getNumberOfDetectors
         # Bind functions to get and set the dac
         self.get = partial(self._detector._api.getAdc, self.name)
 
@@ -144,7 +144,7 @@ class Adc:
         Get dacs either by slice, key or list
         """
         if key == slice(None, None, None):
-            return [self.get(i) / 1000 for i in range(self._n_modules)]
+            return [self.get(i) / 1000 for i in range(self.get_nmod())]
         elif isinstance(key, Iterable):
             return [self.get(k) / 1000 for k in key]
         else:
@@ -154,7 +154,7 @@ class Adc:
         """String representation for a single adc in all modules"""
         degree_sign = u'\N{DEGREE SIGN}'
         r_str = ['{:14s}: '.format(self.name)]
-        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self._n_modules)]
+        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
 
 
