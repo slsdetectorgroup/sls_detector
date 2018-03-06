@@ -44,10 +44,18 @@ class Jungfrau(Detector):
 
     """
     _detector_dynamic_range = [4, 8, 16, 32]
+
+    _settings = ['dynamichg0',
+                 'dynamicgain',
+                 'fixgain1',
+                 'fixgain2',
+                 'forceswitchg1',
+                 'forceswitchg2']
+    """Available settings for Jungfrau"""
     
-    def __init__(self):
+    def __init__(self, id=0):
         #Init on base calss
-        super().__init__()
+        super().__init__(id)
         self._dacs = JungfrauDacs(self)
 
         #Jungfrau specific temps, this can be reduced to a single value?

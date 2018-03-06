@@ -16,15 +16,17 @@
 
 class Detector{
 public:
-    Detector(int i=0):det(i){
-        //added default arg to cope with branch
-        //removed when going back to developer
+    Detector(int i):det(i){
 
+        //id of the multi detector instance
+        multi_detector_id = i;
 
         //Disable any output from std::cout
         std::cout.setstate(std::ios_base::failbit);
 
     }
+
+    int getMultiDetectorId(){ return multi_detector_id; }
 
     //get image size as [nrow, ncols] return as a pair of ints
     std::pair<int, int> getImageSize(){
@@ -56,10 +58,10 @@ public:
     int getFramesCaughtByReceiver(){
         return det.getFramesCaughtByReceiver();
     }
-    int getFramesCaughtByReceiverSingleDetector(const int i){
+    int getFramesCaughtByReceiver(const int i){
         return getSlsDetector(i)->getFramesCaughtByReceiver();
-
     }
+
 
     void resetFramesCaught(){
         det.resetFramesCaught();
@@ -245,6 +247,7 @@ public:
     void setFlippedDataX(const int i, const bool value){
         getSlsDetector(i)->setFlippedData(slsDetectorDefs::dimension::X, value);
     }
+
     void setFlippedDataY(const int i, const bool value){
         getSlsDetector(i)->setFlippedData(slsDetectorDefs::dimension::Y, value);
     }
@@ -256,10 +259,17 @@ public:
         return det.getFileName();
     }
 
-    void setFilePath(std::string path){ det.setFilePath(path); }
-    
+    void setFilePath(std::string path){
+        det.setFilePath(path);
+    }
+    void setFilePath(std::string path, const int i){
+        getSlsDetector(i)->setFilePath(path);
+    }
     std::string getFilePath(){
         return det.getFilePath();
+    }
+    std::string getFilePath(const int i){
+        return getSlsDetector(i)->getFilePath();
     }
 
 
@@ -372,7 +382,10 @@ public:
     }
 
 
-    void setFileIndex(const int i){ det.setFileIndex(i); }
+    void setFileIndex(const int i){
+        det.setFileIndex(i);
+    }
+
     int getFileIndex(){
         return det.setFileIndex(-1);
     }
@@ -574,6 +587,7 @@ public:
 private:
     multiSlsDetector det;
     slsDetector* getSlsDetector(int i);
+    int multi_detector_id = 0;
 };
 
 

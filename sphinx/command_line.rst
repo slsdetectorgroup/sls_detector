@@ -41,6 +41,7 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |ron| replace:: :py:attr:`Detector.receiver_online`
 .. |flipy| replace:: :py:attr:`Detector.flipped_data_y`
 .. |flipx| replace:: :py:attr:`Detector.flipped_data_x`
+.. |cn| replace:: :py:attr:`Detector.config_network`
 
 ------------------------
 Commands
@@ -49,7 +50,7 @@ Commands
 ===================== ================================= ================== =========
 Command               Python                              Implementation     Tests
 ===================== ================================= ================== =========
-sls_detector_acquire  :py:func:`Detector.acq`               OK               OK
+sls_detector_acquire  :py:func:`Detector.acq`            OK                 OK
 test                   Also not in the cmdline?
 help                   help(Detector.acq)
 exitserver
@@ -58,7 +59,7 @@ flippeddatay          |flipy|
 digitet                Which detector?
 bustest                |m|
 digibittest            Which detector?
-reg                   :py:attr:`Jungfrau.register`          OK
+reg                   :py:attr:`Jungfrau.register`       OK
 adcreg
 setbit
 clearbit
@@ -230,11 +231,11 @@ txndelay_right        :py:attr:`Eiger.delay`.right             OK
 txndelay_frame        :py:attr:`Eiger.delay`.frame             OK
 flowcontrol_10g       :py:attr:`Eiger.flowcontrol_10g`         OK
 zmqport
-rx_zmqport              :py:attr:`Detector.rx_zmqport`             Read
-rx_datastream           |rxd|                                   OK
+rx_zmqport             :py:attr:`Detector.rx_zmqport`          Read
+rx_datastream          |rxd|                                   OK
 zmqip
-rx_zmqip                :py:attr:`Detector.rx_zmqip`            Read
-configuremac            :py:attr:`Detector.config_network`    OK
+rx_zmqip               :py:attr:`Detector.rx_zmqip`            Read
+configuremac           |cn|                                     OK
 rx_tcpport             :py:attr:`Detector.rx_tcpport`
 port
 stopport

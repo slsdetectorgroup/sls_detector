@@ -9,7 +9,6 @@ import os
 from collections import namedtuple, Iterable
 from functools import partial
 import numpy as np
-from multiprocessing import Process
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
 
@@ -105,24 +104,29 @@ class Dac(DetectorProperty):
 
     """
     def __init__(self, name, low, high, default, detector):
-        self.name = name
-        self._detector = detector
+
+        super().__init__(partial(detector._api.getDac, name),
+                         partial(detector._api.setDac, name),
+                         detector._api.getNumberOfDetectors,
+                         name)
+        # self.name = name
+        # self._detector = detector
 
         self.min_value = low
         self.max_value = high
         self.default = default
 
         # Local copy to avoid calling the detector class every time
-        self.get_nmod = self._detector._api.getNumberOfDetectors
+        # self.get_nmod = self._detector._api.getNumberOfDetectors
 
         # Bind functions to get and set the dac
-        self.get = partial(self._detector._api.getDac, self.name)
-        self.set = partial(self._detector._api.setDac, self.name)
+        # self.get = partial(self._detector._api.getDac, self.name)
+        # self.set = partial(self._detector._api.setDac, self.name)
 
 
     def __repr__(self):
         """String representation for a single dac in all modules"""
-        r_str = ['{:10s}: '.format(self.name)]
+        r_str = ['{:10s}: '.format(self.__name__)]
         r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
 
@@ -130,7 +134,7 @@ class Adc:
     def __init__(self, name, detector):
         self.name = name
         self._detector = detector
-        self._n_modules = self._detector.n_modules
+        self.get_nmod = self._detector._api.getNumberOfDetectors
         # Bind functions to get and set the dac
         self.get = partial(self._detector._api.getAdc, self.name)
 
@@ -140,7 +144,7 @@ class Adc:
         Get dacs either by slice, key or list
         """
         if key == slice(None, None, None):
-            return [self.get(i) / 1000 for i in range(self._n_modules)]
+            return [self.get(i) / 1000 for i in range(self.get_nmod())]
         elif isinstance(key, Iterable):
             return [self.get(k) / 1000 for k in key]
         else:
@@ -150,7 +154,7 @@ class Adc:
         """String representation for a single adc in all modules"""
         degree_sign = u'\N{DEGREE SIGN}'
         r_str = ['{:14s}: '.format(self.name)]
-        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self._n_modules)]
+        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
 
 
@@ -268,11 +272,13 @@ class Detector:
 
     _speed_names = {0: 'Full Speed', 1: 'Half Speed', 2: 'Quarter Speed', 3: 'Super Slow Speed'}
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
+    _settings = []
 
-    def __init__(self):
+    def __init__(self, id = 0):
         # C++ API interfacing slsDetector and multiSlsDetector
 
-        self._api = DetectorApi()
+        self._api = DetectorApi(id)
+
 
         self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,
                                               self._api.setFlippedDataX,
@@ -293,7 +299,8 @@ class Detector:
         return self._api.getNumberOfDetectors()
     
     def __repr__(self):
-        return '{}()'.format(self.__class__.__name__)
+        return '{}(id = {})'.format(self.__class__.__name__,
+                                    self._api.getMultiDetectorId())
 
 
     def acq(self):
@@ -324,11 +331,13 @@ class Detector:
         Examples
         ----------
 
-        d.busy
-        >> True
+        ::
 
-        #If the detector is stuck
-        d.busy = False
+            d.busy
+            >> True
+
+            #If the detector is stuck
+            d.busy = False
 
 
         """
@@ -534,7 +543,11 @@ class Detector:
 
             detector.file_path = '/new/path/to/other/files'
         """
-        return self._api.getFilePath()
+        fp = self._api.getFilePath()
+        if fp == '':
+            return [self._api.getFilePath(i) for i in range(len(self))]
+        else:
+            return fp
 
     @file_path.setter
     @error_handling
@@ -616,14 +629,12 @@ class Detector:
     def free_shared_memory(self):
         """
         Free the shared memory that contains the detector settings
-
-        .. warning ::
-
-            After doing this you can't access the detector until it is
-            reconfigured
+        and reinitialized with 0 detectors so that you can keep
+        using the same object.
 
         """
         self._api.freeSharedMemory()
+        self.__init__(self._api.getMultiDetectorId())
 
     @property
     def flipped_data_x(self):
@@ -861,7 +872,7 @@ class Detector:
         if n >= 1:
             self._api.setNumberOfFrames(n)
         else:
-            raise ValueError('Invalid value for n_frames: {:d}. Number of'\
+            raise DetectorValueError('Invalid value for n_frames: {:d}. Number of'\
                              ' frames should be an integer greater than 0'.format(n))
 
     @property
@@ -909,7 +920,10 @@ class Detector:
     @n_measurements.setter
     @error_handling
     def n_measurements(self, value):
-        self._api.setNumberOfMeasurements(value)
+        if value > 0:
+            self._api.setNumberOfMeasurements(value)
+        else:
+            raise DetectorValueError('Number of measurements must be positive')
 
     @property
     @error_handling
@@ -1257,11 +1271,13 @@ class Detector:
     def settings(self):
         """
         Detector settings used to control for example calibration or gain
-        switching. For EIGER almost always standard
-        
-        .. todo::
-            
-            check input depending on detector
+        switching. For EIGER almost always standard standard.
+
+        .. warning ::
+
+            For Eiger setting settings should be followed by setting the threshold
+            otherwise reading of the settings will overwrite the set value
+
         
         """
         return self._api.getSettings()
@@ -1269,8 +1285,12 @@ class Detector:
     @settings.setter
     @error_handling
     def settings(self, s):
-        #check input!
-        self._api.setSettings(s)
+        if s in self._settings:
+            self._api.setSettings(s)
+        else:
+            raise DetectorValueError('Settings: {:s}, not defined for {:s}. '
+                                     'Valid options are: [{:s}]'.format(s, self.detector_type, ', '.join(self._settings)))
+
         
     @property
     @error_handling
@@ -1484,10 +1504,10 @@ class Detector:
         """
         self._api.configureNetworkParameters()
 
-def free_shared_memory():
+def free_shared_memory(id = 0):
     """
-    Function to free the shared memory. After this
-    we need to create a new detector object. 
+    Function to free the shared memory but do not initialize with new
+    0 size detector
     """
-    d = Detector()
-    d.free_shared_memory()
+    api = DetectorApi(id)
+    api.freeSharedMemory()

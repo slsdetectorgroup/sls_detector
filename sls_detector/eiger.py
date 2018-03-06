@@ -49,6 +49,9 @@ class EigerVcmp:
     def __setitem__(self, i, value):
         self.set[i](value)
 
+    def __repr__(self):
+        return 'vcmp: '+ str(self[:])
+
 
 class EigerDacs(DetectorDacs):
     _dacs = [('vsvp',    0, 4000,    0),
@@ -131,10 +134,13 @@ class Eiger(Detector):
     functions. 
     """
     _detector_dynamic_range = [4, 8, 16, 32]
-    
-    def __init__(self):
-        # Init on base calss
-        super().__init__()
+
+
+    _settings = ['standard', 'highgain', 'lowgain', 'veryhighgain', 'verylowgain']
+    """available settings for Eiger, note almost always standard"""
+
+    def __init__(self, id=0):
+        super().__init__(id)
 
         self._active = DetectorProperty(self._api.getActive,
                                         self._api.setActive,
@@ -219,7 +225,7 @@ class Eiger(Detector):
 
         ::
 
-            d = sls.Detector()
+            d = Eiger()
 
             #Set all vrf to 1500
             d.dacs.vrf = 1500
@@ -366,7 +372,8 @@ class Eiger(Detector):
     @error_handling
     def pulse_diagonal(self, n):
         """
-        Unsed for calibraiton
+        Pulse pixels in super colums in a diagonal fashion. Used for calibration
+        of vcall. Saves time compared to pulsing all pixels.
         """
         self._api.pulseDiagonal(n)
 

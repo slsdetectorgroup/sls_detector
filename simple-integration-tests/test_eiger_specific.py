@@ -1,6 +1,6 @@
 import pytest
 import config_test
-
+import time
 from sls_detector.errors import DetectorValueError
 
 from fixtures import eiger, eigertest
@@ -75,9 +75,10 @@ def test_acitve(eiger):
     eiger.reset_frames_caught()
     eiger.active[1] = False
     eiger.acq()
-    assert eiger._api.getFramesCaughtByReceiverSingleDetector(1) == 0
-    assert eiger._api.getFramesCaughtByReceiverSingleDetector(0) == 1
+    assert eiger._api.getFramesCaughtByReceiver(1) == 0
+    assert eiger._api.getFramesCaughtByReceiver(0) == 1
     eiger.active = True
+    time.sleep(0.5)
     eiger.acq()
     assert eiger.frames_caught == 1
 
