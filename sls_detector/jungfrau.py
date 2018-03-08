@@ -9,18 +9,11 @@ from functools import partial
 from collections import namedtuple
 
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, element_if_equal, all_equal
+from .detector import Register
 from .decorators import error_handling
 
 
-class Register:
-    def __init__(self, detector):
-        self._detector = detector
 
-    def __getitem__(self, key):
-        return hex(self._detector._api.readRegister(key))
-
-    def __setitem__(self, key, value):
-        self._detector._api.writeRegister(key, value)
 
 
 class JungfrauDacs(DetectorDacs):

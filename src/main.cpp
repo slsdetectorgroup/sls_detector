@@ -62,7 +62,18 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("getAdc", &Detector::getAdc)
             .def("getDac", &Detector::getDac)
+            .def("getDac_mV", &Detector::getDac_mV)
             .def("setDac", &Detector::setDac)
+            .def("setDac_mV", &Detector::setDac_mV)
+            .def("getDacFromIndex", &Detector::getDacFromIndex)
+            .def("setDacFromIndex", &Detector::setDacFromIndex)
+
+            .def("getDbitPipeline", &Detector::getDbitPipeline)
+            .def("setDbitPipeline", &Detector::setDbitPipeline)
+            .def("getDbitPhase", &Detector::getDbitPhase)
+            .def("setDbitPhase", &Detector::setDbitPhase)
+            .def("getDbitClock", &Detector::getDbitClock)
+            .def("setDbitClock", &Detector::setDbitClock)
 
             .def("setThresholdEnergy", &Detector::setThresholdEnergy)
             .def("getThresholdEnergy", &Detector::getThresholdEnergy)
@@ -102,6 +113,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("readRegister", &Detector::readRegister)
             .def("writeRegister", &Detector::writeRegister)
             .def("writeAdcRegister", &Detector::writeAdcRegister)
+            .def("setBitInRegister", &Detector::setBitInRegister)
+            .def("clearBitInRegister", &Detector::clearBitInRegister)
 
 
             .def("setDynamicRange", &Detector::setDynamicRange)
@@ -142,6 +155,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("setNumberOfGates", &Detector::setNumberOfGates)
             .def("getDelay", &Detector::getDelay)
             .def("setDelay", &Detector::setDelay)
+            .def("getJCTBSamples", &Detector::getJCTBSamples)
+            .def("setJCTBSamples", &Detector::setJCTBSamples)
 
             .def("getTimingMode", &Detector::getTimingMode)
             .def("setTimingMode", &Detector::setTimingMode)

@@ -31,9 +31,22 @@ def element_if_equal(mylist):
     else:
         return mylist
 
+class Register:
+    def __init__(self, detector):
+        self._detector = detector
 
+    def __getitem__(self, key):
+        return hex(self._detector._api.readRegister(key))
 
+    def __setitem__(self, key, value):
+        self._detector._api.writeRegister(key, value)
 
+class Adc_register:
+    def __init__(self, detector):
+        self._detector = detector
+
+    def __setitem__(self, key, value):
+        self._detector._api.writeAdcRegister(key, value)
 
 class DetectorProperty:
     """
@@ -109,19 +122,32 @@ class Dac(DetectorProperty):
                          partial(detector._api.setDac, name),
                          detector._api.getNumberOfDetectors,
                          name)
-        # self.name = name
-        # self._detector = detector
 
         self.min_value = low
         self.max_value = high
         self.default = default
 
-        # Local copy to avoid calling the detector class every time
-        # self.get_nmod = self._detector._api.getNumberOfDetectors
 
-        # Bind functions to get and set the dac
-        # self.get = partial(self._detector._api.getDac, self.name)
-        # self.set = partial(self._detector._api.setDac, self.name)
+
+    def __repr__(self):
+        """String representation for a single dac in all modules"""
+        r_str = ['{:10s}: '.format(self.__name__)]
+        r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
+        return ''.join(r_str).strip(', ')
+
+
+class IndexDac(DetectorProperty):
+    def __init__(self, index, low, high, default, detector):
+
+        super().__init__(partial(detector._api.getDacFromIndex, index),
+                         partial(detector._api.setDacFromIndex, index),
+                         detector._api.getNumberOfDetectors,
+                         str(index))
+
+        self.min_value = low
+        self.max_value = high
+        self.default = default
+
 
 
     def __repr__(self):
