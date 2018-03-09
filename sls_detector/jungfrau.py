@@ -54,7 +54,7 @@ class Jungfrau(Detector):
         #Jungfrau specific temps, this can be reduced to a single value?
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
-        self._register = Register(self)
+        # self._register = Register(self)
 
 
     @property
@@ -193,22 +193,22 @@ class Jungfrau(Detector):
         """Reset the temperature_event. After reset temperature_event is False"""
         self._api.resetTemperatureEvent()
 
-    @property
-    @error_handling
-    def register(self):
-        """Directly manipulate registers on the readout board
-        
-        Examples
-        ---------
-        
-        ::
-            
-            d.register[0x5d] = 0xf00
-        
-        """
-        
-        
-        return self._register
+    # @property
+    # @error_handling
+    # def register(self):
+    #     """Directly manipulate registers on the readout board
+    #
+    #     Examples
+    #     ---------
+    #
+    #     ::
+    #
+    #         d.register[0x5d] = 0xf00
+    #
+    #     """
+    #
+    #
+    #     return self._register
 
 
     @property

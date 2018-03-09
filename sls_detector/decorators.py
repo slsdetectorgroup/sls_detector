@@ -29,3 +29,27 @@ def error_handling(func):
         return result
 
     return wrapper
+
+
+def property_error_handling(func):
+    """
+    Check for errors registered by the slsDetectorSoftware
+    """
+
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        # remove any previous errors
+        self._detector._api.clearErrorMask()
+
+        # call function
+        result = func(self, *args, **kwargs)
+
+        # check for new errors
+        m = self._detector.error_mask
+        if m != 0:
+            msg = self._detector.error_message
+            self._detector._api.clearErrorMask()
+            raise DetectorError(msg)
+        return result
+
+    return wrapper

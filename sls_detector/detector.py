@@ -12,7 +12,7 @@ import numpy as np
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
 
-from .decorators import error_handling
+from .decorators import error_handling, property_error_handling
 from .errors import DetectorError, DetectorValueError
 
 
@@ -35,6 +35,7 @@ class Register:
     def __init__(self, detector):
         self._detector = detector
 
+    @property_error_handling
     def __getitem__(self, key):
         return hex(self._detector._api.readRegister(key))
 
@@ -304,7 +305,7 @@ class Detector:
         # C++ API interfacing slsDetector and multiSlsDetector
 
         self._api = DetectorApi(id)
-
+        self._register = Register(self)
 
         self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,
                                               self._api.setFlippedDataX,
@@ -1037,6 +1038,24 @@ class Detector:
     @error_handling
     def receiver_online(self, value):
         self._api.setReceiverOnline(value)
+
+    #When returning instance error hadling needs to be done in the
+    #class that is returned
+    @property
+    def register(self):
+        """Directly manipulate registers on the readout board
+
+        Examples
+        ---------
+
+        ::
+
+            d.register[0x5d] = 0xf00
+
+        """
+
+
+        return self._register
 
 
     def reset_frames_caught(self):

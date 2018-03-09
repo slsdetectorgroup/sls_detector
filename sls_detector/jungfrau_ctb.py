@@ -90,9 +90,9 @@ class JungfrauCTB(Detector):
     def adc_register(self):
         return self._adc_register
 
-    @property
-    def register(self):
-        return self._register
+    # @property
+    # def register(self):
+    #     return self._register
 
     def adcOFF(self):
         """Switch off the ADC"""
