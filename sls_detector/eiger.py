@@ -537,7 +537,7 @@ class Eiger(Detector):
     @error_handling
     def tengiga(self, value):
         self._api.setTenGigabitEthernet(value)
-        
+
     def setup500k(self, hostnames):
         """
         Setup the Eiger detector to run on the local machine

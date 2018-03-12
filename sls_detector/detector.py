@@ -37,7 +37,7 @@ class Register:
 
     @property_error_handling
     def __getitem__(self, key):
-        return hex(self._detector._api.readRegister(key))
+        return self._detector._api.readRegister(key)
 
     def __setitem__(self, key, value):
         self._detector._api.writeRegister(key, value)
