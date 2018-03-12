@@ -20,10 +20,10 @@ conda config --add channels slsdetectorgroup
 conda install sls_detector
 
 #Install specific version
-conda install sls_detector=3.0.1
+conda install sls_detector=3.1.0
 
 #Scientific Linux 6 version (GLIBC2.12)
-conda install sls_detector=SL6_3.0.1
+conda install sls_detector=SL6_3.1.0
 ```
 
 ### Building using conda-build ###
@@ -35,7 +35,7 @@ Needs [sls_detector_software](https://github.com/slsdetectorgroup/sls_detector_s
 git clone https://github.com/slsdetectorgroup/sls_detector.git
 
 #Checkout the branch needed
-git checkout 3.0.1
+git checkout 3.1.0
 
 #Build and install the local version
 conda-build sls_detector
