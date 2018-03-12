@@ -1,6 +1,6 @@
 package:
     name: sls_detector
-    version: 3.1.0rc
+    version: subperiod
 
 build:
   number: 0

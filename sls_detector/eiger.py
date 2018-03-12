@@ -485,6 +485,19 @@ class Eiger(Detector):
         else:
             self._api.setNetworkParameter('rx_zmqport', str(port), -1)
 
+
+    def set_subperiod(self, t):
+        mask = 0x80000000  #Bit 31
+        clk = 100e6        #100MHz
+
+
+        n_clocks = int(clk * t)
+        counter_value = n_clocks | mask
+        print(f'Setting subperiod counter to: {n_clocks} by writing: {bin(counter_value)}'
+              f' to register 6')
+        self.register[0x6] = counter_value
+
+
     @property
     def temp(self):
         """
