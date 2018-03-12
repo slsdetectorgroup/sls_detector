@@ -58,10 +58,10 @@ public:
     int getFramesCaughtByReceiver(){
         return det.getFramesCaughtByReceiver();
     }
-    int getFramesCaughtByReceiverSingleDetector(const int i){
+    int getFramesCaughtByReceiver(const int i){
         return getSlsDetector(i)->getFramesCaughtByReceiver();
-
     }
+
 
     void resetFramesCaught(){
         det.resetFramesCaught();
@@ -137,18 +137,26 @@ public:
 
 
     //read register from readout system, used for low level control
-    int readRegister(const int addr){
+    uint32_t readRegister(const uint32_t addr){
         return det.readRegister(addr);
     }
 
     //directly write to register in readout system
-    void writeRegister(const int addr, const int value){
+    void writeRegister(const uint32_t addr, const uint32_t value){
         det.writeRegister(addr, value);
     }
 
     //directly write to the ADC register
+    //should this also be unsigned? Probably...
     void writeAdcRegister(const int addr, const int value){
         det.writeAdcRegister(addr, value);
+    }
+
+    void setBitInRegister(const uint32_t reg_addr, const int bit_number){
+        det.setBit(reg_addr, bit_number);
+    }
+    void clearBitInRegister(const uint32_t reg_addr, const int bit_number){
+        det.clearBit(reg_addr, bit_number);
     }
 
     bool getAcquiringFlag(){
@@ -208,7 +216,6 @@ public:
 
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
     void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
-    int getReadoutClockSpeed(){ return det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, -1); }
 
     int getFirmwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_FIRMWARE_VERSION); }
     int getSoftwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
@@ -217,10 +224,31 @@ public:
         return getSlsDetector(i)->getId(slsDetectorDefs::DETECTOR_SERIAL_NUMBER);
     }
 
+    int getReadoutClockSpeed(){
+        return det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, -1);
+    }
     void setReadoutClockSpeed(const int speed){
         det.setSpeed(slsDetectorDefs::CLOCK_DIVIDER, speed);
     }
 
+    void setDbitPipeline(const int value){
+        det.setSpeed(slsDetectorDefs::DBIT_PIPELINE, value);
+    }
+    int getDbitPipeline(){
+        return det.setSpeed(slsDetectorDefs::DBIT_PIPELINE, -1);
+    }
+    void setDbitPhase(const int value){
+        det.setSpeed(slsDetectorDefs::DBIT_PHASE, value);
+    }
+    int getDbitPhase(){
+        return det.setSpeed(slsDetectorDefs::DBIT_PHASE, -1);
+    }
+    void setDbitClock(const int value){
+        det.setSpeed(slsDetectorDefs::DBIT_CLOCK, value);
+    }
+    int getDbitClock(){
+        return det.setSpeed(slsDetectorDefs::DBIT_CLOCK, -1);
+    }
     int getRxTcpport(const int i){
         return getSlsDetector(i)->setPort(slsDetectorDefs::portType::DATA_PORT);
     }
@@ -247,6 +275,7 @@ public:
     void setFlippedDataX(const int i, const bool value){
         getSlsDetector(i)->setFlippedData(slsDetectorDefs::dimension::X, value);
     }
+
     void setFlippedDataY(const int i, const bool value){
         getSlsDetector(i)->setFlippedData(slsDetectorDefs::dimension::Y, value);
     }
@@ -258,10 +287,17 @@ public:
         return det.getFileName();
     }
 
-    void setFilePath(std::string path){ det.setFilePath(path); }
-    
+    void setFilePath(std::string path){
+        det.setFilePath(path);
+    }
+    void setFilePath(std::string path, const int i){
+        getSlsDetector(i)->setFilePath(path);
+    }
     std::string getFilePath(){
         return det.getFilePath();
+    }
+    std::string getFilePath(const int i){
+        return getSlsDetector(i)->getFilePath();
     }
 
 
@@ -344,6 +380,28 @@ public:
         det.setDAC(val, dac, 0, mod_id);
     }
 
+    dacs_t getDac_mV(std::string dac_name, const int mod_id){
+        dacs_t val = -1;
+        auto dac = dacNameToEnum(dac_name);
+        return det.setDAC(val, dac, 1, mod_id);
+    }
+    void setDac_mV(std::string dac_name, const int mod_id, dacs_t value){
+        auto dac = dacNameToEnum(dac_name);
+        det.setDAC(value, dac, 1, mod_id);
+    }
+
+    //Intended for the JungfrauCTB should we name dacs instead
+    dacs_t getDacFromIndex(const int index, const int mod_id){
+        dacs_t val = -1;
+        auto dac = static_cast<slsDetectorDefs::dacIndex>(0);
+        return det.setDAC(val, dac, 0, mod_id);
+    }
+    //Intended for the JungfrauCTB should we name dacs instead
+    dacs_t setDacFromIndex(const int index, const int mod_id, dacs_t value){
+        auto dac = static_cast<slsDetectorDefs::dacIndex>(0);
+        return det.setDAC(value, dac, 0, mod_id);
+    }
+
     //Calling multi do we have a need to lock/unlock a single det?
     bool getServerLock(){ return det.lockServer(-1); }
     void setServerLock(const bool value){ det.lockServer(value); }
@@ -374,7 +432,10 @@ public:
     }
 
 
-    void setFileIndex(const int i){ det.setFileIndex(i); }
+    void setFileIndex(const int i){
+        det.setFileIndex(i);
+    }
+
     int getFileIndex(){
         return det.setFileIndex(-1);
     }
@@ -405,7 +466,13 @@ public:
     void setCycles(const int64_t n_cycles){
         det.setTimer(slsReceiverDefs::timerIndex::CYCLES_NUMBER, n_cycles);
     }
+    int64_t getJCTBSamples(){
+        return det.setTimer(slsReceiverDefs::timerIndex::SAMPLES_JCTB, -1);
+    }
 
+    void setJCTBSamples(const int64_t n_samples){
+        det.setTimer(slsReceiverDefs::timerIndex::SAMPLES_JCTB, n_samples);
+    }
     void setNumberOfMeasurements(const int n_measurements){
         det.setTimer(slsReceiverDefs::timerIndex::MEASUREMENTS_NUMBER, n_measurements);
     }
@@ -641,9 +708,12 @@ slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_na
 };
 
 slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
-    //to avoid unitialised
+    //to avoid uninitialised
     slsDetectorDefs::dacIndex dac = slsDetectorDefs::dacIndex::E_SvP;
-    if(dac_name == std::string("vsvp")){
+
+
+
+    if(dac_name == "vsvp"){
         dac = slsDetectorDefs::dacIndex::E_SvP;
     }
     else if(dac_name == "vtr"){
@@ -697,6 +767,27 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
     else if(dac_name == "iodelay"){
         dac = slsDetectorDefs::dacIndex::IO_DELAY;
     }
+    else if(dac_name == "v_a"){
+        dac = slsDetectorDefs::dacIndex::V_POWER_A;
+    }
+    else if(dac_name == "v_b"){
+        dac = slsDetectorDefs::dacIndex::V_POWER_B;
+    }
+    else if(dac_name == "v_c"){
+        dac = slsDetectorDefs::dacIndex::V_POWER_C;
+    }
+    else if(dac_name == "v_d"){
+        dac = slsDetectorDefs::dacIndex::V_POWER_D;
+    }
+    else if(dac_name == "v_io"){
+        dac = slsDetectorDefs::dacIndex::V_POWER_IO;
+    }
+    else if(dac_name == "v_chip"){
+        dac = slsDetectorDefs::dacIndex::V_POWER_CHIP;
+    }
+    else if(dac_name == "v_limit"){
+        dac = slsDetectorDefs::dacIndex::V_LIMIT;
+    }
     else if(dac_name == "temp_fpga"){
         dac = slsDetectorDefs::dacIndex::TEMPERATURE_FPGA;
     }
@@ -748,7 +839,60 @@ slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
     else if(dac_name == "vref_comp"){
         dac = static_cast<slsDetectorDefs::dacIndex>(7);
     }
-
+    else if(dac_name == "dac0"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(0);
+    }
+    else if(dac_name == "dac1"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(1);
+    }
+    else if(dac_name == "dac2"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(2);
+    }
+    else if(dac_name == "dac3"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(3);
+    }
+    else if(dac_name == "dac4"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(4);
+    }
+    else if(dac_name == "dac5"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(5);
+    }
+    else if(dac_name == "dac6"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(6);
+    }
+    else if(dac_name == "dac7"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(7);
+    }
+    else if(dac_name == "dac8"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(8);
+    }
+    else if(dac_name == "dac9"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(9);
+    }
+    else if(dac_name == "dac10"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(10);
+    }
+    else if(dac_name == "dac11"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(11);
+    }
+    else if(dac_name == "dac12"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(12);
+    }
+    else if(dac_name == "dac13"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(13);
+    }
+    else if(dac_name == "dac14"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(14);
+    }
+    else if(dac_name == "dac15"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(15);
+    }
+    else if(dac_name == "dac16"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(16);
+    }
+    else if(dac_name == "dac17"){
+        dac = static_cast<slsDetectorDefs::dacIndex>(17);
+    }
 
     return dac;
 

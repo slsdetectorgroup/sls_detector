@@ -12,7 +12,7 @@ import numpy as np
 from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
 
-from .decorators import error_handling
+from .decorators import error_handling, property_error_handling
 from .errors import DetectorError, DetectorValueError
 
 
@@ -31,9 +31,23 @@ def element_if_equal(mylist):
     else:
         return mylist
 
+class Register:
+    def __init__(self, detector):
+        self._detector = detector
 
+    @property_error_handling
+    def __getitem__(self, key):
+        return self._detector._api.readRegister(key)
 
+    def __setitem__(self, key, value):
+        self._detector._api.writeRegister(key, value)
 
+class Adc_register:
+    def __init__(self, detector):
+        self._detector = detector
+
+    def __setitem__(self, key, value):
+        self._detector._api.writeAdcRegister(key, value)
 
 class DetectorProperty:
     """
@@ -104,24 +118,42 @@ class Dac(DetectorProperty):
 
     """
     def __init__(self, name, low, high, default, detector):
-        self.name = name
-        self._detector = detector
+
+        super().__init__(partial(detector._api.getDac, name),
+                         partial(detector._api.setDac, name),
+                         detector._api.getNumberOfDetectors,
+                         name)
 
         self.min_value = low
         self.max_value = high
         self.default = default
 
-        # Local copy to avoid calling the detector class every time
-        self.get_nmod = self._detector._api.getNumberOfDetectors
-
-        # Bind functions to get and set the dac
-        self.get = partial(self._detector._api.getDac, self.name)
-        self.set = partial(self._detector._api.setDac, self.name)
 
 
     def __repr__(self):
         """String representation for a single dac in all modules"""
-        r_str = ['{:10s}: '.format(self.name)]
+        r_str = ['{:10s}: '.format(self.__name__)]
+        r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
+        return ''.join(r_str).strip(', ')
+
+
+class IndexDac(DetectorProperty):
+    def __init__(self, index, low, high, default, detector):
+
+        super().__init__(partial(detector._api.getDacFromIndex, index),
+                         partial(detector._api.setDacFromIndex, index),
+                         detector._api.getNumberOfDetectors,
+                         str(index))
+
+        self.min_value = low
+        self.max_value = high
+        self.default = default
+
+
+
+    def __repr__(self):
+        """String representation for a single dac in all modules"""
+        r_str = ['{:10s}: '.format(self.__name__)]
         r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
 
@@ -129,7 +161,7 @@ class Adc:
     def __init__(self, name, detector):
         self.name = name
         self._detector = detector
-        self._n_modules = self._detector.n_modules
+        self.get_nmod = self._detector._api.getNumberOfDetectors
         # Bind functions to get and set the dac
         self.get = partial(self._detector._api.getAdc, self.name)
 
@@ -139,7 +171,7 @@ class Adc:
         Get dacs either by slice, key or list
         """
         if key == slice(None, None, None):
-            return [self.get(i) / 1000 for i in range(self._n_modules)]
+            return [self.get(i) / 1000 for i in range(self.get_nmod())]
         elif isinstance(key, Iterable):
             return [self.get(k) / 1000 for k in key]
         else:
@@ -149,7 +181,7 @@ class Adc:
         """String representation for a single adc in all modules"""
         degree_sign = u'\N{DEGREE SIGN}'
         r_str = ['{:14s}: '.format(self.name)]
-        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self._n_modules)]
+        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self.get_nmod())]
         return ''.join(r_str).strip(', ')
 
 
@@ -273,7 +305,7 @@ class Detector:
         # C++ API interfacing slsDetector and multiSlsDetector
 
         self._api = DetectorApi(id)
-
+        self._register = Register(self)
 
         self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,
                                               self._api.setFlippedDataX,
@@ -538,7 +570,11 @@ class Detector:
 
             detector.file_path = '/new/path/to/other/files'
         """
-        return self._api.getFilePath()
+        fp = self._api.getFilePath()
+        if fp == '':
+            return [self._api.getFilePath(i) for i in range(len(self))]
+        else:
+            return fp
 
     @file_path.setter
     @error_handling
@@ -620,14 +656,12 @@ class Detector:
     def free_shared_memory(self):
         """
         Free the shared memory that contains the detector settings
-
-        .. warning ::
-
-            After doing this you can't access the detector until it is
-            reconfigured
+        and reinitialized with 0 detectors so that you can keep
+        using the same object.
 
         """
         self._api.freeSharedMemory()
+        self.__init__(self._api.getMultiDetectorId())
 
     @property
     def flipped_data_x(self):
@@ -1004,6 +1038,24 @@ class Detector:
     @error_handling
     def receiver_online(self, value):
         self._api.setReceiverOnline(value)
+
+    #When returning instance error hadling needs to be done in the
+    #class that is returned
+    @property
+    def register(self):
+        """Directly manipulate registers on the readout board
+
+        Examples
+        ---------
+
+        ::
+
+            d.register[0x5d] = 0xf00
+
+        """
+
+
+        return self._register
 
 
     def reset_frames_caught(self):
@@ -1497,10 +1549,10 @@ class Detector:
         """
         self._api.configureNetworkParameters()
 
-def free_shared_memory():
+def free_shared_memory(id = 0):
     """
-    Function to free the shared memory. After this
-    we need to create a new detector object. 
+    Function to free the shared memory but do not initialize with new
+    0 size detector
     """
-    d = Detector()
-    d.free_shared_memory()
+    api = DetectorApi(id)
+    api.freeSharedMemory()

@@ -9,18 +9,11 @@ from functools import partial
 from collections import namedtuple
 
 from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, element_if_equal, all_equal
+from .detector import Register
 from .decorators import error_handling
 
 
-class Register:
-    def __init__(self, detector):
-        self._detector = detector
 
-    def __getitem__(self, key):
-        return hex(self._detector._api.readRegister(key))
-
-    def __setitem__(self, key, value):
-        self._detector._api.writeRegister(key, value)
 
 
 class JungfrauDacs(DetectorDacs):
@@ -61,7 +54,7 @@ class Jungfrau(Detector):
         #Jungfrau specific temps, this can be reduced to a single value?
         self._temp = DetectorAdcs()
         self._temp.fpga = Adc('temp_fpga', self)
-        self._register = Register(self)
+        # self._register = Register(self)
 
 
     @property
@@ -200,22 +193,22 @@ class Jungfrau(Detector):
         """Reset the temperature_event. After reset temperature_event is False"""
         self._api.resetTemperatureEvent()
 
-    @property
-    @error_handling
-    def register(self):
-        """Directly manipulate registers on the readout board
-        
-        Examples
-        ---------
-        
-        ::
-            
-            d.register[0x5d] = 0xf00
-        
-        """
-        
-        
-        return self._register
+    # @property
+    # @error_handling
+    # def register(self):
+    #     """Directly manipulate registers on the readout board
+    #
+    #     Examples
+    #     ---------
+    #
+    #     ::
+    #
+    #         d.register[0x5d] = 0xf00
+    #
+    #     """
+    #
+    #
+    #     return self._register
 
 
     @property

@@ -28,7 +28,8 @@ requirements:
 
 test:
       imports:
-         - sls_detector
+        - sls_detector
+
 
 
 about:

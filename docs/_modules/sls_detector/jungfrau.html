@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sls_detector.jungfrau &mdash; sls_detector 3.1.0rc documentation</title>
+  <title>sls_detector.jungfrau &mdash; sls_detector 3.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="sls_detector 3.1.0rc documentation" href="../../index.html"/>
+    <link rel="top" title="sls_detector 3.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                3.1.0rc
+                3.1.0
               </div>
             
           
@@ -97,7 +97,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command line to Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../error-handling.html">Error handling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../sls_detector.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sls_detector.html">Python classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp_api.html">C++ API</a></li>
 </ul>
 
             
@@ -173,18 +174,11 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 
 <span class="kn">from</span> <span class="nn">.detector</span> <span class="k">import</span> <span class="n">Detector</span><span class="p">,</span> <span class="n">DetectorDacs</span><span class="p">,</span> <span class="n">DetectorAdcs</span><span class="p">,</span> <span class="n">Adc</span><span class="p">,</span> <span class="n">element_if_equal</span><span class="p">,</span> <span class="n">all_equal</span>
+<span class="kn">from</span> <span class="nn">.detector</span> <span class="k">import</span> <span class="n">Register</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
 
 
-<span class="k">class</span> <span class="nc">Register</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
 
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">JungfrauDacs</span><span class="p">(</span><span class="n">DetectorDacs</span><span class="p">):</span>
@@ -225,7 +219,7 @@
         <span class="c1">#Jungfrau specific temps, this can be reduced to a single value?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span> <span class="o">=</span> <span class="n">DetectorAdcs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp</span><span class="o">.</span><span class="n">fpga</span> <span class="o">=</span> <span class="n">Adc</span><span class="p">(</span><span class="s1">&#39;temp_fpga&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_register</span> <span class="o">=</span> <span class="n">Register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># self._register = Register(self)</span>
 
 
     <span class="nd">@property</span>
@@ -364,22 +358,22 @@
         <span class="sd">&quot;&quot;&quot;Reset the temperature_event. After reset temperature_event is False&quot;&quot;&quot;</span></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetTemperatureEvent</span><span class="p">()</span>
 
-    <span class="nd">@property</span>
-    <span class="nd">@error_handling</span>
-    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Directly manipulate registers on the readout board</span>
-<span class="sd">        </span>
-<span class="sd">        Examples</span>
-<span class="sd">        ---------</span>
-<span class="sd">        </span>
-<span class="sd">        ::</span>
-<span class="sd">            </span>
-<span class="sd">            d.register[0x5d] = 0xf00</span>
-<span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        
-        
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span>
+    <span class="c1"># @property</span>
+    <span class="c1"># @error_handling</span>
+    <span class="c1"># def register(self):</span>
+    <span class="c1">#     &quot;&quot;&quot;Directly manipulate registers on the readout board</span>
+    <span class="c1">#</span>
+    <span class="c1">#     Examples</span>
+    <span class="c1">#     ---------</span>
+    <span class="c1">#</span>
+    <span class="c1">#     ::</span>
+    <span class="c1">#</span>
+    <span class="c1">#         d.register[0x5d] = 0xf00</span>
+    <span class="c1">#</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#     return self._register</span>
 
 
     <span class="nd">@property</span>
@@ -478,7 +472,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'3.1.0rc',
+            VERSION:'3.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

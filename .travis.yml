@@ -30,8 +30,14 @@ install:
   - source activate test-environment
   - conda-build .
 
+  - conda install --use-local sls_detector
+  - conda install pytest
+  - conda install pytest-mock
+  - conda install numpy
+
 script:
  - echo "No test scripts to be run!"
+ - python -m pytest unit-tests
 
 deploy:
   provider: script
