@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sls_detector.detector &mdash; sls_detector 3.1.0rc documentation</title>
+  <title>sls_detector.detector &mdash; sls_detector 3.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="sls_detector 3.1.0rc documentation" href="../../index.html"/>
+    <link rel="top" title="sls_detector 3.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                3.1.0rc
+                3.1.0
               </div>
             
           
@@ -177,7 +177,7 @@
 <span class="kn">from</span> <span class="nn">_sls_detector</span> <span class="k">import</span> <span class="n">DetectorApi</span> <span class="c1"># c++ api wrapping multiSlsDetector</span>
 
 
-<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span><span class="p">,</span> <span class="n">property_error_handling</span>
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">DetectorError</span><span class="p">,</span> <span class="n">DetectorValueError</span>
 
 
@@ -196,9 +196,23 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">mylist</span>
 
+<span class="k">class</span> <span class="nc">Register</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
 
+    <span class="nd">@property_error_handling</span>
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">readRegister</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">writeRegister</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
+<span class="k">class</span> <span class="nc">Adc_register</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="n">detector</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">writeAdcRegister</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">DetectorProperty</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -274,19 +288,32 @@
                          <span class="n">partial</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDac</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
                          <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
                          <span class="n">name</span><span class="p">)</span>
-        <span class="c1"># self.name = name</span>
-        <span class="c1"># self._detector = detector</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">low</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="n">high</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span>
 
-        <span class="c1"># Local copy to avoid calling the detector class every time</span>
-        <span class="c1"># self.get_nmod = self._detector._api.getNumberOfDetectors</span>
 
-        <span class="c1"># Bind functions to get and set the dac</span>
-        <span class="c1"># self.get = partial(self._detector._api.getDac, self.name)</span>
-        <span class="c1"># self.set = partial(self._detector._api.setDac, self.name)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;String representation for a single dac in all modules&quot;&quot;&quot;</span>
+        <span class="n">r_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:10s}</span><span class="s1">: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)]</span>
+        <span class="n">r_str</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:5d}</span><span class="s1">, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_nmod</span><span class="p">())]</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r_str</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">IndexDac</span><span class="p">(</span><span class="n">DetectorProperty</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">detector</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDacFromIndex</span><span class="p">,</span> <span class="n">index</span><span class="p">),</span>
+                         <span class="n">partial</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setDacFromIndex</span><span class="p">,</span> <span class="n">index</span><span class="p">),</span>
+                         <span class="n">detector</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">,</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">low</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="n">high</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span>
+
 
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -443,7 +470,7 @@
         <span class="c1"># C++ API interfacing slsDetector and multiSlsDetector</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register</span> <span class="o">=</span> <span class="n">Register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_flippeddatax</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFlippedDataX</span><span class="p">,</span>
                                               <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFlippedDataX</span><span class="p">,</span>
@@ -1177,6 +1204,24 @@
     <span class="k">def</span> <span class="nf">receiver_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReceiverOnline</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
+    <span class="c1">#When returning instance error hadling needs to be done in the</span>
+    <span class="c1">#class that is returned</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Directly manipulate registers on the readout board</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.register[0x5d] = 0xf00</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span>
+
 
 <div class="viewcode-block" id="Detector.reset_frames_caught"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.reset_frames_caught">[docs]</a>    <span class="k">def</span> <span class="nf">reset_frames_caught</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1712,7 +1757,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'3.1.0rc',
+            VERSION:'3.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

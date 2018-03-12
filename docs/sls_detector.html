@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python classes &mdash; sls_detector 3.1.0rc documentation</title>
+  <title>Python classes &mdash; sls_detector 3.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector 3.1.0rc documentation" href="index.html"/>
+    <link rel="top" title="sls_detector 3.1.0 documentation" href="index.html"/>
         <link rel="next" title="C++ API" href="cpp_api.html"/>
         <link rel="prev" title="Error handling" href="error-handling.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.1.0rc
+                3.1.0
               </div>
             
           
@@ -740,6 +740,16 @@ detectors</td>
 </div>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="sls_detector.Detector.register">
+<code class="descname">register</code><a class="headerlink" href="#sls_detector.Detector.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Directly manipulate registers on the readout board</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">register</span><span class="p">[</span><span class="mh">0x5d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf00</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="sls_detector.Detector.reset_frames_caught">
 <code class="descname">reset_frames_caught</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.reset_frames_caught"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.reset_frames_caught" title="Permalink to this definition">¶</a></dt>
@@ -1230,16 +1240,6 @@ or multi detector.</p>
 <dd><p>Power on or off the ASICs, True for on False for off</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="sls_detector.Jungfrau.register">
-<code class="descname">register</code><a class="headerlink" href="#sls_detector.Jungfrau.register" title="Permalink to this definition">¶</a></dt>
-<dd><p>Directly manipulate registers on the readout board</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">register</span><span class="p">[</span><span class="mh">0x5d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf00</span>
-</pre></div>
-</div>
-</dd></dl>
-
 <dl class="method">
 <dt id="sls_detector.Jungfrau.reset_temperature_event">
 <code class="descname">reset_temperature_event</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau.reset_temperature_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau.reset_temperature_event" title="Permalink to this definition">¶</a></dt>
@@ -1368,7 +1368,7 @@ crossed</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'3.1.0rc',
+            VERSION:'3.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
