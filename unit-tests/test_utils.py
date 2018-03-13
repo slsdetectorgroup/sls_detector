@@ -20,4 +20,4 @@ def test_convert_one_ms_using_exponent():
     assert pytest.approx(eiger_register_to_time(0b1101), 1e-9) == 1e-3
 
 def test_convert_five_seconds():
-    assert pytest.approx(eiger_register_to_time(0b1001110001000101), 1e-9) == 5.01
+    assert pytest.approx(eiger_register_to_time(0b1001110001000101), 1e-9) == 5.0
