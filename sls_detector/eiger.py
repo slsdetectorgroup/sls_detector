@@ -187,31 +187,30 @@ class Eiger(Detector):
     @error_handling
     def active(self, value):
         self._active[:] = value
+    
 
-#   Currently only supported in the developer branch of sls
-#
-#    @property
-#    @error_handling
-#    def add_gappixels(self):
-#        """Enable or disable the (virual) pixels between ASICs
-#        
-#        Examples
-#        ----------
-#        
-#        ::
-#            
-#            d.add_gappixels = True
-#            
-#            d.add_gappixels
-#            >> True
-#        
-#        """
-#        return self._api.getGapPixels()
-#    
-#    @add_gappixels.setter
-#    @error_handling
-#    def add_gappixels(self, value):
-#        self._api.setGapPixels(value)
+    @property
+    @error_handling
+    def add_gappixels(self):
+       """Enable or disable the (virual) pixels between ASICs
+
+       Examples
+       ----------
+
+       ::
+
+           d.add_gappixels = True
+
+           d.add_gappixels
+           >> True
+
+       """
+       return self._api.getGapPixels()
+
+    @add_gappixels.setter
+    @error_handling
+    def add_gappixels(self, value):
+       self._api.setGapPixels(value)
 
     @property
     def dacs(self):

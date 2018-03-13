@@ -626,16 +626,14 @@ public:
     //Check if detector if filling in gap pixels in module
     //return true if so, currently only in developer
     bool getGapPixels(){
-        throw std::runtime_error("gap pixels only in develop");
-//        return det.enableGapPixels(-1);
+        return det.enableGapPixels(-1);
     }
 
 
     //Set to true to have the detector filling in gap pixels
     //false to disable, currently only in developer
     void setGapPixels(bool val){
-        throw std::runtime_error("gap pixels only in develop");
-//        det.enableGapPixels(val);
+        det.enableGapPixels(val);
     }
 
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
