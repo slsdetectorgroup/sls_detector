@@ -120,3 +120,17 @@ def test_longer_subexptime(eiger):
     # time is stored straight as n clocks
     reg = eiger.register[0x6]
     assert pytest.approx(t, 1e-9) == reg/100e6
+
+@eigertest
+def test_n_frames(eiger):
+    t = 0.01
+    n = 17
+    eiger.exposure_time = t
+    eiger.n_frames = n
+    eiger.file_write = False
+    eiger.acq()
+
+    # Register 0x6 holds sub exposure time
+    # time is stored straight as n clocks
+    reg = eiger.register[0x3]
+    assert reg == n

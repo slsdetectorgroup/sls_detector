@@ -202,7 +202,7 @@ public:
     void setHostname(std::string hostname){
         det.setHostname(hostname.c_str());
     }
-    
+
     int getDynamicRange(){
         return det.setDynamicRange(-1);
     }
@@ -282,7 +282,7 @@ public:
 
     //----------------------------------------------------File
     void setFileName(std::string fname){ det.setFileName(fname); }
-   
+
     std::string getFileName(){
         return det.getFileName();
     }
@@ -297,7 +297,7 @@ public:
         return det.getFilePath();
     }
     std::string getFilePath(const int i){
-        return getSlsDetector(i)->getFilePath();
+        return det[i]->getFilePath();
     }
 
 
@@ -425,7 +425,7 @@ public:
         auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
         return det.setDAC(val, dac, 0, -1);
     }
-    
+
     void setDacVthreshold(const dacs_t val){
         auto dac = slsDetectorDefs::dacIndex::THRESHOLD;
         det.setDAC(val, dac, 0, -1);
@@ -554,11 +554,11 @@ public:
     bool getRxDataStreamStatus(){
         return det.enableDataStreamingFromReceiver();
     }
-    
+
     void setRxDataStreamStatus(bool state){
         det.enableDataStreamingFromReceiver(state);
     }
-    
+
     //Get a network parameter for all detectors, looping over individual detectors
     //return a vector of strings
     std::vector<std::string> getNetworkParameter(std::string par_name){
@@ -701,7 +701,7 @@ slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_na
         throw std::runtime_error("rx_zmqip only in developer");
 //        return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_SRC_IP;
     }
-    
+
     return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_PORT;
 };
 

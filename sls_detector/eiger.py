@@ -187,7 +187,7 @@ class Eiger(Detector):
     @error_handling
     def active(self, value):
         self._active[:] = value
-    
+
 
     @property
     @error_handling
