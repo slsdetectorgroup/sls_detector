@@ -15,14 +15,14 @@ requirements:
         - cmake
         - setuptools
         - pybind11
-        - sls_detector_software >= 3.1
+        - sls_detector_software 3.1.1
         - pyzmq 16.0.2
     run:
         - python
         - gcc
         - cmake
         - numpy
-        - sls_detector_software >= 3.1.0
+        - sls_detector_software 3.1.1
         - pyzmq 16.0.2
 
 
