@@ -769,7 +769,7 @@ class Detector:
         if os.path.isfile(fname):
             self._api.readConfigurationFile(fname)
         else:
-            raise FileNotFoundError('Cannot find settings file')
+            raise FileNotFoundError('Cannot find configuration file')
 
     @error_handling
     def load_parameters(self, fname):
