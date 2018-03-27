@@ -382,6 +382,13 @@ class Detector:
         """Clear the error mask for the detector. Used to reset after checking."""
         self._api.clearErrorMask()
 
+    @property
+    @error_handling
+    def client_version(self):
+        """
+        :py:obj:`int` Client C++ API version
+        """
+        return self._api.getClientVersion()
 
     @property
     @error_handling
@@ -605,7 +612,6 @@ class Detector:
         :py:obj:`int` Firmware version of the detector
         """
         return self._api.getFirmwareVersion()
-
 
     @property
     def flags(self):
@@ -1039,6 +1045,14 @@ class Detector:
     def receiver_online(self, value):
         self._api.setReceiverOnline(value)
 
+    @property
+    @error_handling
+    def receiver_version(self):
+        """
+        :py:obj:`int` Receiver version
+        """
+        return self._api.getReceiverVersion()
+
     #When returning instance error hadling needs to be done in the
     #class that is returned
     @property
@@ -1310,6 +1324,14 @@ class Detector:
 #    case FORCESWITCHG2: return  string("forceswitchg2");\
 #    case VERYLOWGAIN: return  string("verylowgain");\
 #    default:    		return string("undefined");
+
+    @property
+    @error_handling
+    def server_version(self):
+        """
+        :py:obj:`int` On-board server version of the detector
+        """
+        return self._api.getServerVersion()
 
     @property
     @error_handling

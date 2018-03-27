@@ -217,8 +217,10 @@ public:
     void readConfigurationFile(std::string fname){ det.readConfigurationFile(fname);}
     void readParametersFile(std::string fname){ det.retrieveDetectorSetup(fname); }
 
-    int getFirmwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_FIRMWARE_VERSION); }
-    int getSoftwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
+    int64_t getFirmwareVersion(){ return det.getId(slsDetectorDefs::DETECTOR_FIRMWARE_VERSION); }
+    int64_t getServerVersion(){ return det.getId(slsDetectorDefs::DETECTOR_SOFTWARE_VERSION); }
+    int64_t getClientVersion(){ return det.getId(slsDetectorDefs::THIS_SOFTWARE_VERSION); }
+    int64_t getReceiverVersion(){ return det.getId(slsDetectorDefs::RECEIVER_VERSION); }
 
     int getDetectorNumber(const int i){
         return getSlsDetector(i)->getId(slsDetectorDefs::DETECTOR_SERIAL_NUMBER);
