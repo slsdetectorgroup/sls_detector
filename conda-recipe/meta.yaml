@@ -19,6 +19,7 @@ requirements:
         - pyzmq
         - pybind11
         - libstdcxx-ng
+        - libgcc-ng
     run:
         - python
         - cmake
@@ -26,6 +27,7 @@ requirements:
         - sls_detector_lib 3.1.1
         - pyzmq
         - libstdcxx-ng
+        - libgcc-ng
 
 
 test:
