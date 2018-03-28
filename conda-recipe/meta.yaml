@@ -1,6 +1,6 @@
 package:
     name: sls_detector
-    version: developer
+    version: 3.1.1
 
 build:
   number: 0
@@ -11,19 +11,23 @@ source:
 requirements:
     build:
         - python
-        - gcc
+        - gcc_linux-64
+        - gxx_linux-64
         - cmake
         - setuptools
+        - sls_detector_lib 3.1.1
+        - pyzmq
         - pybind11
-        - sls_detector_software developer
-        - pyzmq 16.0.2
+        - libstdcxx-ng
+        - libgcc-ng
     run:
         - python
-        - gcc
         - cmake
         - numpy
-        - sls_detector_software developer
-        - pyzmq 16.0.2
+        - sls_detector_lib 3.1.1
+        - pyzmq
+        - libstdcxx-ng
+        - libgcc-ng
 
 
 test:
