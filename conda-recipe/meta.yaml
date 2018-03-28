@@ -11,19 +11,21 @@ source:
 requirements:
     build:
         - python
-        - gcc
+        - gcc_linux-64
+        - gxx_linux-64
         - cmake
         - setuptools
+        - sls_detector_lib 3.1.1
+        - pyzmq
         - pybind11
-        - sls_detector_software 3.1.1
-        - pyzmq 16.0.2
+        - libstdcxx-ng
     run:
         - python
-        - gcc
         - cmake
         - numpy
-        - sls_detector_software 3.1.1
-        - pyzmq 16.0.2
+        - sls_detector_lib 3.1.1
+        - pyzmq
+        - libstdcxx-ng
 
 
 test:
