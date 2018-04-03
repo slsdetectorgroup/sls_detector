@@ -220,6 +220,12 @@ leaves the detector with busy == True</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.client_version">
+<code class="descname">client_version</code><a class="headerlink" href="#sls_detector.Detector.client_version" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Client C++ API version</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.client_zmqport">
 <code class="descname">client_zmqport</code><a class="headerlink" href="#sls_detector.Detector.client_zmqport" title="Permalink to this definition">¶</a></dt>
 <dd><p>zmq port of the client</p>
@@ -741,6 +747,12 @@ detectors</td>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.receiver_version">
+<code class="descname">receiver_version</code><a class="headerlink" href="#sls_detector.Detector.receiver_version" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Receiver version</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.register">
 <code class="descname">register</code><a class="headerlink" href="#sls_detector.Detector.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Directly manipulate registers on the readout board</p>
@@ -812,6 +824,12 @@ otherwise</p>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">]</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.server_version">
+<code class="descname">server_version</code><a class="headerlink" href="#sls_detector.Detector.server_version" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> On-board server version of the detector</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -966,6 +984,19 @@ module</p>
 
 <span class="n">d</span><span class="o">.</span><span class="n">active</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="o">&gt;&gt;</span> <span class="n">active</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.add_gappixels">
+<code class="descname">add_gappixels</code><a class="headerlink" href="#sls_detector.Eiger.add_gappixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable or disable the (virual) pixels between ASICs</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">add_gappixels</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">d</span><span class="o">.</span><span class="n">add_gappixels</span>
+<span class="o">&gt;&gt;</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </dd></dl>
