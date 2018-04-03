@@ -6,43 +6,49 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 
 
  .. note ::
-     
-     Commands labeled Mythen only  or Gotthard only are currently not implemented in the 
+
+     Commands labeled Mythen only  or Gotthard only are currently not implemented in the
      Python class. If you need this functionallity please contact the SLS Detector Group
 
 .. py:currentmodule:: sls_detector
 
 .. |resmat| replace:: :py:attr:`Eiger.eiger_matrix_reset`
 .. |stat| replace:: :py:attr:`Detector.status`
-.. |ro| replace:: *(read only)* 
-.. |start| replace:: :py:func:`Detector.start_detector` 
-.. |stop| replace:: :py:func:`Detector.stop_detector` 
-.. |conf| replace:: :py:func:`Detector.load_config` 
-.. |pars| replace:: :py:func:`Detector.load_parameters` 
-.. |free| replace:: :py:func:`Detector.free_shared_memory` 
-.. |speed| replace:: :py:attr:`Detector.readout_clock` 
+.. |ro| replace:: *(read only)*
+.. |start| replace:: :py:func:`Detector.start_detector`
+.. |stop| replace:: :py:func:`Detector.stop_detector`
+.. |conf| replace:: :py:func:`Detector.load_config`
+.. |pars| replace:: :py:func:`Detector.load_parameters`
+.. |free| replace:: :py:func:`Detector.free_shared_memory`
+.. |speed| replace:: :py:attr:`Detector.readout_clock`
 .. |firmv| replace:: :py:attr:`Detector.firmware_version`
-.. |sub| replace:: :py:attr:`Detector.sub_exposure_time` 
+.. |sub| replace:: :py:attr:`Detector.sub_exposure_time`
 .. |tb| replace:: :py:attr:`Detector.trimbits`
 .. |mg| replace:: Mythen and Gotthard only
 .. |g| replace:: Gotthard only
 .. |m| replace:: Mythen only
 .. |new_chiptest| replace:: New chip test board only
 .. |chiptest| replace:: Chip test board only
-.. |dr| replace::  :py:attr:`Detector.dynamic_range` 
+.. |dr| replace::  :py:attr:`Detector.dynamic_range`
 .. |j| replace:: Jungfrau only
 .. |rate| replace:: :py:attr:`Detector.rate_correction`
 .. |te| replace:: :py:attr:`Detector.trimmed_energies`
 .. |rxd| replace:: :py:attr:`Detector.rx_datastream`
 .. |temp_fpgaext| replace:: :py:attr:`Detector.temp`.fpgaext
-.. |epa| replace:: :py:func:`Eiger.pulse_all_pixels` 
-.. |rfc| replace:: :py:func:`Detector.reset_frames_caught` 
-.. |rfi| replace:: :py:attr:`Detector.receiver_frame_index` 
+.. |epa| replace:: :py:func:`Eiger.pulse_all_pixels`
+.. |rfc| replace:: :py:func:`Detector.reset_frames_caught`
+.. |rfi| replace:: :py:attr:`Detector.receiver_frame_index`
 .. |ron| replace:: :py:attr:`Detector.receiver_online`
 .. |flipy| replace:: :py:attr:`Detector.flipped_data_y`
 .. |flipx| replace:: :py:attr:`Detector.flipped_data_x`
 .. |cn| replace:: :py:attr:`Detector.config_network`
-
+.. |adcr| replace:: :py:func:`DetectorApi.writeAdcRegister`
+.. |sb| replace:: :py:func:`DetectorApi.setBitInRegister`
+.. |cb| replace:: :py:func:`DetectorApi.clearBitInRegister`
+.. |nmes| replace:: :py:attr:`Detector.n_measurements`
+.. |tempth| replace:: :py:attr:`Jungfrau.temperature_threshold`
+.. |tempev| replace:: :py:attr:`Jungfrau.temperature_event`
+.. |tempco| replace:: :py:attr:`Jungfrau.temperature_control`
 ------------------------
 Commands
 ------------------------
@@ -59,22 +65,22 @@ flippeddatay          |flipy|
 digitet                Which detector?
 bustest                |m|
 digibittest            Which detector?
-reg                   :py:attr:`Jungfrau.register`       OK
-adcreg
-setbit
-clearbit
+reg                   :py:attr:`Jungfrau.register`        OK
+adcreg                |adcr|                              OK
+setbit                |sb|                                OK
+clearbit              |cb|
 getbit
 r_compression          Also not in the cmdline?
-acquire               :py:func:`Detector.acq`
-busy                  :py:attr:`Detector.busy`                OK              Partial
-status                |stat|                                  OK |ro|
-status start          |start|                                 OK
-status stop           |stop|                                  OK
-data                  |m|                   
-frame                 |m|                
-readctr               |g|                 
-resetctr              |g|               
-resmat                |resmat|                                OK               OK
+acquire               :py:func:`Detector.acq`             OK
+busy                  :py:attr:`Detector.busy`            OK                Partial
+status                |stat|                              OK |ro|
+status start          |start|                             OK
+status stop           |stop|                              OK
+data                  |m|
+frame                 |m|
+readctr               |g|
+resetctr              |g|
+resmat                |resmat|                            OK               OK
 free                  |free|
 add
 remove
@@ -120,7 +126,7 @@ gates                 |mg|
 frames                :py:attr:`Detector.n_frames`           OK               OK
 cycles                :py:attr:`Detector.cycles`            OK
 probes                |m|
-measurements
+measurements          |nmes|                                 OK
 samples               Chip test board only (new?)
 exptimel              |mg|
 periodl               |mg|
@@ -163,7 +169,7 @@ samplex
 sampley
 threaded              :py:attr:`Detector.threaded`
 darkimage
-gainimage 
+gainimage
 settingsdir           :py:attr:`Detector.settings_path`
 trimdir
 caldir
@@ -191,6 +197,9 @@ outdir                 :py:attr:`Detector.file_path`           OK            OK
 fname                  :py:attr:`Detector.file_name`           OK            OK
 index                  :py:attr:`Detector.file_index`          OK            OK
 enablefwrite           :py:attr:`Detector.file_write`          OK            OK
+temp_threshold         |tempth|
+temp_control           |tempco|
+temp_event             |tempev|
 overwrite
 currentfname
 fileformat
@@ -273,4 +282,3 @@ patwait2              |chiptest|
 patwaittime2          |chiptest|
 dut_clk               |chiptest|
 ===================== ================================= ================== =========
-
