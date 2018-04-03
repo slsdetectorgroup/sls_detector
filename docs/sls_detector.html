@@ -222,7 +222,12 @@ leaves the detector with busy == True</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.client_version">
 <code class="descname">client_version</code><a class="headerlink" href="#sls_detector.Detector.client_version" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Client C++ API version</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> The date of commit for the client API version</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">client_version</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;20180327&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -749,7 +754,12 @@ detectors</td>
 <dl class="attribute">
 <dt id="sls_detector.Detector.receiver_version">
 <code class="descname">receiver_version</code><a class="headerlink" href="#sls_detector.Detector.receiver_version" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> Receiver version</p>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Receiver version as a string. [yearmonthday]</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">receiver_version</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;20180327&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">

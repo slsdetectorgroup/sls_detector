@@ -55,27 +55,27 @@ class DetectorProperty:
     Used as base class for dacs etc.
     """
     def __init__(self, get_func, set_func, nmod_func, name):
-        
+
         # functions to get and set the parameter
         self.get = get_func
         self.set = set_func
         self.get_nmod = nmod_func
         self.__name__ = name
-        
+
     def __getitem__(self, key):
         if key == slice(None, None, None):
             return [self.get(i) for i in range(self.get_nmod())]
         elif isinstance(key, Iterable):
             return [self.get(k) for k in key]
         else:
-            return self.get(key)        
+            return self.get(key)
 
     def __setitem__(self, key, value):
         """
         Set dacs either by slice, key or list. Supports values that can
         be iterated over.
         """
-        
+
         if key == slice(None, None, None):
             if isinstance(value, (np.integer, int)):
                 for i in range(self.get_nmod()):
@@ -278,10 +278,10 @@ class DetectorDacs:
         """
         for _d in self:
             _d[:] = _d.default
-            
+
     def update_nmod(self):
         """
-        Update the cached value of nmod, needs to be run after adding or 
+        Update the cached value of nmod, needs to be run after adding or
         removing detectors
         """
         for _d in self:
@@ -324,7 +324,7 @@ class Detector:
 
     def __len__(self):
         return self._api.getNumberOfDetectors()
-    
+
     def __repr__(self):
         return '{}(id = {})'.format(self.__class__.__name__,
                                     self._api.getMultiDetectorId())
@@ -375,7 +375,7 @@ class Detector:
     def busy(self, value):
         self._api.setAcquiringFlag(value)
 
-    
+
 
 
     def clear_errors(self):
@@ -386,9 +386,20 @@ class Detector:
     @error_handling
     def client_version(self):
         """
-        :py:obj:`int` Client C++ API version
+        :py:obj:`str` The date of commit for the client API version
+
+        Examples
+        ----------
+
+        ::
+
+            d.client_version
+            >> '20180327'
+
         """
-        return self._api.getClientVersion()
+        v = hex(self._api.getClientVersion())
+
+        return v[2:]
 
     @property
     @error_handling
@@ -409,7 +420,7 @@ class Detector:
         """
         return [self._api.getDetectorNumber(i) for i in range(self.n_modules)]
 
-    
+
 
 
     @property
@@ -468,7 +479,7 @@ class Detector:
     def error_mask(self):
         """Read the error mask from the slsDetectorSoftware"""
         return self._api.getErrorMask()
-    
+
     @property
     def error_message(self):
         """Read the error message from the slsDetectorSoftware"""
@@ -731,9 +742,9 @@ class Detector:
         """
         :py:obj:`collections.namedtuple` with the image size of the detector
         Also works setting using a normal tuple
-        
+
         .. note ::
-            
+
             Follows the normal convention in Python of (rows, cols)
 
         Examples
@@ -805,28 +816,28 @@ class Detector:
         """
         Load trimbit file or files. Either called with detector number or -1
         to try to load detector specific trimbit files
-        
+
         Parameters
         -----------
         fname:
             :py:obj:`str` Filename (including path) to the trimbit files
-            
-        idet 
+
+        idet
             :py:obj:`int` Detector to load trimbits to, -1 for all
-        
-        
+
+
         ::
-            
+
             #Assuming 500k consisting of beb049 and beb048
             # 0 is beb049
             # 1 is beb048
-            
+
             #Load name.sn049 to beb049 and name.sn048 to beb048
             detector.load_trimbits('/path/to/dir/name')
-            
+
             #Load one file to a specific detector
             detector.load_trimbits('/path/to/dir/name.sn049', 0)
-        
+
         """
         self._api.loadTrimbitFile(fname, idet)
 
@@ -979,20 +990,20 @@ class Detector:
     @error_handling
     def online(self):
         """Online flag for the detector
-        
+
         Examples
         ----------
-        
+
         ::
-            
-            d.online 
+
+            d.online
             >> False
-            
+
             d.online = True
-        
+
         """
         return self._api.getOnline()
-    
+
     @online.setter
     @error_handling
     def online(self, value):
@@ -1039,7 +1050,7 @@ class Detector:
 
         """
         return self._api.getReceiverOnline()
-    
+
     @receiver_online.setter
     @error_handling
     def receiver_online(self, value):
@@ -1049,9 +1060,19 @@ class Detector:
     @error_handling
     def receiver_version(self):
         """
-        :py:obj:`int` Receiver version
+        :py:obj:`str` Receiver version as a string. [yearmonthday]
+
+        Examples
+        ----------
+
+        ::
+
+            d.receiver_version
+            >> '20180327'
+
         """
-        return self._api.getReceiverVersion()
+        v = hex(self._api.getReceiverVersion())
+        return v[2:]
 
     #When returning instance error hadling needs to be done in the
     #class that is returned
@@ -1074,13 +1095,13 @@ class Detector:
 
     def reset_frames_caught(self):
         """
-        Reset the number of frames caught by the receiver. 
-        
+        Reset the number of frames caught by the receiver.
+
         .. note ::
-            
+
             Automatically done when using d.acq()
-            
-            
+
+
         """
         self._api.resetFramesCaught()
 
@@ -1189,16 +1210,16 @@ class Detector:
         """
         Zmq datastream from receiver. :py:obj:`True` if enabled and :py:obj:`False`
         otherwise
-        
+
         ::
-            
+
             #Enable data streaming from receiver
             detector.rx_datastream = True
-            
+
             #Check data streaming
             detector.rx_datastream
             >> True
-            
+
         """
         return self._api.getRxDataStreamStatus()
 
@@ -1212,7 +1233,7 @@ class Detector:
     def rx_hostname(self):
         s = self._api.getNetworkParameter('rx_hostname')
         return element_if_equal(s)
-            
+
     @property
     @error_handling
     def rx_udpip(self):
@@ -1226,7 +1247,7 @@ class Detector:
                 self._api.setNetworkParameter('rx_udpip', addr, i)
         else:
             self._api.setNetworkParameter('rx_udpip', ip, -1)
-    
+
     @rx_hostname.setter
     @error_handling
     def rx_hostname(self, names):
@@ -1279,12 +1300,12 @@ class Detector:
     def rx_zmqport(self):
         """
         Return the receiver zmq ports.
-        
+
         ::
-            
+
             detector.rx_zmqport
             >> [30001, 30002]
-            
+
 
 
 
@@ -1345,10 +1366,10 @@ class Detector:
             For Eiger setting settings should be followed by setting the threshold
             otherwise reading of the settings will overwrite the set value
 
-        
+
         """
         return self._api.getSettings()
-        
+
     @settings.setter
     @error_handling
     def settings(self, s):
@@ -1358,15 +1379,15 @@ class Detector:
             raise DetectorValueError('Settings: {:s}, not defined for {:s}. '
                                      'Valid options are: [{:s}]'.format(s, self.detector_type, ', '.join(self._settings)))
 
-        
+
     @property
     @error_handling
     def settings_path(self):
         """
-        The path where the slsDetectorSoftware looks for settings/trimbit files            
+        The path where the slsDetectorSoftware looks for settings/trimbit files
         """
         return self._api.getSettingsDir()
-    
+
     @settings_path.setter
     @error_handling
     def settings_path(self, path):
@@ -1405,7 +1426,7 @@ class Detector:
 
     def start_receiver(self):
         self._api.startReceiver()
-        
+
     def stop_receiver(self):
         self._api.stopReceiver()
 
@@ -1451,7 +1472,7 @@ class Detector:
 
         """
         return self._api.getThreadedProcessing()
-    
+
     @threaded.setter
     def threaded(self, value):
         self._api.setThreadedProcessing(value)
@@ -1463,7 +1484,7 @@ class Detector:
         Detector threshold in eV
         """
         return self._api.getThresholdEnergy()
-        
+
     @threshold.setter
     @error_handling
     def threshold(self, eV):
@@ -1491,19 +1512,19 @@ class Detector:
         """
         EIGER: the energies at which the detector was trimmed. This also sets
         the range for which the calibration of the detector is valid.
-        
-            
+
+
         ::
-            
+
             detector.trimmed_energies = [5400, 6400, 8000]
-            
+
             detector.trimmed_energies
             >> [5400, 6400, 8000]
-        
+
         """
-        
+
         return self._api.getTrimEnergies()
-    
+
     @trimmed_energies.setter
     def trimmed_energies(self, energy_list):
         self._api.setTrimEnergies(energy_list)
@@ -1511,7 +1532,7 @@ class Detector:
     @property
     def vthreshold(self):
         """
-        Threshold in DAC units for the detector. Sets the individual vcmp of 
+        Threshold in DAC units for the detector. Sets the individual vcmp of
         all chips in the detector.
         """
         return self._api.getDac('vthreshold', -1)

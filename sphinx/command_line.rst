@@ -22,6 +22,8 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |free| replace:: :py:func:`Detector.free_shared_memory`
 .. |speed| replace:: :py:attr:`Detector.readout_clock`
 .. |firmv| replace:: :py:attr:`Detector.firmware_version`
+.. |cv| replace:: :py:attr:`Detector.client_version`
+.. |rv| replace:: :py:attr:`Detector.receiver_version`
 .. |sub| replace:: :py:attr:`Detector.sub_exposure_time`
 .. |tb| replace:: :py:attr:`Detector.trimbits`
 .. |mg| replace:: Mythen and Gotthard only
@@ -107,6 +109,7 @@ programfpga            |j|
 resetfpga              |j|
 powerchip              |j|
 led                    Moench?
+auto_comp_disable
 pulse                 Used in |epa|                           OK
 pulsenmove            Used in |epa|                           OK
 pulsechip             :py:func:`Eiger.pulse_chip`             OK
@@ -115,8 +118,8 @@ detectornumber
 modulenumber          |m|
 detectorversion       |firmv|                                OK               OK
 softwareversion
-thisversion
-receiverversion
+thisversion           |cv|
+receiverversion       |rv|
 timing                :py:attr:`Detector.timing_mode`
 exptime               :py:attr:`Detector.exposure_time`      OK               OK
 subexptime            |sub|                                  OK               OK

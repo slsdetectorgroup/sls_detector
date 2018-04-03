@@ -220,27 +220,27 @@
 <span class="sd">    Used as base class for dacs etc.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_func</span><span class="p">,</span> <span class="n">set_func</span><span class="p">,</span> <span class="n">nmod_func</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        
+
         <span class="c1"># functions to get and set the parameter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="n">get_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span> <span class="o">=</span> <span class="n">set_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_nmod</span> <span class="o">=</span> <span class="n">nmod_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">name</span>
-        
+
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_nmod</span><span class="p">())]</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>        
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set dacs either by slice, key or list. Supports values that can</span>
 <span class="sd">        be iterated over.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_nmod</span><span class="p">()):</span>
@@ -443,10 +443,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">_d</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">_d</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">_d</span><span class="o">.</span><span class="n">default</span>
-            
+
     <span class="k">def</span> <span class="nf">update_nmod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Update the cached value of nmod, needs to be run after adding or </span>
+<span class="sd">        Update the cached value of nmod, needs to be run after adding or</span>
 <span class="sd">        removing detectors</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">_d</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
@@ -489,7 +489,7 @@
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNumberOfDetectors</span><span class="p">()</span>
-    
+
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">(id = </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getMultiDetectorId</span><span class="p">())</span>
@@ -540,7 +540,7 @@
     <span class="k">def</span> <span class="nf">busy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setAcquiringFlag</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    
+
 
 
 <div class="viewcode-block" id="Detector.clear_errors"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.clear_errors">[docs]</a>    <span class="k">def</span> <span class="nf">clear_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -551,9 +551,20 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">client_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :py:obj:`int` Client C++ API version</span>
+<span class="sd">        :py:obj:`str` The date of commit for the client API version</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.client_version</span>
+<span class="sd">            &gt;&gt; &#39;20180327&#39;</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getClientVersion</span><span class="p">()</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getClientVersion</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -574,7 +585,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorNumber</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_modules</span><span class="p">)]</span>
 
-    
+
 
 
     <span class="nd">@property</span>
@@ -633,7 +644,7 @@
     <span class="k">def</span> <span class="nf">error_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read the error mask from the slsDetectorSoftware&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getErrorMask</span><span class="p">()</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read the error message from the slsDetectorSoftware&quot;&quot;&quot;</span>
@@ -896,9 +907,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :py:obj:`collections.namedtuple` with the image size of the detector</span>
 <span class="sd">        Also works setting using a normal tuple</span>
-<span class="sd">        </span>
+
 <span class="sd">        .. note ::</span>
-<span class="sd">            </span>
+
 <span class="sd">            Follows the normal convention in Python of (rows, cols)</span>
 
 <span class="sd">        Examples</span>
@@ -970,28 +981,28 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load trimbit file or files. Either called with detector number or -1</span>
 <span class="sd">        to try to load detector specific trimbit files</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        -----------</span>
 <span class="sd">        fname:</span>
 <span class="sd">            :py:obj:`str` Filename (including path) to the trimbit files</span>
-<span class="sd">            </span>
-<span class="sd">        idet </span>
+
+<span class="sd">        idet</span>
 <span class="sd">            :py:obj:`int` Detector to load trimbits to, -1 for all</span>
-<span class="sd">        </span>
-<span class="sd">        </span>
+
+
 <span class="sd">        ::</span>
-<span class="sd">            </span>
+
 <span class="sd">            #Assuming 500k consisting of beb049 and beb048</span>
 <span class="sd">            # 0 is beb049</span>
 <span class="sd">            # 1 is beb048</span>
-<span class="sd">            </span>
+
 <span class="sd">            #Load name.sn049 to beb049 and name.sn048 to beb048</span>
 <span class="sd">            detector.load_trimbits(&#39;/path/to/dir/name&#39;)</span>
-<span class="sd">            </span>
+
 <span class="sd">            #Load one file to a specific detector</span>
 <span class="sd">            detector.load_trimbits(&#39;/path/to/dir/name.sn049&#39;, 0)</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">loadTrimbitFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">idet</span><span class="p">)</span></div>
 
@@ -1144,20 +1155,20 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">online</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Online flag for the detector</span>
-<span class="sd">        </span>
+
 <span class="sd">        Examples</span>
 <span class="sd">        ----------</span>
-<span class="sd">        </span>
+
 <span class="sd">        ::</span>
-<span class="sd">            </span>
-<span class="sd">            d.online </span>
+
+<span class="sd">            d.online</span>
 <span class="sd">            &gt;&gt; False</span>
-<span class="sd">            </span>
+
 <span class="sd">            d.online = True</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getOnline</span><span class="p">()</span>
-    
+
     <span class="nd">@online</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -1204,7 +1215,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverOnline</span><span class="p">()</span>
-    
+
     <span class="nd">@receiver_online</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">receiver_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -1214,9 +1225,19 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">receiver_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :py:obj:`int` Receiver version</span>
+<span class="sd">        :py:obj:`str` Receiver version as a string. [yearmonthday]</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.receiver_version</span>
+<span class="sd">            &gt;&gt; &#39;20180327&#39;</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverVersion</span><span class="p">()</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverVersion</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
 
     <span class="c1">#When returning instance error hadling needs to be done in the</span>
     <span class="c1">#class that is returned</span>
@@ -1239,13 +1260,13 @@
 
 <div class="viewcode-block" id="Detector.reset_frames_caught"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.reset_frames_caught">[docs]</a>    <span class="k">def</span> <span class="nf">reset_frames_caught</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reset the number of frames caught by the receiver. </span>
-<span class="sd">        </span>
+<span class="sd">        Reset the number of frames caught by the receiver.</span>
+
 <span class="sd">        .. note ::</span>
-<span class="sd">            </span>
+
 <span class="sd">            Automatically done when using d.acq()</span>
-<span class="sd">            </span>
-<span class="sd">            </span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetFramesCaught</span><span class="p">()</span></div>
 
@@ -1354,16 +1375,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Zmq datastream from receiver. :py:obj:`True` if enabled and :py:obj:`False`</span>
 <span class="sd">        otherwise</span>
-<span class="sd">        </span>
+
 <span class="sd">        ::</span>
-<span class="sd">            </span>
+
 <span class="sd">            #Enable data streaming from receiver</span>
 <span class="sd">            detector.rx_datastream = True</span>
-<span class="sd">            </span>
+
 <span class="sd">            #Check data streaming</span>
 <span class="sd">            detector.rx_datastream</span>
 <span class="sd">            &gt;&gt; True</span>
-<span class="sd">            </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getRxDataStreamStatus</span><span class="p">()</span>
 
@@ -1377,7 +1398,7 @@
     <span class="k">def</span> <span class="nf">rx_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_hostname&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-            
+
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_udpip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1391,7 +1412,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpip&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpip&#39;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    
+
     <span class="nd">@rx_hostname</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
@@ -1444,12 +1465,12 @@
     <span class="k">def</span> <span class="nf">rx_zmqport</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the receiver zmq ports.</span>
-<span class="sd">        </span>
+
 <span class="sd">        ::</span>
-<span class="sd">            </span>
+
 <span class="sd">            detector.rx_zmqport</span>
 <span class="sd">            &gt;&gt; [30001, 30002]</span>
-<span class="sd">            </span>
+
 
 
 
@@ -1510,10 +1531,10 @@
 <span class="sd">            For Eiger setting settings should be followed by setting the threshold</span>
 <span class="sd">            otherwise reading of the settings will overwrite the set value</span>
 
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSettings</span><span class="p">()</span>
-        
+
     <span class="nd">@settings</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -1523,15 +1544,15 @@
             <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Settings: </span><span class="si">{:s}</span><span class="s1">, not defined for </span><span class="si">{:s}</span><span class="s1">. &#39;</span>
                                      <span class="s1">&#39;Valid options are: [</span><span class="si">{:s}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector_type</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="p">)))</span>
 
-        
+
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">settings_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The path where the slsDetectorSoftware looks for settings/trimbit files            </span>
+<span class="sd">        The path where the slsDetectorSoftware looks for settings/trimbit files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSettingsDir</span><span class="p">()</span>
-    
+
     <span class="nd">@settings_path</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">settings_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
@@ -1570,7 +1591,7 @@
 
 <div class="viewcode-block" id="Detector.start_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.start_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">start_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">startReceiver</span><span class="p">()</span></div>
-        
+
 <div class="viewcode-block" id="Detector.stop_receiver"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.stop_receiver">[docs]</a>    <span class="k">def</span> <span class="nf">stop_receiver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">stopReceiver</span><span class="p">()</span></div>
 
@@ -1616,7 +1637,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getThreadedProcessing</span><span class="p">()</span>
-    
+
     <span class="nd">@threaded</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">threaded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setThreadedProcessing</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -1628,7 +1649,7 @@
 <span class="sd">        Detector threshold in eV</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getThresholdEnergy</span><span class="p">()</span>
-        
+
     <span class="nd">@threshold</span><span class="o">.</span><span class="n">setter</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eV</span><span class="p">):</span>
@@ -1656,19 +1677,19 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        EIGER: the energies at which the detector was trimmed. This also sets</span>
 <span class="sd">        the range for which the calibration of the detector is valid.</span>
-<span class="sd">        </span>
-<span class="sd">            </span>
+
+
 <span class="sd">        ::</span>
-<span class="sd">            </span>
+
 <span class="sd">            detector.trimmed_energies = [5400, 6400, 8000]</span>
-<span class="sd">            </span>
+
 <span class="sd">            detector.trimmed_energies</span>
 <span class="sd">            &gt;&gt; [5400, 6400, 8000]</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getTrimEnergies</span><span class="p">()</span>
-    
+
     <span class="nd">@trimmed_energies</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">trimmed_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy_list</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setTrimEnergies</span><span class="p">(</span><span class="n">energy_list</span><span class="p">)</span>
@@ -1676,7 +1697,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">vthreshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Threshold in DAC units for the detector. Sets the individual vcmp of </span>
+<span class="sd">        Threshold in DAC units for the detector. Sets the individual vcmp of</span>
 <span class="sd">        all chips in the detector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDac</span><span class="p">(</span><span class="s1">&#39;vthreshold&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
