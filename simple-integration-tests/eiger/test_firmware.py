@@ -114,7 +114,6 @@ def test_subexptime(eiger,t):
 @eigertest
 @pytest.mark.parametrize("t", testdata_times)
 def test_subperiod(eiger, t):
-    # t = 0.001
     eiger.sub_period = t
     eiger.file_write = False
     eiger.start_detector()
