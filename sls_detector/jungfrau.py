@@ -8,7 +8,8 @@ Inherits from Detector.
 from functools import partial
 from collections import namedtuple
 
-from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, element_if_equal, all_equal
+from .utils import element_if_equal
+from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
 from .detector import Register
 from .decorators import error_handling
 

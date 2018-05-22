@@ -14,22 +14,7 @@ from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
 
 from .decorators import error_handling, property_error_handling
 from .errors import DetectorError, DetectorValueError
-
-
-def all_equal(mylist):
-    """If all elements are equal return true otherwise false"""
-    return all(x == mylist[0] for x in mylist)
-
-
-def element_if_equal(mylist):
-    """If all elements are equal return only one element"""
-    if all_equal(mylist):
-        if len(mylist) == 0:
-            return None
-        else:
-            return mylist[0]
-    else:
-        return mylist
+from .utils import element_if_equal
 
 class Register:
     def __init__(self, detector):
@@ -578,8 +563,8 @@ class Detector:
         FileNotFoundError
             If path does not exists
 
-        Examples
-        --------
+        Examplessimple-integration-tests/eiger/write_tb_files.py
+        --------simple-integration-tests/eiger/write_tb_files.py
 
         ::
 
@@ -1066,7 +1051,7 @@ class Detector:
         ----------
 
         ::
-
+element_if_equal
             d.receiver_version
             >> '20180327'
 
@@ -1430,28 +1415,7 @@ class Detector:
     def stop_receiver(self):
         self._api.stopReceiver()
 
-    @property
-    def sub_exposure_time(self):
-        """
-        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode
 
-        ::
-
-            d.sub_exposure_time
-            >> 0.0023
-
-            d.sub_exposure_time = 0.002
-
-        """
-        return self._api.getSubExposureTime() / 1e9
-
-    @sub_exposure_time.setter
-    def sub_exposure_time(self, t):
-        ns_time = int(t * 1e9)
-        if ns_time > 0:
-            self._api.setSubExposureTime(ns_time)
-        else:
-            raise ValueError('Sub exposure time must be larger than 0')
 
 
 

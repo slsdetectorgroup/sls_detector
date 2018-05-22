@@ -10,7 +10,8 @@ from functools import partial
 from collections import namedtuple, Iterable
 import socket
 
-from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, DetectorProperty, element_if_equal
+from .utils import  element_if_equal
+from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, DetectorProperty
 from .decorators import error_handling
 
 

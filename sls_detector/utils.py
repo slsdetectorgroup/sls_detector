@@ -3,6 +3,21 @@ Utility functions that are useful for testing and troubleshooting
 but not directly used in controlling the detector
 """
 
+def all_equal(mylist):
+    """If all elements are equal return true otherwise false"""
+    return all(x == mylist[0] for x in mylist)
+
+
+def element_if_equal(mylist):
+    """If all elements are equal return only one element"""
+    if all_equal(mylist):
+        if len(mylist) == 0:
+            return None
+        else:
+            return mylist[0]
+    else:
+        return mylist
+
 
 
 def eiger_register_to_time(register):
