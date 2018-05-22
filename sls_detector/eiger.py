@@ -484,6 +484,55 @@ class Eiger(Detector):
         else:
             self._api.setNetworkParameter('rx_zmqport', str(port), -1)
 
+
+    @property
+    def sub_exposure_time(self):
+        """
+        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode
+
+        ::
+
+            d.sub_exposure_time
+            >> 0.0023
+
+            d.sub_exposure_time = 0.002
+
+        """
+        return self._api.getSubExposureTime() / 1e9
+
+    
+    @sub_exposure_time.setter
+    def sub_exposure_time(self, t):
+        ns_time = int(t * 1e9)
+        if ns_time > 0:
+            self._api.setSubExposureTime(ns_time)
+        else:
+            raise ValueError('Sub exposure time must be larger than 0')
+
+    @property
+    def sub_period(self):
+        """
+        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode
+
+        ::
+
+            d.sub_exposure_time
+            >> 0.0023
+
+            d.sub_exposure_time = 0.002
+
+        """
+        return self._api.getSubPeriod() / 1e9
+
+    
+    @sub_period.setter
+    def sub_period(self, t):
+        ns_time = int(t * 1e9)
+        if ns_time > 0:
+            self._api.setSubPeriod(ns_time)
+        else:
+            raise ValueError('Sub period time must be larger than 0')
+
     @property
     def temp(self):
         """
