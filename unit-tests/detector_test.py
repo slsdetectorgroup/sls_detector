@@ -12,39 +12,15 @@ sys.path.append('/home/l_frojdh/slsdetectorgrup/sls_detector')
 
 import _sls_detector
 from sls_detector.errors import DetectorValueError, DetectorError
-from sls_detector.detector import all_equal, element_if_equal
+from sls_detector.utils import all_equal, element_if_equal
 @pytest.fixture
 def d():
     from sls_detector import Detector
     return Detector()
 
 
-def test_all_equal_int():
-    assert all_equal([5,5]) == True
-
-def test_all_equal_fails():
-    assert all_equal([5,6])  == False
-
-def test_all_equal_tuple():
-    assert all_equal(('a', 'a', 'a')) == True
-
-def test_all_equal_str():
-    assert all_equal('aaa') == True
-
-def test_all_equal_str_fails():
-    assert all_equal('aaab') == False
-
 def test_length_zero(d):
     assert len(d) == 0
-
-def test_element_if_equal_int():
-    assert element_if_equal([5,5]) == 5
-
-def test_element_if_equal_str():
-    assert element_if_equal('hhh') == 'h'
-
-def test_element_if_equal_int_fails():
-    assert element_if_equal([5, 6, 7]) == [5, 6, 7]
 
 def test_acq_call(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.acq')
@@ -467,22 +443,7 @@ def test_stop_acq_call(d, mocker):
     d.stop_detector()
     m.assert_called_once_with()
 
-#--------------------------------------------------------------------subexptime
-def test_get_sub_exposure_time(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.getSubExposureTime')
-    m.return_value = 2370000
-    assert d.sub_exposure_time == 0.00237
 
-
-def test_set_sub_exposure_time(d, mocker):
-    m = mocker.patch('_sls_detector.DetectorApi.setSubExposureTime')
-    d.sub_exposure_time = 0.002
-    m.assert_called_once_with(2000000)
-
-def test_set_sub_exposure_time_raises_on_zero(d, mocker):
-    mocker.patch('_sls_detector.DetectorApi.setSubExposureTime')
-    with pytest.raises(ValueError):
-        d.sub_exposure_time = 0
 
 #------------------------------------------------------------------timing mode
 def test_get_timing_mode(d, mocker):

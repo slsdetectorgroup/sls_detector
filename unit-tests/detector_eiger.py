@@ -301,7 +301,22 @@ def test_pulse_chip_asserts_on_smaller_than_minus_one(d, mocker):
     mocker.patch('_sls_detector.DetectorApi.pulseChip')
     with pytest.raises(ValueError):
         d.pulse_chip(-3)
+#--------------------------------------------------------------------subexptime
+def test_get_sub_exposure_time(d, mocker):
+    m = mocker.patch('_sls_detector.DetectorApi.getSubExposureTime')
+    m.return_value = 2370000
+    assert d.sub_exposure_time == 0.00237
 
+
+def test_set_sub_exposure_time(d, mocker):
+    m = mocker.patch('_sls_detector.DetectorApi.setSubExposureTime')
+    d.sub_exposure_time = 0.002
+    m.assert_called_once_with(2000000)
+
+def test_set_sub_exposure_time_raises_on_zero(d, mocker):
+    mocker.patch('_sls_detector.DetectorApi.setSubExposureTime')
+    with pytest.raises(ValueError):
+        d.sub_exposure_time = 0
 
 #-------------------------------------------------------------Rate correction
 def test_get_rate_correction(d, mocker):
