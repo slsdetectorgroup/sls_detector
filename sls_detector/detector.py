@@ -6,292 +6,29 @@ Python - sls
 
 """
 import os
-from collections import namedtuple, Iterable
-from functools import partial
-import numpy as np
-from _sls_detector import DetectorApi # c++ api wrapping multiSlsDetector
+from collections import Iterable, namedtuple
 
-
-from .decorators import error_handling, property_error_handling
+from _sls_detector import DetectorApi
+from .decorators import error_handling
 from .detector_property import DetectorProperty
-from .dacs import DetectorDacs
 from .errors import DetectorError, DetectorValueError
+from .registers import Register
 from .utils import element_if_equal
-
-class Register:
-    def __init__(self, detector):
-        self._detector = detector
-
-    @property_error_handling
-    def __getitem__(self, key):
-        return self._detector._api.readRegister(key)
-
-    def __setitem__(self, key, value):
-        self._detector._api.writeRegister(key, value)
-
-class Adc_register:
-    def __init__(self, detector):
-        self._detector = detector
-
-    def __setitem__(self, key, value):
-        self._detector._api.writeAdcRegister(key, value)
-
-# class DetectorProperty:
-#     """
-#     Class to access detector properties that should be indexed per item
-#     Used as base class for dacs etc.
-#     """
-#     def __init__(self, get_func, set_func, nmod_func, name):
-
-#         # functions to get and set the parameter
-#         self.get = get_func
-#         self.set = set_func
-#         self.get_nmod = nmod_func
-#         self.__name__ = name
-
-#     def __getitem__(self, key):
-#         if key == slice(None, None, None):
-#             return [self.get(i) for i in range(self.get_nmod())]
-#         elif isinstance(key, Iterable):
-#             return [self.get(k) for k in key]
-#         else:
-#             return self.get(key)
-
-#     def __setitem__(self, key, value):
-#         """
-#         Set dacs either by slice, key or list. Supports values that can
-#         be iterated over.
-#         """
-
-#         if key == slice(None, None, None):
-#             if isinstance(value, (np.integer, int)):
-#                 for i in range(self.get_nmod()):
-#                     self.set(i, value)
-#             elif isinstance(value, Iterable):
-#                 for i in range(self.get_nmod()):
-#                     self.set(i, value[i])
-#             else:
-#                 raise ValueError('Value should be int or np.integer not', type(value))
-
-#         elif isinstance(key, Iterable):
-#             if isinstance(value, Iterable):
-#                 for k,v in zip(key, value):
-#                     self.set(k,v)
-
-#             elif isinstance(value, int):
-#                 for k in key:
-#                     self.set(k, value)
-
-
-#         elif isinstance(key, int):
-#             self.set(key, value)
-
-#     def __repr__(self):
-#         s = ', '.join(str(v) for v in self[:])
-#         return '{}: [{}]'.format(self.__name__, s)
-
-
-# # noinspection PyProtectedMember
-# class Dac(DetectorProperty):
-#     """
-#     This class represents a dac on the detector. One instance handles all
-#     dacs with the same name for a multi detector instance.
-
-#     .. note ::
-
-#         This class is used to build up DetectorDacs and is in general
-#         not directly accessed to the user.
-
-
-#     """
-#     def __init__(self, name, low, high, default, detector):
-
-#         super().__init__(partial(detector._api.getDac, name),
-#                          partial(detector._api.setDac, name),
-#                          detector._api.getNumberOfDetectors,
-#                          name)
-
-#         self.min_value = low
-#         self.max_value = high
-#         self.default = default
-
-
-
-#     def __repr__(self):
-#         """String representation for a single dac in all modules"""
-#         r_str = ['{:10s}: '.format(self.__name__)]
-#         r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
-#         return ''.join(r_str).strip(', ')
-
-
-class IndexDac(DetectorProperty):
-    def __init__(self, index, low, high, default, detector):
-
-        super().__init__(partial(detector._api.getDacFromIndex, index),
-                         partial(detector._api.setDacFromIndex, index),
-                         detector._api.getNumberOfDetectors,
-                         str(index))
-
-        self.min_value = low
-        self.max_value = high
-        self.default = default
-
-
-
-    def __repr__(self):
-        """String representation for a single dac in all modules"""
-        r_str = ['{:10s}: '.format(self.__name__)]
-        r_str += ['{:5d}, '.format(self.get(i)) for i in range(self.get_nmod())]
-        return ''.join(r_str).strip(', ')
-
-class Adc:
-    def __init__(self, name, detector):
-        self.name = name
-        self._detector = detector
-        self.get_nmod = self._detector._api.getNumberOfDetectors
-        # Bind functions to get and set the dac
-        self.get = partial(self._detector._api.getAdc, self.name)
-
-
-    def __getitem__(self, key):
-        """
-        Get dacs either by slice, key or list
-        """
-        if key == slice(None, None, None):
-            return [self.get(i) / 1000 for i in range(self.get_nmod())]
-        elif isinstance(key, Iterable):
-            return [self.get(k) / 1000 for k in key]
-        else:
-            return self.get(key) / 1000
-
-    def __repr__(self):
-        """String representation for a single adc in all modules"""
-        degree_sign = u'\N{DEGREE SIGN}'
-        r_str = ['{:14s}: '.format(self.name)]
-        r_str += ['{:6.2f}{:s}C, '.format(self.get(i)/1000, degree_sign) for i in range(self.get_nmod())]
-        return ''.join(r_str).strip(', ')
-
-
-
-class DetectorAdcs:
-    """
-    Interface to the ADCs on the readout board
-    """
-    def __iter__(self):
-        for attr, value in self.__dict__.items():
-            yield value
-
-    def __repr__(self):
-        return '\n'.join([str(t) for t in self])
-
-
-# class DetectorDacs:
-#     _dacs = [('vsvp',    0, 4000,    0),
-#              ('vtr',     0, 4000, 2500),
-#              ('vrf',     0, 4000, 3300),
-#              ('vrs',     0, 4000, 1400),
-#              ('vsvn',    0, 4000, 4000),
-#              ('vtgstv',  0, 4000, 2556),
-#              ('vcmp_ll', 0, 4000, 1500),
-#              ('vcmp_lr', 0, 4000, 1500),
-#              ('vcall',   0, 4000, 4000),
-#              ('vcmp_rl', 0, 4000, 1500),
-#              ('rxb_rb',  0, 4000, 1100),
-#              ('rxb_lb',  0, 4000, 1100),
-#              ('vcmp_rr', 0, 4000, 1500),
-#              ('vcp',     0, 4000,  200),
-#              ('vcn',     0, 4000, 2000),
-#              ('vis',     0, 4000, 1550),
-#              ('iodelay', 0, 4000,  660)]
-#     _dacnames = [_d[0] for _d in _dacs]
-
-#     def __init__(self, detector):
-#         # We need to at least initially know which detector we are connected to
-#         self._detector = detector
-
-#         # Index to support iteration
-#         self._current = 0
-
-#         # Populate the dacs
-#         for _d in self._dacs:
-#             setattr(self, '_'+_d[0], Dac(*_d, detector))
-
-#     def __getattr__(self, name):
-#         return self.__getattribute__('_' + name)
-
-
-#     def __setattr__(self, name, value):
-#         if name in self._dacnames:
-#             return self.__getattribute__('_' + name).__setitem__(slice(None, None, None), value)
-#         else:
-#             super().__setattr__(name, value)
-
-#     def __next__(self):
-#         if self._current >= len(self._dacs):
-#             self._current = 0
-#             raise StopIteration
-#         else:
-#             self._current += 1
-#             return self.__getattr__(self._dacnames[self._current-1])
-
-#     def __iter__(self):
-#         return self
-
-#     def __repr__(self):
-#         r_str = ['========== DACS =========']
-#         r_str += [repr(dac) for dac in self]
-#         return '\n'.join(r_str)
-
-#     def get_asarray(self):
-#         """
-#         Read the dacs into a numpy array with dimensions [ndacs, nmodules]
-#         """
-#         dac_array = np.zeros((len(self._dacs), self._detector.n_modules))
-#         for i, _d in enumerate(self):
-#             dac_array[i,:] = _d[:]
-#         return dac_array
-
-#     def set_from_array(self, dac_array):
-#         """
-#         Set the dacs from an numpy array with dac values. [ndacs, nmodules]
-#         """
-#         dac_array = dac_array.astype(np.int)
-#         for i, _d in enumerate(self):
-#             _d[:] = dac_array[i]
-
-#     def set_default(self):
-#         """
-#         Set all dacs to their default values
-#         """
-#         for _d in self:
-#             _d[:] = _d.default
-
-#     def update_nmod(self):
-#         """
-#         Update the cached value of nmod, needs to be run after adding or
-#         removing detectors
-#         """
-#         for _d in self:
-#             _d._n_modules = self._detector.n_modules
-
-
 
 
 class Detector:
     """
     Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
-    derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API
-
+    derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API and provides a 
+    more Pythonic interface
     """
 
     _speed_names = {0: 'Full Speed', 1: 'Half Speed', 2: 'Quarter Speed', 3: 'Super Slow Speed'}
     _speed_int = {'Full Speed': 0, 'Half Speed': 1, 'Quarter Speed': 2, 'Super Slow Speed': 3}
     _settings = []
 
-    def __init__(self, id = 0):
-        # C++ API interfacing slsDetector and multiSlsDetector
-
-        self._api = DetectorApi(id)
+    def __init__(self, multi_id=0):
+        self._api = DetectorApi(multi_id)
         self._register = Register(self)
 
         self._flippeddatax = DetectorProperty(self._api.getFlippedDataX,
@@ -319,11 +56,9 @@ class Detector:
 
     def acq(self):
         """
-        Blocking command. Acquire the number of frames specified by frames, cycles etc.
+        Blocking command to launch the programmed measurement. Number of frames specified by frames, cycles etc.
         """
         self._api.acq()
-
-
 
 
     @property
@@ -350,7 +85,7 @@ class Detector:
             d.busy
             >> True
 
-            #If the detector is stuck
+            #If the detector is stuck reset by:
             d.busy = False
 
 
@@ -385,15 +120,14 @@ class Detector:
 
         """
         v = hex(self._api.getClientVersion())
-
         return v[2:]
 
     @property
     @error_handling
     def detector_number(self):
         """
-        Get all detector numbers, return as list
-
+        Get all detector numbers as a list. For Eiger the detector numbers
+        correspond to the beb numbers.
 
         Examples
         ---------
@@ -407,23 +141,28 @@ class Detector:
         """
         return [self._api.getDetectorNumber(i) for i in range(self.n_modules)]
 
-
-
-
     @property
     def detector_type(self):
         """
-        list if the type is different otherwise string
+        Return either a string or list of strings with the detector type.
 
         * Eiger
         * Jungfrau
         * etc.
 
+        Examples
+        ----------
+
+        ::
+
+            detector.detector_type
+            >> 'Eiger'
+
+            detector.detector_type
+            >> ['Eiger',  'Jungfrau']
+
         """
         return element_if_equal(self._api.getDetectorType())
-
-
-
 
     @property
     @error_handling
@@ -460,7 +199,7 @@ class Detector:
             return
         else:
             raise DetectorValueError('Cannot set dynamic range to: {:d} availble options: '.format(dr),
-                                    self._detector_dynamic_range)
+                                     self._detector_dynamic_range)
 
     @property
     def error_mask(self):
@@ -511,7 +250,6 @@ class Detector:
             detector.file_index
             >> 10
 
-
         """
         return self._api.getFileIndex()
 
@@ -545,7 +283,6 @@ class Detector:
             # myrun_d2_0.raw
             # myrun_d3_0.raw
 
-
         """
         return self._api.getFileName()
 
@@ -565,8 +302,8 @@ class Detector:
         FileNotFoundError
             If path does not exists
 
-        Examplessimple-integration-tests/eiger/write_tb_files.py
-        --------simple-integration-tests/eiger/write_tb_files.py
+        Examples
+        ---------
 
         ::
 
@@ -574,6 +311,7 @@ class Detector:
             >> '/path/to/files'
 
             detector.file_path = '/new/path/to/other/files'
+
         """
         fp = self._api.getFilePath()
         if fp == '':
@@ -588,7 +326,6 @@ class Detector:
             self._api.setFilePath(path)
         else:
             raise FileNotFoundError('File path does not exists')
-
 
     @property
     @error_handling
@@ -1053,7 +790,7 @@ class Detector:
         ----------
 
         ::
-element_if_equal
+
             d.receiver_version
             >> '20180327'
 
@@ -1075,10 +812,7 @@ element_if_equal
             d.register[0x5d] = 0xf00
 
         """
-
-
         return self._register
-
 
     def reset_frames_caught(self):
         """
@@ -1087,7 +821,6 @@ element_if_equal
         .. note ::
 
             Automatically done when using d.acq()
-
 
         """
         self._api.resetFramesCaught()
@@ -1109,11 +842,6 @@ element_if_equal
         if ns_time < 0:
             raise ValueError('Period must be 0 or larger')
         self._api.setPeriod(ns_time)
-
-
-
-
-
 
     @property
     @error_handling
@@ -1186,7 +914,6 @@ element_if_equal
         speed = self._speed_int[value]
         self._api.setReadoutClockSpeed(speed)
 
-
     @property
     def receiver_frame_index(self):
         return self._api.getReceiverCurrentFrameIndex()
@@ -1218,12 +945,28 @@ element_if_equal
     @property
     @error_handling
     def rx_hostname(self):
+        """
+        Receiver hostname
+        """
         s = self._api.getNetworkParameter('rx_hostname')
         return element_if_equal(s)
+
+    @rx_hostname.setter
+    @error_handling
+    def rx_hostname(self, names):
+        # if we pass a list join the list
+        if isinstance(names, list):
+            names = '+'.join(n for n in names)+'+'
+
+        self._api.setNetworkParameter('rx_hostname', names, -1)
+
 
     @property
     @error_handling
     def rx_udpip(self):
+        """
+        Receiver UDP ip
+        """
         s = self._api.getNetworkParameter('rx_udpip')
         return element_if_equal(s)
 
@@ -1235,14 +978,6 @@ element_if_equal
         else:
             self._api.setNetworkParameter('rx_udpip', ip, -1)
 
-    @rx_hostname.setter
-    @error_handling
-    def rx_hostname(self, names):
-        # if we pass a list join the list
-        if isinstance(names, list):
-            names = '+'.join(n for n in names)+'+'
-
-        self._api.setNetworkParameter('rx_hostname', names, -1)
 
     @property
     def rx_udpmac(self):
@@ -1292,9 +1027,6 @@ element_if_equal
 
             detector.rx_zmqport
             >> [30001, 30002]
-
-
-
 
         """
         _s = self._api.getNetworkParameter('rx_zmqport')
@@ -1558,10 +1290,10 @@ element_if_equal
         """
         self._api.configureNetworkParameters()
 
-def free_shared_memory(id = 0):
+def free_shared_memory(multi_id=0):
     """
     Function to free the shared memory but do not initialize with new
     0 size detector
     """
-    api = DetectorApi(id)
+    api = DetectorApi(multi_id)
     api.freeSharedMemory()

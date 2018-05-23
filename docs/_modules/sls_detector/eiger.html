@@ -25,25 +25,17 @@
   
 
   
-  
     <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="sls_detector 3.1.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -110,7 +102,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">sls_detector</a>
@@ -118,9 +110,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -150,8 +143,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -175,7 +166,9 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">Iterable</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 
-<span class="kn">from</span> <span class="nn">.detector</span> <span class="k">import</span> <span class="n">Detector</span><span class="p">,</span> <span class="n">DetectorDacs</span><span class="p">,</span> <span class="n">DetectorAdcs</span><span class="p">,</span> <span class="n">Adc</span><span class="p">,</span> <span class="n">DetectorProperty</span><span class="p">,</span> <span class="n">element_if_equal</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span>  <span class="n">element_if_equal</span>
+<span class="kn">from</span> <span class="nn">.detector</span> <span class="k">import</span> <span class="n">Detector</span><span class="p">,</span> <span class="n">DetectorDacs</span><span class="p">,</span> <span class="n">DetectorProperty</span>
+<span class="kn">from</span> <span class="nn">.adcs</span> <span class="k">import</span> <span class="n">DetectorAdcs</span><span class="p">,</span> <span class="n">Adc</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
 
 
@@ -649,6 +642,55 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sub_exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.sub_exposure_time</span>
+<span class="sd">            &gt;&gt; 0.0023</span>
+
+<span class="sd">            d.sub_exposure_time = 0.002</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSubExposureTime</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
+
+    
+    <span class="nd">@sub_exposure_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sub_exposure_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setSubExposureTime</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Sub exposure time must be larger than 0&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sub_period</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            d.sub_exposure_time</span>
+<span class="sd">            &gt;&gt; 0.0023</span>
+
+<span class="sd">            d.sub_exposure_time = 0.002</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSubPeriod</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
+
+    
+    <span class="nd">@sub_period</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sub_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setSubPeriod</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Sub period time must be larger than 0&#39;</span><span class="p">)</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -720,9 +762,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -735,7 +775,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -754,6 +794,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'3.1.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -772,14 +813,11 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

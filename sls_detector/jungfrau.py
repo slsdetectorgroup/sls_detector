@@ -4,17 +4,10 @@
 Jungfrau detector class and support functions.
 Inherits from Detector.
 """
-
-from functools import partial
-from collections import namedtuple
-
-from .utils import element_if_equal
-from .detector import Detector, DetectorDacs, DetectorAdcs, Adc
-from .detector import Register
+from .adcs import Adc, DetectorAdcs
 from .decorators import error_handling
-
-
-
+from .detector import Detector, DetectorDacs
+from .utils import element_if_equal
 
 
 class JungfrauDacs(DetectorDacs):
@@ -26,10 +19,8 @@ class JungfrauDacs(DetectorDacs):
              ('vb_ds',      0, 4000,    1000),
              ('vref_ds',    0, 4000,     480),
              ('vref_comp',  0, 4000,     420),
-             ]
+            ]
     _dacnames = [_d[0] for _d in _dacs]
-    
-
 
 class Jungfrau(Detector):
     """
@@ -46,10 +37,10 @@ class Jungfrau(Detector):
                  'forceswitchg1',
                  'forceswitchg2']
     """Available settings for Jungfrau"""
-    
-    def __init__(self, id=0):
+
+    def __init__(self, multi_id=0):
         #Init on base calss
-        super().__init__(id)
+        super().__init__(multi_id)
         self._dacs = JungfrauDacs(self)
 
         #Jungfrau specific temps, this can be reduced to a single value?
@@ -81,7 +72,7 @@ class Jungfrau(Detector):
     def power_chip(self):
         """Power on or off the ASICs, True for on False for off"""
         return self._api.isChipPowered()
-    
+
     @power_chip.setter
     @error_handling
     def power_chip(self, value):

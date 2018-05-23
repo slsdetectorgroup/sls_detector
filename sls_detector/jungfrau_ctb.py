@@ -2,7 +2,11 @@ from functools import partial
 from collections import namedtuple, Iterable
 import socket
 
-from .detector import Detector, IndexDac, DetectorDacs, DetectorAdcs, Adc, DetectorProperty, element_if_equal
+from .detector import Detector
+from .utils import element_if_equal
+from .adcs import DetectorAdcs, Adc
+from .dacs import DetectorDacs
+from .detector_property import DetectorProperty
 from .decorators import error_handling
 from .detector import Register, Adc_register
 
@@ -25,7 +29,7 @@ class JungfrauCTBDacs(DetectorDacs):
              ('dac15', 0, 4000,    1455),
              ('dac16', 0, 4000,       0),
              ('dac17', 0, 4000,    1000),
-             ]
+            ]
     _dacnames = [_d[0] for _d in _dacs]
 
 
@@ -61,14 +65,14 @@ class JungfrauCTB(Detector):
     @v_c.setter
     def v_c(self, value):
         self._api.setDac_mV('v_c', -1, value)
-        
+
     @property
     def v_d(self):
         return self._api.getDac_mV('v_d', -1)
 
     @v_d.setter
     def v_d(self, value):
-        self._api.setDac_mV('v_d', -1, value)       
+        self._api.setDac_mV('v_d', -1, value)
         
     @property
     def v_io(self):

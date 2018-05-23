@@ -11,7 +11,8 @@ from collections import namedtuple, Iterable
 import socket
 
 from .utils import  element_if_equal
-from .detector import Detector, DetectorDacs, DetectorAdcs, Adc, DetectorProperty
+from .detector import Detector, DetectorDacs, DetectorProperty
+from .adcs import DetectorAdcs, Adc
 from .decorators import error_handling
 
 
