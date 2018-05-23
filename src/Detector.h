@@ -597,6 +597,9 @@ public:
     std::string getLastClientIP(){
         return det.getLastClientIP();
     }
+    std::string getReceiverLastClientIP(){
+        return det.getReceiverLastClientIP();
+    }
 
 
     //get frame delay of module (det_id) in ns

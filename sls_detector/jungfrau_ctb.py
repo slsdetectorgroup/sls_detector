@@ -8,7 +8,7 @@ from .adcs import DetectorAdcs, Adc
 from .dacs import DetectorDacs
 from .detector_property import DetectorProperty
 from .decorators import error_handling
-from .detector import Register, Adc_register
+from .registers import Register, Adc_register
 
 class JungfrauCTBDacs(DetectorDacs):
     _dacs = [('dac0',  0, 4000,    1400),

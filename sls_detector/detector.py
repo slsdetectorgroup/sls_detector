@@ -97,9 +97,6 @@ class Detector:
     def busy(self, value):
         self._api.setAcquiringFlag(value)
 
-
-
-
     def clear_errors(self):
         """Clear the error mask for the detector. Used to reset after checking."""
         self._api.clearErrorMask()
@@ -571,7 +568,6 @@ class Detector:
     def lock(self):
         """Lock the detector to this client
 
-
         ::
 
             detector.lock = True
@@ -755,6 +751,11 @@ class Detector:
 
         """
         return self._api.getLastClientIP()
+
+    @property
+    def receiver_last_client_ip(self):
+        """Returns the ip of the client last talking to the receiver"""
+        return self._api.getReceiverLastClientIP()
 
     @property
     @error_handling
@@ -1049,22 +1050,6 @@ class Detector:
 #    def software_version(self):
 #        return self._api.getSoftwareVersion();
 
-#    case STANDARD:      return string("standard");		\
-#    case FAST:      	return string("fast");			\
-#    case HIGHGAIN:      return string("highgain");		\
-#    case DYNAMICGAIN:   return string("dynamicgain");	\
-#    case LOWGAIN:    	return string("lowgain");		\
-#    case MEDIUMGAIN:    return string("mediumgain");	\
-#    case VERYHIGHGAIN:  return string("veryhighgain");	\
-#    case LOWNOISE:      return  string("lownoise");		\
-#    case DYNAMICHG0:    return  string("dynamichg0");	\
-#    case FIXGAIN1:      return  string("fixgain1");		\
-#    case FIXGAIN2:      return  string("fixgain2");		\
-#    case FORCESWITCHG1: return  string("forceswitchg1");\
-#    case FORCESWITCHG2: return  string("forceswitchg2");\
-#    case VERYLOWGAIN: return  string("verylowgain");\
-#    default:    		return string("undefined");
-
     @property
     @error_handling
     def server_version(self):
@@ -1125,7 +1110,6 @@ class Detector:
 
             Check possible values
 
-
         """
         return self._api.getRunStatus()
 
@@ -1148,10 +1132,6 @@ class Detector:
 
     def stop_receiver(self):
         self._api.stopReceiver()
-
-
-
-
 
     @property
     def threaded(self):

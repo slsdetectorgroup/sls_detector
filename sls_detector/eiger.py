@@ -6,14 +6,16 @@ Created on Wed Dec  6 11:51:18 2017
 @author: l_frojdh
 """
 
-from functools import partial
-from collections import namedtuple, Iterable
 import socket
+from collections import Iterable, namedtuple
+from functools import partial
 
-from .utils import  element_if_equal
-from .detector import Detector, DetectorDacs, DetectorProperty
-from .adcs import DetectorAdcs, Adc
+from .adcs import Adc, DetectorAdcs
+from .dacs import DetectorDacs
 from .decorators import error_handling
+from .detector import Detector
+from .detector_property import DetectorProperty
+from .utils import element_if_equal
 
 
 class EigerVcmp:
@@ -514,15 +516,8 @@ class Eiger(Detector):
     @property
     def sub_period(self):
         """
-        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode
-
-        ::
-
-            d.sub_exposure_time
-            >> 0.0023
-
-            d.sub_exposure_time = 0.002
-
+        Period for subexposures. Used to mimize noise by delaying the start of the next
+        subexposure.
         """
         return self._api.getSubPeriod() / 1e9
 
@@ -587,6 +582,11 @@ class Eiger(Detector):
     @error_handling
     def tengiga(self, value):
         self._api.setTenGigabitEthernet(value)
+
+    def set_delays(self, delta):
+        self.tx_delay.left = [delta*(i*2) for i in range(self.n_modules)]
+        self.tx_delay.right = [delta*(i*2+1) for i in range(self.n_modules)]
+
 
     def setup500k(self, hostnames):
         """

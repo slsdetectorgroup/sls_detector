@@ -187,6 +187,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getDelayRight", &Detector::getDelayRight)
             .def("setDelayRight", &Detector::setDelayRight)
             .def("getLastClientIP", &Detector::getLastClientIP)
+            .def("getReceiverLastClientIP", &Detector::getReceiverLastClientIP)
+            
 
 
             .def("setFileWrite", &Detector::setFileWrite)

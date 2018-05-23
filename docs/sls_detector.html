@@ -168,7 +168,7 @@
 <h2>Detector<a class="headerlink" href="#detector" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Detector">
-<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><span class="sig-paren">(</span><em>multi_id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
 derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API and provides a
@@ -1252,7 +1252,7 @@ Used mainly in the calibration code.</p>
 <h2>Jungfrau<a class="headerlink" href="#jungfrau" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Jungfrau">
-<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><span class="sig-paren">(</span><em>multi_id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sls_detector.detector.Detector</span></code></p>
 <p>Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
 class is needed to provide the correct dacs and unique functions.</p>

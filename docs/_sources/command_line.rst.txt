@@ -51,6 +51,8 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |tempth| replace:: :py:attr:`Jungfrau.temperature_threshold`
 .. |tempev| replace:: :py:attr:`Jungfrau.temperature_event`
 .. |tempco| replace:: :py:attr:`Jungfrau.temperature_control`
+.. |detnr| replace:: :py:attr:`Detector.detector_number` 
+
 ------------------------
 Commands
 ------------------------
@@ -67,7 +69,7 @@ flippeddatay          |flipy|
 digitet                Which detector?
 bustest                |m|
 digibittest            Which detector?
-reg                   :py:attr:`Jungfrau.register`        OK
+reg                   :py:attr:`Detector.register`        OK
 adcreg                |adcr|                              OK
 setbit                |sb|                                OK
 clearbit              |cb|
@@ -114,9 +116,9 @@ pulse                 Used in |epa|                           OK
 pulsenmove            Used in |epa|                           OK
 pulsechip             :py:func:`Eiger.pulse_chip`             OK
 moduleversion         |m|
-detectornumber
+detectornumber        |detnr|                                  OK
 modulenumber          |m|
-detectorversion       |firmv|                                OK               OK
+detectorversion       |firmv|                                 OK               OK
 softwareversion
 thisversion           |cv|
 receiverversion       |rv|
@@ -124,6 +126,7 @@ timing                :py:attr:`Detector.timing_mode`
 exptime               :py:attr:`Detector.exposure_time`      OK               OK
 subexptime            |sub|                                  OK               OK
 period                :py:attr:`Detector.period`             OK               OK
+subperiod             :py:attr:`Eiger.sub_period`         OK               OK
 delay                 |mg|
 gates                 |mg|
 frames                :py:attr:`Detector.n_frames`           OK               OK

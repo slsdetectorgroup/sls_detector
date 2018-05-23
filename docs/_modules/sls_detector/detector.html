@@ -161,19 +161,16 @@
 <span class="sd">=============</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">namedtuple</span>
 
 <span class="kn">from</span> <span class="nn">_sls_detector</span> <span class="k">import</span> <span class="n">DetectorApi</span>
-<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span><span class="p">,</span> <span class="n">property_error_handling</span>
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">error_handling</span>
 <span class="kn">from</span> <span class="nn">.detector_property</span> <span class="k">import</span> <span class="n">DetectorProperty</span>
-<span class="kn">from</span> <span class="nn">.dacs</span> <span class="k">import</span> <span class="n">DetectorDacs</span>
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="k">import</span> <span class="n">DetectorError</span><span class="p">,</span> <span class="n">DetectorValueError</span>
+<span class="kn">from</span> <span class="nn">.registers</span> <span class="k">import</span> <span class="n">Register</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">element_if_equal</span>
-<span class="kn">from</span> <span class="nn">.registers</span> <span class="k">import</span> <span class="n">Register</span><span class="p">,</span> <span class="n">Adc_register</span>
+
 
 <div class="viewcode-block" id="Detector"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector">[docs]</a><span class="k">class</span> <span class="nc">Detector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -186,8 +183,8 @@
     <span class="n">_speed_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Full Speed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Half Speed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Quarter Speed&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Super Slow Speed&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
     <span class="n">_settings</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">multi_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">(</span><span class="n">multi_id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_register</span> <span class="o">=</span> <span class="n">Register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_flippeddatax</span> <span class="o">=</span> <span class="n">DetectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFlippedDataX</span><span class="p">,</span>
@@ -279,7 +276,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">v</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getClientVersion</span><span class="p">())</span>
-
         <span class="k">return</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
 
     <span class="nd">@property</span>
@@ -288,7 +284,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all detector numbers as a list. For Eiger the detector numbers</span>
 <span class="sd">        correspond to the beb numbers.</span>
-
 
 <span class="sd">        Examples</span>
 <span class="sd">        ---------</span>
@@ -301,9 +296,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorNumber</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_modules</span><span class="p">)]</span>
-
-
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">detector_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -327,9 +319,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getDetectorType</span><span class="p">())</span>
-
-
-
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -366,7 +355,7 @@
             <span class="k">return</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Cannot set dynamic range to: </span><span class="si">{:d}</span><span class="s1"> availble options: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dr</span><span class="p">),</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">_detector_dynamic_range</span><span class="p">)</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_detector_dynamic_range</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">error_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -417,7 +406,6 @@
 <span class="sd">            detector.file_index</span>
 <span class="sd">            &gt;&gt; 10</span>
 
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileIndex</span><span class="p">()</span>
 
@@ -450,7 +438,6 @@
 <span class="sd">            # myrun_d1_0.raw</span>
 <span class="sd">            # myrun_d2_0.raw</span>
 <span class="sd">            # myrun_d3_0.raw</span>
-
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileName</span><span class="p">()</span>
@@ -495,7 +482,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFilePath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;File path does not exists&#39;</span><span class="p">)</span>
-
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -982,10 +968,7 @@
 <span class="sd">            d.register[0x5d] = 0xf00</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span>
-
 
 <div class="viewcode-block" id="Detector.reset_frames_caught"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.reset_frames_caught">[docs]</a>    <span class="k">def</span> <span class="nf">reset_frames_caught</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -994,7 +977,6 @@
 <span class="sd">        .. note ::</span>
 
 <span class="sd">            Automatically done when using d.acq()</span>
-
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">resetFramesCaught</span><span class="p">()</span></div>
@@ -1016,11 +998,6 @@
         <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Period must be 0 or larger&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setPeriod</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
-
-
-
-
-
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1092,7 +1069,6 @@
     <span class="k">def</span> <span class="nf">readout_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed_int</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReadoutClockSpeed</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">receiver_frame_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1207,9 +1183,6 @@
 
 <span class="sd">            detector.rx_zmqport</span>
 <span class="sd">            &gt;&gt; [30001, 30002]</span>
-
-
-
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqport&#39;</span><span class="p">)</span>
@@ -1473,12 +1446,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">configureNetworkParameters</span><span class="p">()</span></div></div>
 
-<span class="k">def</span> <span class="nf">free_shared_memory</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">free_shared_memory</span><span class="p">(</span><span class="n">multi_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to free the shared memory but do not initialize with new</span>
 <span class="sd">    0 size detector</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="n">DetectorApi</span><span class="p">(</span><span class="n">multi_id</span><span class="p">)</span>
     <span class="n">api</span><span class="o">.</span><span class="n">freeSharedMemory</span><span class="p">()</span>
 </pre></div>
 
