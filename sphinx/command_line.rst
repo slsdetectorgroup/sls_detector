@@ -52,6 +52,7 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |tempev| replace:: :py:attr:`Jungfrau.temperature_event`
 .. |tempco| replace:: :py:attr:`Jungfrau.temperature_control`
 .. |detnr| replace:: :py:attr:`Detector.detector_number` 
+.. |fpf| replace:: :py:attr:`Detector.n_frames_per_file`
 
 ------------------------
 Commands
@@ -267,6 +268,7 @@ r_lastclient
 r_readfreq
 rx_fifodepth
 r_silent
+r_framesperfile       |fpf|
 adcinvert             |chiptest|
 adcdisable            |chiptest|
 pattern               |chiptest|

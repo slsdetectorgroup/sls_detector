@@ -189,6 +189,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getLastClientIP", &Detector::getLastClientIP)
             .def("getReceiverLastClientIP", &Detector::getReceiverLastClientIP)
             
+            .def("setReceiverFramesPerFile", &Detector::setReceiverFramesPerFile)
+            .def("getReceiverFramesPerFile", &Detector::getReceiverFramesPerFile)
 
 
             .def("setFileWrite", &Detector::setFileWrite)

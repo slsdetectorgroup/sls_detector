@@ -639,6 +639,11 @@ of the detector modules.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.n_frames_per_file">
+<code class="descname">n_frames_per_file</code><a class="headerlink" href="#sls_detector.Detector.n_frames_per_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.n_measurements">
 <code class="descname">n_measurements</code><a class="headerlink" href="#sls_detector.Detector.n_measurements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of times to repeat the programmed measurement.
@@ -741,6 +746,12 @@ detectors</td>
 <dt id="sls_detector.Detector.receiver_frame_index">
 <code class="descname">receiver_frame_index</code><a class="headerlink" href="#sls_detector.Detector.receiver_frame_index" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.receiver_last_client_ip">
+<code class="descname">receiver_last_client_ip</code><a class="headerlink" href="#sls_detector.Detector.receiver_last_client_ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ip of the client last talking to the receiver</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.receiver_online">
@@ -1146,6 +1157,11 @@ here they are grouped for each detector</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="sls_detector.Eiger.set_delays">
+<code class="descname">set_delays</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.set_delays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.set_delays" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="sls_detector.Eiger.setup500k">
 <code class="descname">setup500k</code><span class="sig-paren">(</span><em>hostnames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.setup500k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.setup500k" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup the Eiger detector to run on the local machine</p>
@@ -1166,13 +1182,8 @@ here they are grouped for each detector</p>
 <dl class="attribute">
 <dt id="sls_detector.Eiger.sub_period">
 <code class="descname">sub_period</code><a class="headerlink" href="#sls_detector.Eiger.sub_period" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub frame exposure time in <em>seconds</em> for Eiger in 32bit autosumming mode</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span>
-<span class="o">&gt;&gt;</span> <span class="mf">0.0023</span>
-
-<span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span> <span class="o">=</span> <span class="mf">0.002</span>
-</pre></div>
-</div>
+<dd><p>Period for subexposures. Used to mimize noise by delaying the start of the next
+subexposure.</p>
 </dd></dl>
 
 <dl class="attribute">

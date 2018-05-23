@@ -641,6 +641,16 @@ class Detector:
 
     @property
     @error_handling
+    def n_frames_per_file(self):
+        return self._api.getReceiverFramesPerFile()
+
+    @n_frames_per_file.setter
+    @error_handling
+    def n_frames_per_file(self, n):
+        self._api.setReceiverFramesPerFile(n)
+
+    @property
+    @error_handling
     def n_cycles(self):
         """Number of cycles for the measurement (exp*n_frames)*n_cycles"""
         return self._api.getCycles()

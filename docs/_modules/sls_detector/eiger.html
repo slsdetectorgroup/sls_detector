@@ -672,15 +672,8 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sub_period</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode</span>
-
-<span class="sd">        ::</span>
-
-<span class="sd">            d.sub_exposure_time</span>
-<span class="sd">            &gt;&gt; 0.0023</span>
-
-<span class="sd">            d.sub_exposure_time = 0.002</span>
-
+<span class="sd">        Period for subexposures. Used to mimize noise by delaying the start of the next</span>
+<span class="sd">        subexposure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSubPeriod</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
 
@@ -745,6 +738,11 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">tengiga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setTenGigabitEthernet</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Eiger.set_delays"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.set_delays">[docs]</a>    <span class="k">def</span> <span class="nf">set_delays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_delay</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="p">[</span><span class="n">delta</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_modules</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_delay</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="p">[</span><span class="n">delta</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_modules</span><span class="p">)]</span></div>
+
 
 <div class="viewcode-block" id="Eiger.setup500k"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Eiger.setup500k">[docs]</a>    <span class="k">def</span> <span class="nf">setup500k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostnames</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

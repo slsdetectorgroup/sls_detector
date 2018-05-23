@@ -601,6 +601,13 @@ public:
         return det.getReceiverLastClientIP();
     }
 
+    void setReceiverFramesPerFile(const int n_frames){
+        det.setReceiverFramesPerFile(n_frames);
+    }
+    int getReceiverFramesPerFile(){
+        return det.setReceiverFramesPerFile();
+    }
+
 
     //get frame delay of module (det_id) in ns
     int getDelayFrame(const int det_id){
