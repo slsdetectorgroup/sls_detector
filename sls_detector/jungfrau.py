@@ -51,6 +51,16 @@ class Jungfrau(Detector):
 
 
     @property
+    @error_handling
+    def adc_phase(self):
+        return self._api.getAdcPhase()
+
+    @adc_phase.setter
+    @error_handling
+    def adc_phase(self, phase):
+        self._api.setAdcPhase(phase)
+
+    @property
     def dacs(self):
         """
 
@@ -264,3 +274,4 @@ class Jungfrau(Detector):
                 self._api.setNetworkParameter('detectorip', addr, i)
         else:
             self._api.setNetworkParameter('detectorip', ip, -1)
+

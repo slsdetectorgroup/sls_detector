@@ -643,6 +643,13 @@ public:
         getSlsDetector(det_id)->setNetworkParameter(slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_RIGHT, delay_str);
     }
 
+    void setAdcPhase(const int value){
+        det.setSpeed(slsDetectorDefs::ADC_PHASE, value);
+    }
+    int getAdcPhase(){
+        return det.setSpeed(slsDetectorDefs::ADC_PHASE, 100000); //Why 100000?
+    }
+
 
     // //Check if detector if filling in gap pixels in module
     // //return true if so, currently only in developer

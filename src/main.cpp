@@ -210,6 +210,10 @@ PYBIND11_MODULE(_sls_detector, m) {
             // .def("getGapPixels", &Detector::getGapPixels)
             // .def("setGapPixels", &Detector::setGapPixels)
 
+            .def("getAdcPhase", &Detector::getAdcPhase)
+            .def("setAdcPhase", &Detector::setAdcPhase)
+
+
             .def("clearErrorMask", &Detector::clearErrorMask)
             .def("getErrorMask", &Detector::getErrorMask)
             .def("setErrorMask", &Detector::setErrorMask)
