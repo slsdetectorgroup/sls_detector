@@ -22,6 +22,8 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |free| replace:: :py:func:`Detector.free_shared_memory`
 .. |speed| replace:: :py:attr:`Detector.readout_clock`
 .. |firmv| replace:: :py:attr:`Detector.firmware_version`
+.. |cv| replace:: :py:attr:`Detector.client_version`
+.. |rv| replace:: :py:attr:`Detector.receiver_version`
 .. |sub| replace:: :py:attr:`Detector.sub_exposure_time`
 .. |tb| replace:: :py:attr:`Detector.trimbits`
 .. |mg| replace:: Mythen and Gotthard only
@@ -49,6 +51,9 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |tempth| replace:: :py:attr:`Jungfrau.temperature_threshold`
 .. |tempev| replace:: :py:attr:`Jungfrau.temperature_event`
 .. |tempco| replace:: :py:attr:`Jungfrau.temperature_control`
+.. |detnr| replace:: :py:attr:`Detector.detector_number` 
+.. |fpf| replace:: :py:attr:`Detector.n_frames_per_file`
+
 ------------------------
 Commands
 ------------------------
@@ -65,7 +70,7 @@ flippeddatay          |flipy|
 digitet                Which detector?
 bustest                |m|
 digibittest            Which detector?
-reg                   :py:attr:`Jungfrau.register`        OK
+reg                   :py:attr:`Detector.register`        OK
 adcreg                |adcr|                              OK
 setbit                |sb|                                OK
 clearbit              |cb|
@@ -100,23 +105,23 @@ detsizechan           :py:attr:`Detector.image_size`            OK
 roimask                ??
 flippeddatax          |flipx|
 tengiga               :py:attr:`Eiger.tengiga`                  OK
-gappixels             :py:attr:`Eiger.add_gappixels`            OK
 flags                 :py:attr:`Detector.flags`                 OK
 extsig                 |mg|
 programfpga            |j|
 resetfpga              |j|
 powerchip              |j|
 led                    Moench?
+auto_comp_disable
 pulse                 Used in |epa|                           OK
 pulsenmove            Used in |epa|                           OK
 pulsechip             :py:func:`Eiger.pulse_chip`             OK
 moduleversion         |m|
-detectornumber
+detectornumber        |detnr|                                  OK
 modulenumber          |m|
-detectorversion       |firmv|                                OK               OK
+detectorversion       |firmv|                                 OK               OK
 softwareversion
-thisversion
-receiverversion
+thisversion           |cv|
+receiverversion       |rv|
 timing                :py:attr:`Detector.timing_mode`
 exptime               :py:attr:`Detector.exposure_time`      OK               OK
 subexptime            |sub|                                  OK               OK

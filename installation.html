@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; sls_detector 3.1.1 documentation</title>
+  <title>Installation &mdash; sls_detector 3.2.0 documentation</title>
   
 
   
@@ -24,27 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector 3.1.1 documentation" href="index.html"/>
-        <link rel="next" title="Getting started" href="getting_started.html"/>
-        <link rel="prev" title="sls_detector - Python interface for the slsDetectorsPackage" href="index.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting started" href="getting_started.html" />
+    <link rel="prev" title="sls_detector - Python interface for the slsDetectorsPackage" href="index.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
             
             
               <div class="version">
-                3.1.1
+                3.2.0
               </div>
             
           
@@ -117,7 +109,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">sls_detector</a>
@@ -125,9 +117,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -171,16 +164,16 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>The software is developed and tested with <a class="reference external" href="https://www.python.org/">Python3.6</a> It is recommended to
-install Python using <a class="reference external" href="https://www.anaconda.com/download/">Anaconda Python</a> to have a separated environment, but
-this is of course not mandatory. For controlling the detector use v3.0+ of the
-<a class="reference external" href="https://github.com/slsdetectorgroup/slsDetectorPackage">slsDetectorsPackage</a>. Backwards compatibility is likely but in no means
-guaranteed regarding Python and slsDetectorPackage.</p>
+<p>The easiest way to install the Python API and the slsDetectorPackage is using conda. But other
+methods are also available.</p>
 <div class="section" id="install-using-conda">
 <h2>Install using conda<a class="headerlink" href="#install-using-conda" title="Permalink to this headline">¶</a></h2>
-<p>Binaries are available using conda. This is from our experience the easiest and
-most convenient way to install both the slsDetectorPackage and the Python API.
-To install both run the following commands after having installed Anaconda/Miniconda.</p>
+<p>If you don’t have it installed get the latest version of <a class="reference external" href="https://conda.io/miniconda.html">Miniconda</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">repo</span><span class="o">.</span><span class="n">continuum</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">miniconda</span><span class="o">/</span><span class="n">Miniconda3</span><span class="o">-</span><span class="n">latest</span><span class="o">-</span><span class="n">Linux</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">sh</span> <span class="n">Miniconda3</span><span class="o">-</span><span class="n">latest</span><span class="o">-</span><span class="n">Linux</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Install sls_detector and sls_detector_lib using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Add conda channels</span>
 <span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
 <span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">slsdetectorgroup</span>
@@ -190,16 +183,14 @@ To install both run the following commands after having installed Anaconda/Minic
 
 <span class="c1">#Install specific version</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">sls_detector</span><span class="o">=</span><span class="mf">3.0</span><span class="o">.</span><span class="mi">1</span>
-
-<span class="c1">#Scientific Linux 6 version (GLIBC2.12)</span>
-<span class="n">conda</span> <span class="n">install</span> <span class="n">sls_detector</span><span class="o">=</span><span class="n">SL6_3</span><span class="o">.</span><span class="mf">0.1</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="local-build-using-conda-build">
 <h2>Local build using conda-build<a class="headerlink" href="#local-build-using-conda-build" title="Permalink to this headline">¶</a></h2>
-<p>Needs the <a class="reference external" href="https://github.com/slsdetectorgroup/sls_detector_software">sls_detector_software</a> installed  in order to automatically find headers
-and shared libraries.</p>
+<p>Needs the <a class="reference external" href="https://github.com/slsdetectorgroup/sls_detector_lib">sls_detector_lib</a> installed  in order to automatically find headers
+and shared libraries. Make sure that the branch of sls_detector matches the lib
+version installed.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Clone source code</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">slsdetectorgroup</span><span class="o">/</span><span class="n">sls_detector</span><span class="o">.</span><span class="n">git</span>
 
@@ -230,16 +221,14 @@ directory and temporary add this to the path</p>
 </div>
 <div class="section" id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
-<p>The default version of the software is distributed with the slsDetecorGui which depends
-on Qwt and Qt. It is possible to compile without the Gui to reduce the dependencies. When
-installing trough conda, conda manages all dependencies.</p>
+<p>All dependencies are manged trough conda but for a stand alone build you would need</p>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference external" href="https://www.python.org/">Python3.6</a></li>
-<li><a class="reference external" href="https://github.com/slsdetectorgroup/slsDetectorPackage">slsDetectorsPackage</a> 3.0+</li>
 <li>gcc 4.8+</li>
 <li>Qwt 6</li>
 <li>Qt 4.8</li>
+<li>numpy</li>
+<li>slsDetectorPackage</li>
 </ul>
 </div></blockquote>
 </div>
@@ -247,9 +236,7 @@ installing trough conda, conda manages all dependencies.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -267,11 +254,11 @@ installing trough conda, conda manages all dependencies.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Sls Detector Group.
+        &copy; Copyright 2018, SLS Detector Group.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -289,7 +276,8 @@ installing trough conda, conda manages all dependencies.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'3.1.1',
+            VERSION:'3.2.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -303,19 +291,13 @@ installing trough conda, conda manages all dependencies.</p>
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

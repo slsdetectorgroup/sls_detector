@@ -1,27 +1,23 @@
 Installation
 =========================
 
-
-The software is developed and tested with `Python3.6`_ It is recommended to 
-install Python using `Anaconda Python`_ to have a separated environment, but
-this is of course not mandatory. For controlling the detector use v3.0+ of the
-`slsDetectorsPackage`_. Backwards compatibility is likely but in no means
-guaranteed regarding Python and slsDetectorPackage.
-
-.. _Anaconda Python:  https://www.anaconda.com/download/
-.. _Python3.6: https://www.python.org/
-.. _slsDetectorsPackage: https://github.com/slsdetectorgroup/slsDetectorPackage
-
-
-
+The easiest way to install the Python API and the slsDetectorPackage is using conda. But other
+methods are also available. 
 
 ---------------------
 Install using conda
 ---------------------
+If you don't have it installed get the latest version of `Miniconda`_
 
-Binaries are available using conda. This is from our experience the easiest and
-most convenient way to install both the slsDetectorPackage and the Python API.
-To install both run the following commands after having installed Anaconda/Miniconda.
+.. _Miniconda: https://conda.io/miniconda.html
+
+::
+
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh Miniconda3-latest-Linux-x86_64.sh
+
+
+Install sls_detector and sls_detector_lib using:
 
 ::
 
@@ -35,18 +31,15 @@ To install both run the following commands after having installed Anaconda/Minic
     #Install specific version
     conda install sls_detector=3.0.1
 
-    #Scientific Linux 6 version (GLIBC2.12)
-    conda install sls_detector=SL6_3.0.1
-
-
 ------------------------------
 Local build using conda-build
 ------------------------------
 
-Needs the `sls_detector_software`_ installed  in order to automatically find headers
-and shared libraries.
+Needs the `sls_detector_lib`_ installed  in order to automatically find headers
+and shared libraries. Make sure that the branch of sls_detector matches the lib 
+version installed. 
 
-.. _sls_detector_software: https://github.com/slsdetectorgroup/sls_detector_software
+.. _sls_detector_lib: https://github.com/slsdetectorgroup/sls_detector_lib
 
 ::
 
@@ -84,18 +77,14 @@ Then in your Python script
 
 
 
-
-
 --------------
 Prerequisites
 --------------
 
-The default version of the software is distributed with the slsDetecorGui which depends
-on Qwt and Qt. It is possible to compile without the Gui to reduce the dependencies. When
-installing trough conda, conda manages all dependencies.
+All dependencies are manged trough conda but for a stand alone build you would need
 
- * `Python3.6`_
- * `slsDetectorsPackage`_ 3.0+
  * gcc 4.8+
  * Qwt 6
  * Qt 4.8
+ * numpy
+ * slsDetectorPackage

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python classes &mdash; sls_detector 3.1.1 documentation</title>
+  <title>Python classes &mdash; sls_detector 3.2.0 documentation</title>
   
 
   
@@ -24,27 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="sls_detector 3.1.1 documentation" href="index.html"/>
-        <link rel="next" title="C++ API" href="cpp_api.html"/>
-        <link rel="prev" title="Error handling" href="error-handling.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="C++ API" href="cpp_api.html" />
+    <link rel="prev" title="Error handling" href="error-handling.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
             
             
               <div class="version">
-                3.1.1
+                3.2.0
               </div>
             
           
@@ -116,7 +108,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">sls_detector</a>
@@ -124,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -174,14 +167,15 @@
 <h2>Detector<a class="headerlink" href="#detector" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Detector">
-<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Detector</code><span class="sig-paren">(</span><em>multi_id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class used as interface with the slsDetectorSoftware. To control a specific detector use the
-derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API</p>
+derived classes such as Eiger and Jungfrau. Functions as an interface to the C++ API and provides a
+more Pythonic interface</p>
 <dl class="method">
 <dt id="sls_detector.Detector.acq">
 <code class="descname">acq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.acq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.acq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Blocking command. Acquire the number of frames specified by frames, cycles etc.</p>
+<dd><p>Blocking command to launch the programmed measurement. Number of frames specified by frames, cycles etc.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -207,7 +201,7 @@ leaves the detector with busy == True</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">busy</span>
 <span class="o">&gt;&gt;</span> <span class="kc">True</span>
 
-<span class="c1">#If the detector is stuck</span>
+<span class="c1">#If the detector is stuck reset by:</span>
 <span class="n">d</span><span class="o">.</span><span class="n">busy</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
@@ -217,6 +211,17 @@ leaves the detector with busy == True</p>
 <dt id="sls_detector.Detector.clear_errors">
 <code class="descname">clear_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.clear_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.clear_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the error mask for the detector. Used to reset after checking.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.client_version">
+<code class="descname">client_version</code><a class="headerlink" href="#sls_detector.Detector.client_version" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> The date of commit for the client API version</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">client_version</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;20180327&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -235,7 +240,8 @@ and UDP ports, and computes the IP header checksum for such parameters</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.detector_number">
 <code class="descname">detector_number</code><a class="headerlink" href="#sls_detector.Detector.detector_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all detector numbers, return as list</p>
+<dd><p>Get all detector numbers as a list. For Eiger the detector numbers
+correspond to the beb numbers.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#for beb083 and beb098</span>
 <span class="n">detector</span><span class="o">.</span><span class="n">detector_number</span>
@@ -247,12 +253,20 @@ and UDP ports, and computes the IP header checksum for such parameters</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.detector_type">
 <code class="descname">detector_type</code><a class="headerlink" href="#sls_detector.Detector.detector_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>list if the type is different otherwise string</p>
+<dd><p>Return either a string or list of strings with the detector type.</p>
 <ul class="simple">
 <li>Eiger</li>
 <li>Jungfrau</li>
 <li>etc.</li>
 </ul>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">detector_type</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;Eiger&#39;</span>
+
+<span class="n">detector</span><span class="o">.</span><span class="n">detector_type</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;Eiger&#39;</span><span class="p">,</span>  <span class="s1">&#39;Jungfrau&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -728,6 +742,12 @@ detectors</td>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.receiver_last_client_ip">
+<code class="descname">receiver_last_client_ip</code><a class="headerlink" href="#sls_detector.Detector.receiver_last_client_ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ip of the client last talking to the receiver</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.receiver_online">
 <code class="descname">receiver_online</code><a class="headerlink" href="#sls_detector.Detector.receiver_online" title="Permalink to this definition">¶</a></dt>
 <dd><p>Online flag for the receiver. Is set together with detector.online when creating the detector object</p>
@@ -736,6 +756,17 @@ detectors</td>
 <span class="o">&gt;&gt;</span> <span class="kc">True</span>
 
 <span class="n">d</span><span class="o">.</span><span class="n">receiver_online</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.receiver_version">
+<code class="descname">receiver_version</code><a class="headerlink" href="#sls_detector.Detector.receiver_version" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Receiver version as a string. [yearmonthday]</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">receiver_version</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;20180327&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -778,7 +809,8 @@ otherwise</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_hostname">
 <code class="descname">rx_hostname</code><a class="headerlink" href="#sls_detector.Detector.rx_hostname" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Receiver hostname</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_tcpport">
@@ -788,7 +820,8 @@ otherwise</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_udpip">
 <code class="descname">rx_udpip</code><a class="headerlink" href="#sls_detector.Detector.rx_udpip" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Receiver UDP ip</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.rx_udpmac">
@@ -812,6 +845,12 @@ otherwise</p>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">30001</span><span class="p">,</span> <span class="mi">30002</span><span class="p">]</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.server_version">
+<code class="descname">server_version</code><a class="headerlink" href="#sls_detector.Detector.server_version" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> On-board server version of the detector</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -864,18 +903,6 @@ with receiver start.</p>
 <dt id="sls_detector.Detector.stop_receiver">
 <code class="descname">stop_receiver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.stop_receiver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.stop_receiver" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="sls_detector.Detector.sub_exposure_time">
-<code class="descname">sub_exposure_time</code><a class="headerlink" href="#sls_detector.Detector.sub_exposure_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub frame exposure time in <em>seconds</em> for Eiger in 32bit autosumming mode</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span>
-<span class="o">&gt;&gt;</span> <span class="mf">0.0023</span>
-
-<span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span> <span class="o">=</span> <span class="mf">0.002</span>
-</pre></div>
-</div>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.threaded">
@@ -1111,9 +1138,26 @@ here they are grouped for each detector</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="sls_detector.Eiger.set_delays">
+<code class="descname">set_delays</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.set_delays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.set_delays" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="sls_detector.Eiger.setup500k">
 <code class="descname">setup500k</code><span class="sig-paren">(</span><em>hostnames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.setup500k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.setup500k" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup the Eiger detector to run on the local machine</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.sub_exposure_time">
+<code class="descname">sub_exposure_time</code><a class="headerlink" href="#sls_detector.Eiger.sub_exposure_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub frame exposure time in <em>seconds</em> for Eiger in 32bit autosumming mode</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span>
+<span class="o">&gt;&gt;</span> <span class="mf">0.0023</span>
+
+<span class="n">d</span><span class="o">.</span><span class="n">sub_exposure_time</span> <span class="o">=</span> <span class="mf">0.002</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -1193,7 +1237,7 @@ Used mainly in the calibration code.</p>
 <h2>Jungfrau<a class="headerlink" href="#jungfrau" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="sls_detector.Jungfrau">
-<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sls_detector.</code><code class="descname">Jungfrau</code><span class="sig-paren">(</span><em>multi_id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/jungfrau.html#Jungfrau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Jungfrau" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sls_detector.detector.Detector</span></code></p>
 <p>Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
 class is needed to provide the correct dacs and unique functions.</p>
@@ -1326,9 +1370,7 @@ crossed</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -1346,11 +1388,11 @@ crossed</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Sls Detector Group.
+        &copy; Copyright 2018, SLS Detector Group.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1368,7 +1410,8 @@ crossed</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'3.1.1',
+            VERSION:'3.2.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -1382,19 +1425,13 @@ crossed</p>
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
