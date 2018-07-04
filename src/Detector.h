@@ -461,14 +461,14 @@ public:
         return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, -1);
     }
 
-    void setSubPeriod(const int64_t t){
-        det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, t);
-    }
+    // void setSubPeriod(const int64_t t){
+    //     det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, t);
+    // }
 
-    int64_t getSubPeriod(){
-        //time in ns
-        return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, -1);
-    }
+    // int64_t getSubPeriod(){
+    //     //time in ns
+    //     return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, -1);
+    // }
 
     int64_t getCycles(){
         return det.setTimer(slsReceiverDefs::timerIndex::CYCLES_NUMBER, -1);
@@ -601,12 +601,12 @@ public:
         return det.getReceiverLastClientIP();
     }
 
-    void setReceiverFramesPerFile(const int n_frames){
-        det.setReceiverFramesPerFile(n_frames);
-    }
-    int getReceiverFramesPerFile(){
-        return det.setReceiverFramesPerFile();
-    }
+    // void setReceiverFramesPerFile(const int n_frames){
+    //     det.setReceiverFramesPerFile(n_frames);
+    // }
+    // int getReceiverFramesPerFile(){
+    //     return det.setReceiverFramesPerFile();
+    // }
 
 
     //get frame delay of module (det_id) in ns
@@ -644,18 +644,18 @@ public:
     }
 
 
-    //Check if detector if filling in gap pixels in module
-    //return true if so, currently only in developer
-    bool getGapPixels(){
-        return det.enableGapPixels(-1);
-    }
+    // //Check if detector if filling in gap pixels in module
+    // //return true if so, currently only in developer
+    // bool getGapPixels(){
+    //     return det.enableGapPixels(-1);
+    // }
 
 
-    //Set to true to have the detector filling in gap pixels
-    //false to disable, currently only in developer
-    void setGapPixels(bool val){
-        det.enableGapPixels(val);
-    }
+    // //Set to true to have the detector filling in gap pixels
+    // //false to disable, currently only in developer
+    // void setGapPixels(bool val){
+    //     det.enableGapPixels(val);
+    // }
 
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
 

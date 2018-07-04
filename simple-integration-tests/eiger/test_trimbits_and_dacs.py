@@ -26,9 +26,3 @@ def test_set_trimbits_raises_on_too_big(eiger):
 def test_set_trimbits_raises_on_negative(eiger):
     with pytest.raises(DetectorValueError):
         eiger.trimbits = -5
-
-
-# @jungfrautest
-# def test_jungfrau(jungfrau):
-#     """Example of a test that is not run with Eiger connected"""
-#     pass

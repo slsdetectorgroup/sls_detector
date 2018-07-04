@@ -148,8 +148,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getSubExposureTime", &Detector::getSubExposureTime)
             .def("setPeriod", &Detector::setPeriod)
             .def("getPeriod", &Detector::getPeriod)
-            .def("setSubPeriod", &Detector::setSubPeriod)
-            .def("getSubPeriod", &Detector::getSubPeriod)
+            // .def("setSubPeriod", &Detector::setSubPeriod)
+            // .def("getSubPeriod", &Detector::getSubPeriod)
 
             .def("getCycles", &Detector::getCycles)
             .def("setCycles", &Detector::setCycles)
@@ -189,8 +189,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getLastClientIP", &Detector::getLastClientIP)
             .def("getReceiverLastClientIP", &Detector::getReceiverLastClientIP)
             
-            .def("setReceiverFramesPerFile", &Detector::setReceiverFramesPerFile)
-            .def("getReceiverFramesPerFile", &Detector::getReceiverFramesPerFile)
+            // .def("setReceiverFramesPerFile", &Detector::setReceiverFramesPerFile)
+            // .def("getReceiverFramesPerFile", &Detector::getReceiverFramesPerFile)
 
 
             .def("setFileWrite", &Detector::setFileWrite)
@@ -207,8 +207,8 @@ PYBIND11_MODULE(_sls_detector, m) {
 
             .def("resetFramesCaught", &Detector::resetFramesCaught)
             .def("getReceiverCurrentFrameIndex", &Detector::getReceiverCurrentFrameIndex)
-            .def("getGapPixels", &Detector::getGapPixels)
-            .def("setGapPixels", &Detector::setGapPixels)
+            // .def("getGapPixels", &Detector::getGapPixels)
+            // .def("setGapPixels", &Detector::setGapPixels)
 
             .def("clearErrorMask", &Detector::clearErrorMask)
             .def("getErrorMask", &Detector::getErrorMask)
