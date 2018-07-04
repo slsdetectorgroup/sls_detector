@@ -8,7 +8,7 @@ Sphinx built documentation is available here:
 
 ### Install using conda ###
 
-Binaries are available using conda. This installs both the detector software and the Python
+Binaries are available using conda. This installs both the sls_detector_lib and the Python
 interface.
 
 ```bash
@@ -20,10 +20,10 @@ conda config --add channels slsdetectorgroup
 conda install sls_detector
 
 #Install specific version
-conda install sls_detector=3.0.1
+conda install sls_detector=3.2.0
 
-#Scientific Linux 6 version (GLIBC2.12)
-conda install sls_detector=SL6_3.0.1
+#Optionally add the GUI
+conda install sls_detector_gui=3.2.0
 ```
 
 ### Building using conda-build ###
@@ -35,7 +35,7 @@ Needs [sls_detector_software](https://github.com/slsdetectorgroup/sls_detector_s
 git clone https://github.com/slsdetectorgroup/sls_detector.git
 
 #Checkout the branch needed
-git checkout 3.0.1
+git checkout 3.2.0
 
 #Build and install the local version
 conda-build sls_detector
@@ -47,7 +47,7 @@ conda install --use-local sls_detector
 
 IF you if you are developing and are making constant changes to the code it's a bit cumbersome 
 to build with conda and install. Then an easier way is to build the C/C++ parts in the package 
-directory and temporary add this to the path
+directory and temporary add this to the path. Make sure that you have a gcc around 4.8..
 
 ```bash
 #in path/to/sls_detector  
@@ -58,6 +58,6 @@ Then in your Python script
 
 import sys
 sys.path.append('/path/to/sls_detector')
-from sls_detector import Detector
+from sls_detector import Eiger
 ```
 
