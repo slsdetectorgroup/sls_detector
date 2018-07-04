@@ -193,28 +193,28 @@ class Eiger(Detector):
         self._active[:] = value
     
 
-    @property
-    @error_handling
-    def add_gappixels(self):
-       """Enable or disable the (virual) pixels between ASICs
+    # @property
+    # @error_handling
+    # def add_gappixels(self):
+    #    """Enable or disable the (virual) pixels between ASICs
 
-       Examples
-       ----------
+    #    Examples
+    #    ----------
 
-       ::
+    #    ::
 
-           d.add_gappixels = True
+    #        d.add_gappixels = True
 
-           d.add_gappixels
-           >> True
+    #        d.add_gappixels
+    #        >> True
 
-       """
-       return self._api.getGapPixels()
+    #    """
+    #    return self._api.getGapPixels()
 
-    @add_gappixels.setter
-    @error_handling
-    def add_gappixels(self, value):
-       self._api.setGapPixels(value)
+    # @add_gappixels.setter
+    # @error_handling
+    # def add_gappixels(self, value):
+    #    self._api.setGapPixels(value)
 
     @property
     def dacs(self):
@@ -513,22 +513,22 @@ class Eiger(Detector):
         else:
             raise ValueError('Sub exposure time must be larger than 0')
 
-    @property
-    def sub_period(self):
-        """
-        Period for subexposures. Used to mimize noise by delaying the start of the next
-        subexposure.
-        """
-        return self._api.getSubPeriod() / 1e9
+    # @property
+    # def sub_period(self):
+    #     """
+    #     Period for subexposures. Used to mimize noise by delaying the start of the next
+    #     subexposure.
+    #     """
+    #     return self._api.getSubPeriod() / 1e9
 
     
-    @sub_period.setter
-    def sub_period(self, t):
-        ns_time = int(t * 1e9)
-        if ns_time > 0:
-            self._api.setSubPeriod(ns_time)
-        else:
-            raise ValueError('Sub period time must be larger than 0')
+    # @sub_period.setter
+    # def sub_period(self, t):
+    #     ns_time = int(t * 1e9)
+    #     if ns_time > 0:
+    #         self._api.setSubPeriod(ns_time)
+    #     else:
+    #         raise ValueError('Sub period time must be larger than 0')
 
     @property
     def temp(self):

@@ -639,15 +639,15 @@ class Detector:
             raise DetectorValueError('Invalid value for n_frames: {:d}. Number of'\
                              ' frames should be an integer greater than 0'.format(n))
 
-    @property
-    @error_handling
-    def n_frames_per_file(self):
-        return self._api.getReceiverFramesPerFile()
+    # @property
+    # @error_handling
+    # def n_frames_per_file(self):
+    #     return self._api.getReceiverFramesPerFile()
 
-    @n_frames_per_file.setter
-    @error_handling
-    def n_frames_per_file(self, n):
-        self._api.setReceiverFramesPerFile(n)
+    # @n_frames_per_file.setter
+    # @error_handling
+    # def n_frames_per_file(self, n):
+    #     self._api.setReceiverFramesPerFile(n)
 
     @property
     @error_handling
