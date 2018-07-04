@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sls_detector.detector &mdash; sls_detector 3.1.0 documentation</title>
+  <title>sls_detector.detector &mdash; sls_detector 3.2.0 documentation</title>
   
 
   
@@ -24,8 +24,7 @@
 
   
 
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -57,7 +56,7 @@
             
             
               <div class="version">
-                3.1.0
+                3.2.0
               </div>
             
           
@@ -795,15 +794,15 @@
             <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Invalid value for n_frames: </span><span class="si">{:d}</span><span class="s1">. Number of&#39;</span>\
                              <span class="s1">&#39; frames should be an integer greater than 0&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
-    <span class="nd">@property</span>
-    <span class="nd">@error_handling</span>
-    <span class="k">def</span> <span class="nf">n_frames_per_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverFramesPerFile</span><span class="p">()</span>
+    <span class="c1"># @property</span>
+    <span class="c1"># @error_handling</span>
+    <span class="c1"># def n_frames_per_file(self):</span>
+    <span class="c1">#     return self._api.getReceiverFramesPerFile()</span>
 
-    <span class="nd">@n_frames_per_file</span><span class="o">.</span><span class="n">setter</span>
-    <span class="nd">@error_handling</span>
-    <span class="k">def</span> <span class="nf">n_frames_per_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReceiverFramesPerFile</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="c1"># @n_frames_per_file.setter</span>
+    <span class="c1"># @error_handling</span>
+    <span class="c1"># def n_frames_per_file(self, n):</span>
+    <span class="c1">#     self._api.setReceiverFramesPerFile(n)</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1455,7 +1454,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, Sls Detector Group.
+        &copy; Copyright 2018, SLS Detector Group.
 
     </p>
   </div>
@@ -1477,7 +1476,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'3.1.0',
+            VERSION:'3.2.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -1492,10 +1491,7 @@
 
   
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

@@ -105,7 +105,6 @@ detsizechan           :py:attr:`Detector.image_size`            OK
 roimask                ??
 flippeddatax          |flipx|
 tengiga               :py:attr:`Eiger.tengiga`                  OK
-gappixels             :py:attr:`Eiger.add_gappixels`            OK
 flags                 :py:attr:`Detector.flags`                 OK
 extsig                 |mg|
 programfpga            |j|
@@ -127,7 +126,6 @@ timing                :py:attr:`Detector.timing_mode`
 exptime               :py:attr:`Detector.exposure_time`      OK               OK
 subexptime            |sub|                                  OK               OK
 period                :py:attr:`Detector.period`             OK               OK
-subperiod             :py:attr:`Eiger.sub_period`         OK               OK
 delay                 |mg|
 gates                 |mg|
 frames                :py:attr:`Detector.n_frames`           OK               OK
@@ -268,7 +266,6 @@ r_lastclient
 r_readfreq
 rx_fifodepth
 r_silent
-r_framesperfile       |fpf|
 adcinvert             |chiptest|
 adcdisable            |chiptest|
 pattern               |chiptest|
