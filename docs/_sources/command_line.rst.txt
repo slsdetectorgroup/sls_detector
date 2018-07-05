@@ -53,6 +53,8 @@ slsDetectorSoftware here is a quick reference translating to Python commands
 .. |tempco| replace:: :py:attr:`Jungfrau.temperature_control`
 .. |detnr| replace:: :py:attr:`Detector.detector_number` 
 .. |fpf| replace:: :py:attr:`Detector.n_frames_per_file`
+.. |adcp| replace:: :py:attr:`Jungfrau.adc_phase`
+
 
 ------------------------
 Commands
@@ -151,7 +153,7 @@ totdutycycle          |m|
 phasestep             |g|
 oversampling          |new_chiptest|
 adcclk                |new_chiptest|
-adcphase              |new_chiptest|
+adcphase              |adcp|                             OK                   OK
 adcpipeline           |new_chiptest|
 dbitclk               |new_chiptest|
 dbitphase             |new_chiptest|
