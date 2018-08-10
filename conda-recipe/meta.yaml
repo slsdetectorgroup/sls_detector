@@ -10,15 +10,18 @@ source:
 
 requirements:
     build:
-        - python
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
         - cmake
-        - gcc
-        - libstdcxx-ng
-        - libgcc-ng
+        - python {{ python }}
         - libpng >=1.6.32,<1.6.35
         - setuptools
         - sls_detector_lib developer
         - pyzmq
+        - pybind11
+
+    host:
+        - python
         - pybind11
 
     run:
