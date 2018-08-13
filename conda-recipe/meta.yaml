@@ -1,6 +1,6 @@
 package:
     name: sls_detector
-    version: developer
+    version: 3.1.4rc
 
 build:
   number: 0
@@ -27,7 +27,7 @@ requirements:
     run:
         - python
         - numpy
-        - sls_detector_lib developer
+        - sls_detector_lib 3.1.4rc
         - pyzmq
         - libstdcxx-ng
         - libgcc-ng
