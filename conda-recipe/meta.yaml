@@ -16,7 +16,7 @@ requirements:
         - python {{ python }}
         - libpng >=1.6.32,<1.6.35
         - setuptools
-        - sls_detector_lib 3.2.0rc
+        - sls_detector_lib 3.1.3
         - pyzmq
         - pybind11
 
