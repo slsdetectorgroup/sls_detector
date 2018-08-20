@@ -69,7 +69,7 @@ def test_get_exposure_time(d, mocker):
 def test_set_exposure_time(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.setExposureTime')
     d.exposure_time = 1.5
-    m.assert_called_once_with(1500000000)
+    m.assert_called_once_with(1500000000, -1)
 
 def test_set_exposure_time_less_than_zero(d, mocker):
     mocker.patch('_sls_detector.DetectorApi.setExposureTime')
@@ -308,7 +308,7 @@ def test_get_period_time(d, mocker):
 def test_set_period_time(d, mocker):
     m = mocker.patch('_sls_detector.DetectorApi.setPeriod')
     d.period = 1.953
-    m.assert_called_once_with(1953000000)
+    m.assert_called_once_with(1953000000, -1)
 
 def test_set_period_time_less_than_zero(d, mocker):
     mocker.patch('_sls_detector.DetectorApi.setPeriod')
