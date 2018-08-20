@@ -93,13 +93,13 @@ class Jungfrau(Detector):
     @error_handling
     def delay(self):
         """Delay after trigger [s]"""
-        return self._api.getDelay()/1e9
+        return self._api.getDelay(-1)/1e9
 
     @delay.setter
     @error_handling
     def delay(self, t):
         ns_time = int(t * 1e9)
-        self._api.setDelay(ns_time)
+        self._api.setDelay(ns_time, -1)
 
     @property
     @error_handling

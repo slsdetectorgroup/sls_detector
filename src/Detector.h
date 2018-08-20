@@ -443,22 +443,22 @@ public:
     }
 
     //time in ns
-    void setExposureTime(const int64_t t){
-        det.setTimer(slsReceiverDefs::timerIndex::ACQUISITION_TIME, t);
+    void setExposureTime(int64_t t, int mod_id){
+        det.setTimer(slsReceiverDefs::timerIndex::ACQUISITION_TIME, t, mod_id);
     }
 
     //time in ns
-    int64_t getExposureTime(){
-        return det.setTimer(slsReceiverDefs::timerIndex::ACQUISITION_TIME, -1);
+    int64_t getExposureTime(int mod_id){
+        return det.setTimer(slsReceiverDefs::timerIndex::ACQUISITION_TIME, -1, mod_id);
     }
 
-    void setSubExposureTime(const int64_t t){
-        det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, t);
+    void setSubExposureTime(int64_t t, int mod_id){
+        det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, t, mod_id);
     }
 
-    int64_t getSubExposureTime(){
+    int64_t getSubExposureTime(int mod_id){
         //time in ns
-        return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, -1);
+        return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, -1, mod_id);
     }
 
     // void setSubPeriod(const int64_t t){
@@ -495,7 +495,7 @@ public:
     int getNumberOfGates(){
         return det.setTimer(slsReceiverDefs::timerIndex::GATES_NUMBER, -1);
     }
-    void setNumberOfGates(const int t){
+    void setNumberOfGates(int t){
         det.setTimer(slsReceiverDefs::timerIndex::GATES_NUMBER, t);
     }
     int getNumberOfProbes(){
@@ -505,20 +505,20 @@ public:
         det.setTimer(slsReceiverDefs::timerIndex::PROBES_NUMBER, t);
     }
     //time in ns
-    int64_t getDelay(){
-        return det.setTimer(slsReceiverDefs::timerIndex::DELAY_AFTER_TRIGGER, -1);
+    int64_t getDelay(int mod_id){
+        return det.setTimer(slsReceiverDefs::timerIndex::DELAY_AFTER_TRIGGER, -1, mod_id);
     }
     //time in ns
-    void setDelay(const int64_t t){
-        det.setTimer(slsReceiverDefs::timerIndex::DELAY_AFTER_TRIGGER, t);
+    void setDelay(int64_t t, int mod_id){
+        det.setTimer(slsReceiverDefs::timerIndex::DELAY_AFTER_TRIGGER, t, mod_id);
     }
     //time in ns
-    int64_t getPeriod(){
-        return det.setTimer(slsReceiverDefs::timerIndex::FRAME_PERIOD, -1);
+    int64_t getPeriod(int mod_id){
+        return det.setTimer(slsReceiverDefs::timerIndex::FRAME_PERIOD, -1, mod_id);
     }
     //time in ns
-    void setPeriod(const int64_t t){
-        det.setTimer(slsReceiverDefs::timerIndex::FRAME_PERIOD, t);
+    void setPeriod(int64_t t, int mod_id){
+        det.setTimer(slsReceiverDefs::timerIndex::FRAME_PERIOD, t, mod_id);
     }
 
     int64_t getNumberOfFrames(){

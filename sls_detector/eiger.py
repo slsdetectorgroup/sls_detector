@@ -502,14 +502,14 @@ class Eiger(Detector):
             d.sub_exposure_time = 0.002
 
         """
-        return self._api.getSubExposureTime() / 1e9
+        return self._api.getSubExposureTime(-1) / 1e9
 
     
     @sub_exposure_time.setter
     def sub_exposure_time(self, t):
         ns_time = int(t * 1e9)
         if ns_time > 0:
-            self._api.setSubExposureTime(ns_time)
+            self._api.setSubExposureTime(ns_time, -1)
         else:
             raise ValueError('Sub exposure time must be larger than 0')
 

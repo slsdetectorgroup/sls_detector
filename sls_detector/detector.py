@@ -119,6 +119,9 @@ class Detector:
         v = hex(self._api.getClientVersion())
         return v[2:]
 
+
+
+
     @property
     @error_handling
     def detector_number(self):
@@ -214,7 +217,7 @@ class Detector:
         """
         :obj:`double` Exposure time in [s] of a single frame.
         """
-        return self._api.getExposureTime() / 1e9
+        return self._api.getExposureTime(-1) / 1e9
 
     @exposure_time.setter
     @error_handling
@@ -222,7 +225,7 @@ class Detector:
         ns_time = int(t * 1e9)
         if ns_time <= 0:
             raise DetectorValueError('Exposure time must be larger than 0')
-        self._api.setExposureTime(ns_time)
+        self._api.setExposureTime(ns_time, -1)
 
     @property
     @error_handling
@@ -843,7 +846,7 @@ class Detector:
         :obj:`double` Period between start of frames. Set to 0 for the detector
         to choose the shortest possible
         """
-        _t = self._api.getPeriod()
+        _t = self._api.getPeriod(-1)
         return _t / 1e9
 
     @period.setter
@@ -852,7 +855,7 @@ class Detector:
         ns_time = int(t * 1e9)
         if ns_time < 0:
             raise ValueError('Period must be 0 or larger')
-        self._api.setPeriod(ns_time)
+        self._api.setPeriod(ns_time, -1)
 
     @property
     @error_handling
