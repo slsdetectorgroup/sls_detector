@@ -461,13 +461,13 @@ public:
         return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, -1);
     }
 
-    void setSubPeriod(const int64_t t){
-        det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, t);
+    void setSubExposureDeadTime(const int64_t t){
+        det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_DEADTIME, t);
     }
 
-    int64_t getSubPeriod(){
+    int64_t getSubExposureDeadTime(){
         //time in ns
-        return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, -1);
+        return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_DEADTIME, -1);
     }
 
     int64_t getCycles(){

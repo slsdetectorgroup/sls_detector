@@ -148,8 +148,8 @@ PYBIND11_MODULE(_sls_detector, m) {
             .def("getSubExposureTime", &Detector::getSubExposureTime)
             .def("setPeriod", &Detector::setPeriod)
             .def("getPeriod", &Detector::getPeriod)
-            .def("setSubPeriod", &Detector::setSubPeriod)
-            .def("getSubPeriod", &Detector::getSubPeriod)
+            .def("setSubExposureDeadTime", &Detector::setSubExposureDeadTime)
+            .def("getSubExposureDeadTime", &Detector::getSubExposureDeadTime)
 
             .def("getCycles", &Detector::getCycles)
             .def("setCycles", &Detector::setCycles)

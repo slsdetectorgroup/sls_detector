@@ -514,21 +514,21 @@ class Eiger(Detector):
             raise ValueError('Sub exposure time must be larger than 0')
 
     @property
-    def sub_period(self):
+    def sub_deadtime(self):
         """
-        Period for subexposures. Used to mimize noise by delaying the start of the next
+        Deadtime between subexposures. Used to mimize noise by delaying the start of the next
         subexposure.
         """
-        return self._api.getSubPeriod() / 1e9
+        return self._api.getSubExposureDeadTime() / 1e9
 
     
-    @sub_period.setter
-    def sub_period(self, t):
+    @sub_deadtime.setter
+    def sub_deadtime(self, t):
         ns_time = int(t * 1e9)
-        if ns_time > 0:
-            self._api.setSubPeriod(ns_time)
+        if ns_time >= 0:
+            self._api.setSubExposureDeadTime(ns_time)
         else:
-            raise ValueError('Sub period time must be larger than 0')
+            raise ValueError('Sub deadtime time must be larger or equal to 0')
 
     @property
     def temp(self):
