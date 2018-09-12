@@ -641,12 +641,12 @@ class Detector:
 
     @property
     @error_handling
-    def n_frames_per_file(self):
+    def frames_per_file(self):
         return self._api.getReceiverFramesPerFile()
 
-    @n_frames_per_file.setter
+    @frames_per_file.setter
     @error_handling
-    def n_frames_per_file(self, n):
+    def frames_per_file(self, n):
         self._api.setReceiverFramesPerFile(n)
 
     @property
@@ -1027,6 +1027,74 @@ class Detector:
         """
         ip = self._api.getNetworkParameter('rx_zmqip')
         return element_if_equal(ip)
+
+    @property
+    @error_handling
+    def detector_mac(self):
+        """
+        Read detector mac address
+        """
+        mac = self._api.getNetworkParameter('detectormac')
+        return element_if_equal(mac)
+
+    @property
+    @error_handling
+    def detector_ip(self):
+        """
+        Read detector ip address
+        """
+        ip = self._api.getNetworkParameter('detectorip')
+        return element_if_equal(ip)
+
+    @property
+    @error_handling
+    def client_zmqip(self):
+        """
+        Ip address where the client listens to zmq stream
+        """
+        ip = self._api.getNetworkParameter('client_zmqip')
+        return element_if_equal(ip)
+
+    @property
+    @error_handling
+    def rx_udpsocksize(self):
+        """
+        UDP buffer size
+        """
+        buffer_size = [int(s) for s in self._api.getNetworkParameter('rx_udpsocksize')]
+        return element_if_equal(buffer_size)       
+
+    @property
+    @error_handling
+    def rx_jsonaddheader(self):
+        """
+        UDP buffer size
+        """
+        header = self._api.getNetworkParameter('rx_jsonaddheader')
+        return element_if_equal(header)  
+
+    @rx_jsonaddheader.setter
+    @error_handling
+    def rx_jsonaddheader(self, header):
+        self._api.setNetworkParameter('rx_jsonaddheader', header, -1)
+
+
+
+    @rx_udpsocksize.setter
+    @error_handling
+    def rx_udpsocksize(self, buffer_size):
+        self._api.setNetworkParameter('rx_udpsocksize', str(buffer_size), -1)
+
+
+    @property
+    @error_handling
+    def rx_realudpsocksize(self):
+        """
+        UDP buffer size
+        """
+        buffer_size = [int(s) for s in self._api.getNetworkParameter('rx_realudpsocksize')]
+        return element_if_equal(buffer_size) 
+
 
     @property
     @error_handling

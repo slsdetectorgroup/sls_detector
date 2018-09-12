@@ -556,6 +556,8 @@ public:
     bool getFileWrite(){
         return det.enableWriteToFile(-1);
     }
+
+
     void setAllTrimbits(int tb){
         det.setAllTrimbits(tb);
     }
@@ -700,6 +702,15 @@ slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_na
     else if(par_name == "rx_udpport2"){
         return slsDetectorDefs::networkParameter::RECEIVER_UDP_PORT2;
     }
+    else if(par_name == "rx_udpsocksize"){
+        return slsDetectorDefs::networkParameter::RECEIVER_UDP_SCKT_BUF_SIZE;
+    }
+    else if(par_name == "rx_realudpsocksize"){
+        return slsDetectorDefs::networkParameter::RECEIVER_REAL_UDP_SCKT_BUF_SIZE;
+    }
+    else if(par_name == "rx_jsonaddheader"){
+        return slsDetectorDefs::networkParameter::ADDITIONAL_JSON_HEADER;
+    }
     else if(par_name == "delay_left"){
         return slsDetectorDefs::networkParameter::DETECTOR_TXN_DELAY_LEFT;
     }
@@ -719,11 +730,13 @@ slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_na
         return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_PORT;
     }
     else if(par_name == "rx_zmqip"){
-        throw std::runtime_error("rx_zmqip only in developer");
-//        return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_SRC_IP;
+       return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_SRC_IP;
+    }
+    else if(par_name == "client_zmqip"){
+        return slsDetectorDefs::networkParameter::CLIENT_STREAMING_SRC_IP;
     }
     
-    return slsDetectorDefs::networkParameter::RECEIVER_STREAMING_PORT;
+    throw std::runtime_error("Could not decode network parameter");
 };
 
 slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name){
