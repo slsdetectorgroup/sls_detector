@@ -196,6 +196,12 @@ PYBIND11_MODULE(_sls_detector, m)
         .def("setReceiverPartialFramesPadding", &Detector::setReceiverPartialFramesPadding)
         .def("getReceiverPartialFramesPadding", &Detector::getReceiverPartialFramesPadding)
 
+        .def("getUserDetails", &Detector::getUserDetails)
+        .def("isClientAndDetecorCompatible", &Detector::isClientAndDetecorCompatible)
+        .def("isClientAndReceiverCompatible", &Detector::isClientAndReceiverCompatible)
+        .def("getMeasuredPeriod", &Detector::getMeasuredPeriod)
+        .def("getMeasuredSubPeriod", &Detector::getMeasuredSubPeriod)
+
 
         .def("setFileWrite", &Detector::setFileWrite)
         .def("getFileWrite", &Detector::getFileWrite)

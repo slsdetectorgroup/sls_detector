@@ -410,6 +410,12 @@ class Detector:
 
 
     @property
+    def api_compatibility(self):
+        Compatibility = namedtuple('Compatibility', ['client_detector', 'client_receiver'])
+        c = Compatibility(self._api.isClientAndDetecorCompatible(), self._api.isClientAndReceiverCompatible())
+        return c
+
+    @property
     def frame_padding(self):
         """
         Padd partial frames in the receiver
@@ -1050,12 +1056,15 @@ class Detector:
     @error_handling
     def rx_zmqip(self):
         """
-        .. todo ::
-
-            also set
+        ip where the receiver streams data
         """
         ip = self._api.getNetworkParameter('rx_zmqip')
         return element_if_equal(ip)
+
+    @rx_zmqip.setter
+    def rx_zmqip(self, ip):
+        self._api.setNetworkParameter('rx_zmqip', ip, -1)
+
 
     @property
     @error_handling
@@ -1083,6 +1092,11 @@ class Detector:
         """
         ip = self._api.getNetworkParameter('client_zmqip')
         return element_if_equal(ip)
+
+    @client_zmqip.setter
+    @error_handling
+    def client_zmqip(self, ip):
+        self._api.setNetworkParameter('client_zmqip', ip, -1)
 
     @property
     @error_handling
@@ -1156,6 +1170,11 @@ class Detector:
 #    @property
 #    def software_version(self):
 #        return self._api.getSoftwareVersion();
+
+
+    @property
+    def user(self):
+        return self._api.getUserDetails()
 
     @property
     @error_handling

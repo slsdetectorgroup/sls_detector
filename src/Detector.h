@@ -358,6 +358,10 @@ public:
         return getSlsDetector(i)->getFilePath();
     }
 
+    std::string getUserDetails(){
+        return det.getUserDetails();
+    }
+
     void setReceiverFramesPerFile(const int n_frames)
     {
         det.setReceiverFramesPerFile(n_frames);
@@ -381,6 +385,32 @@ public:
     bool getReceiverPartialFramesPadding(){
         return det.setReceiverPartialFramesPadding();
     }
+
+
+    double getMeasuredPeriod(){
+        auto t = det.getTimeLeft(slsReceiverDefs::MEASURED_PERIOD);
+        return static_cast<double>(t)*1E-9;
+    }
+    double getMeasuredSubPeriod(){
+        auto t = det.getTimeLeft(slsReceiverDefs::MEASURED_SUBPERIOD);
+        return static_cast<double>(t)*1E-9;
+    }
+
+    bool isClientAndDetecorCompatible(){
+        auto r = det.checkVersionCompatibility(slsDetectorDefs::CONTROL_PORT);
+        if (r==0)
+            return true;
+        else
+            return false;
+    }
+    bool isClientAndReceiverCompatible(){
+        auto r = det.checkVersionCompatibility(slsDetectorDefs::DATA_PORT);
+        if (r==0)
+            return true;
+        else
+            return false;
+    }
+
     void setReceiverPartialFramesPadding(bool padding){
         det.setReceiverPartialFramesPadding(padding);
     }
@@ -1006,7 +1036,10 @@ std::vector<std::string> Detector::getReadoutFlags()
         flags.push_back("digital");
     if (r & slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL)
         flags.push_back("analog_digital");
-
+    if (r & slsDetectorDefs::readOutFlags::NOOVERFLOW)
+        flags.push_back("nooverflow");
+    if (r & slsDetectorDefs::readOutFlags::SHOW_OVERFLOW)
+        flags.push_back("overflow");
     return flags;
 }
 
@@ -1031,6 +1064,10 @@ void Detector::setReadoutFlag(const std::string flag_name)
         det.setReadOutFlags(slsDetectorDefs::readOutFlags::DIGITAL_ONLY);
     else if (flag_name == "analog_digital")
         det.setReadOutFlags(slsDetectorDefs::readOutFlags::ANALOG_AND_DIGITAL);
+    else if(flag_name == "nooverflow")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::NOOVERFLOW);
+    else if(flag_name == "overflow")
+        det.setReadOutFlags(slsDetectorDefs::readOutFlags::SHOW_OVERFLOW);
     else
         throw std::runtime_error("Flag name not recognized");
 }
