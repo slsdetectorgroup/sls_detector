@@ -173,6 +173,9 @@ def test_set_receiver_online_raises_on_non_bool(detector):
     with pytest.raises(TypeError):
         detector.receiver_online = 'probably not this'
 
+
+
+
 def test_set_period(detector):
     detector.period = 5.123
     assert detector.period == 5.123

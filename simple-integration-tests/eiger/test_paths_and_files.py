@@ -34,3 +34,19 @@ def test_set_path_and_write_files(eiger, tmpdir):
     assert (prefix+'_d1_0.raw' in files) == True
     assert (prefix+'_d2_0.raw' in files) == True
     assert (prefix+'_d3_0.raw' in files) == True
+
+def test_set_discard_policy(detector):
+    detector.frame_discard_policy = 'nodiscard'
+    assert detector.frame_discard_policy == 'nodiscard'
+    detector.frame_discard_policy = 'discardpartial'
+    assert detector.frame_discard_policy == 'discardpartial'
+    detector.frame_discard_policy = 'discardempty'
+    assert detector.frame_discard_policy == 'discardempty'
+
+def test_set_discard_policy_raises(detector):
+    with pytest.raises(ValueError):
+        detector.frame_discard_policy = 'adjfvadksvsj'
+
+def test_set_frames_perfile(detector):
+    detector.frames_per_file = 5000
+    assert detector.frames_per_file == 5000
