@@ -192,6 +192,13 @@ class Eiger(Detector):
     def active(self, value):
         self._active[:] = value
     
+    @property
+    def measured_period(self):
+        return self._api.getMeasuredPeriod()
+
+    @property
+    def measured_subperiod(self):
+        return self._api.getMeasuredSubPeriod()
 
     @property
     @error_handling

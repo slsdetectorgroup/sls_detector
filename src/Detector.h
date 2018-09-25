@@ -387,14 +387,23 @@ public:
     }
 
 
-    double getMeasuredPeriod(){
-        auto t = det.getTimeLeft(slsReceiverDefs::MEASURED_PERIOD);
-        return static_cast<double>(t)*1E-9;
+    std::vector<double> getMeasuredPeriod(){
+        std::vector<double> mp;
+        for (int i = 0; i < det.getNumberOfDetectors(); ++i) {
+            auto t = det.getTimeLeft(slsReceiverDefs::MEASURED_PERIOD, i);
+            mp.push_back(static_cast<double>(t)*1E-9);
+        }
+        return mp;
     }
-    double getMeasuredSubPeriod(){
-        auto t = det.getTimeLeft(slsReceiverDefs::MEASURED_SUBPERIOD);
-        return static_cast<double>(t)*1E-9;
+    std::vector<double> getMeasuredSubPeriod(){
+        std::vector<double> mp;
+        for (int i = 0; i < det.getNumberOfDetectors(); ++i) {
+            auto t = det.getTimeLeft(slsReceiverDefs::MEASURED_SUBPERIOD, i);
+            mp.push_back(static_cast<double>(t)*1E-9);
+        }
+        return mp;
     }
+    
 
     bool isClientAndDetecorCompatible(){
         auto r = det.checkVersionCompatibility(slsDetectorDefs::CONTROL_PORT);
