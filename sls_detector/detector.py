@@ -391,6 +391,35 @@ class Detector:
         """
         return self._api.getFramesCaughtByReceiver()
 
+
+    @property
+    @error_handling
+    def frame_discard_policy(self):
+        """
+        Decides what the receiver does when packet loss occurs.
+        nodiscard - keep all frames 
+        discardempty - discard only empty frames
+        discardpartial - discard partial and empty frames
+        """
+        return self._api.getReceiverFrameDiscardPolicy()
+
+    @frame_discard_policy.setter
+    @error_handling
+    def frame_discard_policy(self, policy):
+        self._api.setReceiverFramesDiscardPolicy(policy)
+
+
+    @property
+    def frame_padding(self):
+        """
+        Padd partial frames in the receiver
+        """
+        return self._api.getReceiverPartialFramesPadding()
+    
+    @frame_padding.setter
+    def frame_padding(self, padding):
+        self._api.setReceiverPartialFramesPadding(padding)
+
     def free_shared_memory(self):
         """
         Free the shared memory that contains the detector settings
