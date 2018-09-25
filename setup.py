@@ -8,7 +8,7 @@ import sys
 import setuptools
 import os
 
-__version__ = '0.0.1'
+__version__ = '4.0.0'
 
 
 def get_conda_path():

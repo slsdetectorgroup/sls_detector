@@ -419,7 +419,7 @@ public:
     std::vector<std::string> getReadoutFlags();
 
     //note singular
-    void setReadoutFlag(const string flag_name);
+    void setReadoutFlag(const std::string flag_name);
 
     //name to enum transltion of dac
     dacs_t getDacVthreshold(){
@@ -955,7 +955,7 @@ std::vector<std::string> Detector::getReadoutFlags(){
 }
 
 //note singular
-void Detector::setReadoutFlag(const string flag_name){
+void Detector::setReadoutFlag(const std::string flag_name){
     if(flag_name == "none")
         det.setReadOutFlags(slsDetectorDefs::readOutFlags::NORMAL_READOUT);
     else if(flag_name == "storeinram")
