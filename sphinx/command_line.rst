@@ -127,7 +127,6 @@ timing                :py:attr:`Detector.timing_mode`
 exptime               :py:attr:`Detector.exposure_time`      OK               OK
 subexptime            |sub|                                  OK               OK
 period                :py:attr:`Detector.period`             OK               OK
-subperiod             :py:attr:`Eiger.sub_period`         OK               OK
 delay                 |mg|
 gates                 |mg|
 frames                :py:attr:`Detector.n_frames`           OK               OK
