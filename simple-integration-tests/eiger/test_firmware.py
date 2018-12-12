@@ -111,15 +111,15 @@ def test_subexptime(eiger,t):
     assert pytest.approx(t, 1e-9) == reg/100e6
 
 
-@eigertest
-@pytest.mark.parametrize("t", testdata_times)
-def test_subperiod(eiger, t):
-    eiger.sub_period = t
-    eiger.file_write = False
-    eiger.start_detector()
-    eiger.stop_detector()
+# @eigertest
+# @pytest.mark.parametrize("t", testdata_times)
+# def test_subperiod(eiger, t):
+#     eiger.sub_period = t
+#     eiger.file_write = False
+#     eiger.start_detector()
+#     eiger.stop_detector()
 
-    # Register 0x7 holds sub period
-    # time is stored straight as n clocks
-    reg = eiger.register[0x7]
-    assert pytest.approx(t, 1e-9) == reg/100e6
+#     # Register 0x7 holds sub period
+#     # time is stored straight as n clocks
+#     reg = eiger.register[0x7]
+#     assert pytest.approx(t, 1e-9) == reg/100e6

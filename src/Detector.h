@@ -419,7 +419,7 @@ public:
     std::vector<std::string> getReadoutFlags();
 
     //note singular
-    void setReadoutFlag(const string flag_name);
+    void setReadoutFlag(const std::string flag_name);
 
     //name to enum transltion of dac
     dacs_t getDacVthreshold(){
@@ -461,14 +461,14 @@ public:
         return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_ACQUISITION_TIME, -1);
     }
 
-    void setSubPeriod(const int64_t t){
-        det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, t);
-    }
+    // void setSubPeriod(const int64_t t){
+    //     det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, t);
+    // }
 
-    int64_t getSubPeriod(){
-        //time in ns
-        return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, -1);
-    }
+    // int64_t getSubPeriod(){
+    //     //time in ns
+    //     return det.setTimer(slsReceiverDefs::timerIndex::SUBFRAME_PERIOD, -1);
+    // }
 
     int64_t getCycles(){
         return det.setTimer(slsReceiverDefs::timerIndex::CYCLES_NUMBER, -1);
@@ -942,7 +942,7 @@ std::vector<std::string> Detector::getReadoutFlags(){
 }
 
 //note singular
-void Detector::setReadoutFlag(const string flag_name){
+void Detector::setReadoutFlag(const std::string flag_name){
     if(flag_name == "none")
         det.setReadOutFlags(slsDetectorDefs::readOutFlags::NORMAL_READOUT);
     else if(flag_name == "storeinram")
