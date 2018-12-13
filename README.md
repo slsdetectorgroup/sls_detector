@@ -22,8 +22,6 @@ conda install sls_detector
 #Install specific version
 conda install sls_detector=3.0.1
 
-#Scientific Linux 6 version (GLIBC2.12)
-conda install sls_detector=SL6_3.0.1
 ```
 
 ### Building using conda-build ###
