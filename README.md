@@ -56,6 +56,6 @@ Then in your Python script
 
 import sys
 sys.path.append('/path/to/sls_detector')
-from sls_detector import Detector
+from sls_detector import Eiger
 ```
 
