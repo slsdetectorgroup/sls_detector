@@ -26,7 +26,7 @@ conda install sls_detector=3.0.1
 
 ### Building using conda-build ###
 
-Needs [sls_detector_software](https://github.com/slsdetectorgroup/sls_detector_software) installed.
+Needs sls_detector_lib installed.
 
 ```bash
 #Clone source code
