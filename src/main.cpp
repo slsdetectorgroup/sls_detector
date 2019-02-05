@@ -160,8 +160,11 @@ PYBIND11_MODULE(_sls_detector, m)
         .def("setDelay", &Detector::setDelay)
         .def("getJCTBSamples", &Detector::getJCTBSamples)
         .def("setJCTBSamples", &Detector::setJCTBSamples)
+
         .def("setStoragecellStart", &Detector::setStoragecellStart)
         .def("getStoragecellStart", &Detector::getStoragecellStart)
+        .def("setNumberOfStorageCells", &Detector::setNumberOfStorageCells)
+        .def("getNumberOfStorageCells", &Detector::getNumberOfStorageCells)
 
         .def("getTimingMode", &Detector::getTimingMode)
         .def("setTimingMode", &Detector::setTimingMode)

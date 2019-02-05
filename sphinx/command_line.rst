@@ -128,8 +128,8 @@ cycles                :py:attr:`Detector.n_cycles`           OK                 
 probes                :py:attr:`Jungfrau.n_probes`           OK                 \-
 measurements          :py:attr:`Detector.n_measurements`     OK                 \-
 samples               Chip test board only (new?)            \-                 \-
-storagecells          |j|                                    \-                 \-
-storagecell_start     |j|                                    \-                 \-
+storagecells          :py:attr:`Jungfrau.n_storagecells`     OK                 \-
+storagecell_start     :py:attr:`Jungfrau.storagecell_start`  OK                 \-
 exptimel              |mg|                                   \-                 \-
 periodl               |mg|                                   \-                 \-
 delayl                |mg|                                   \-                 \-

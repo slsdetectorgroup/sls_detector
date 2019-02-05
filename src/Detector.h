@@ -62,6 +62,14 @@ class Detector {
         det.setReceiverFifoDepth(n_frames);
     }
 
+
+    void setNumberOfStorageCells(const int64_t num) {
+        det.setTimer(slsReceiverDefs::timerIndex::STORAGE_CELL_NUMBER, num);
+    }
+    int getNumberOfStorageCells(){
+        return det.setTimer(slsReceiverDefs::timerIndex::STORAGE_CELL_NUMBER, -1);
+    }
+
     void setStoragecellStart(int cell){
         det.setStoragecellStart(cell);
     }

@@ -124,6 +124,20 @@ class Jungfrau(Detector):
     def storagecell_start(self, value):
         self._api.setStoragecellStart(value)
 
+
+    @property
+    @error_handling
+    def n_storagecells(self):
+        """
+        number of storage cells used for the measurements
+        """
+        return self._api.getNumberOfStorageCells()
+
+    @n_storagecells.setter
+    @error_handling
+    def n_storagecells(self, value):
+        self._api.setNumberOfStorageCells(value)
+
     @property
     def temp(self):
         """
