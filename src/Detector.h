@@ -58,6 +58,23 @@ class Detector {
         return getSlsDetector(i)->getFramesCaughtByReceiver();
     }
 
+    void setReceiverFifoDepth(int n_frames){
+        det.setReceiverFifoDepth(n_frames);
+    }
+
+    void setStoragecellStart(int cell){
+        det.setStoragecellStart(cell);
+    }
+
+    int getStoragecellStart(){
+        return det.setStoragecellStart();
+    }
+
+    int getReceiverFifoDepth(){
+        return det.setReceiverFifoDepth();
+    }
+
+
     void resetFramesCaught() {
         det.resetFramesCaught();
     }
@@ -83,9 +100,8 @@ class Detector {
         det.enableTenGigabitEthernet(value);
     }
 
-    int getFileFormat() {
-        return det.getFileFormat();
-    }
+    void setFileFormat(const std::string& format);
+    std::string getFileFormat();
 
     std::string checkOnline() {
         return det.checkOnline();
@@ -597,12 +613,22 @@ class Detector {
         return detector_type;
     }
 
-    void setFileWrite(const bool value) {
+    void setFileWrite(bool value) {
         det.enableWriteToFile(value);
     }
     bool getFileWrite() {
         return det.enableWriteToFile(-1);
     }
+
+    void setFileOverWrite(bool value){
+        det.overwriteFile(value);
+    }
+
+    bool getFileOverWrite(){
+        return det.overwriteFile(-1);
+    }
+
+
 
     void setAllTrimbits(int tb) {
         det.setAllTrimbits(tb);
@@ -714,6 +740,32 @@ slsDetector *Detector::getSlsDetector(int i) const {
         throw std::runtime_error("Could not get detector: " + std::to_string(i));
 }
 
+
+void Detector::setFileFormat(const std::string& format){
+    if (format == "binary"){
+        det.setFileFormat(slsReceiverDefs::fileFormat::BINARY);
+    }else if(format == "ascii"){
+        det.setFileFormat(slsReceiverDefs::fileFormat::ASCII);
+    }else if(format == "hdf5"){
+        det.setFileFormat(slsReceiverDefs::fileFormat::HDF5);
+    }
+}
+
+std::string Detector::getFileFormat(){
+    auto format = det.setFileFormat();
+    switch (format)
+    {
+        case slsDetectorDefs::fileFormat::BINARY:
+            return "binary";
+        case slsDetectorDefs::fileFormat::ASCII:
+            return "ascii";
+        case slsDetectorDefs::fileFormat::HDF5:
+            return "hdf5";
+        default:
+            return "unknown";
+    }
+}
+
 slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_name) {
 
     if (par_name == "detectormac") {
@@ -756,6 +808,8 @@ slsDetectorDefs::networkParameter Detector::networkNameToEnum(std::string par_na
 
     throw std::runtime_error("Could not decode network parameter");
 };
+
+// slsDetectorDefs::fileFormat Detector::file///
 
 slsDetectorDefs::dacIndex Detector::dacNameToEnum(std::string dac_name) {
     //to avoid uninitialised

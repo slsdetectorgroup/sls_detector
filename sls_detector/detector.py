@@ -337,6 +337,34 @@ class Detector:
     def file_write(self, fwrite):
         self._api.setFileWrite(fwrite)
 
+
+    @property
+    @error_handling
+    def file_overwrite(self):
+        """
+        :obj:`bool` If true overwrite files on disk
+        """
+        return self._api.getFileOverWrite()
+
+    @file_overwrite.setter
+    @error_handling
+    def file_overwrite(self, value):
+        self._api.setFileOverWrite(value)
+
+    @property
+    @error_handling
+    def file_padding(self):
+        """
+        Pad files in the receiver
+        :obj:`bool` If true pads partial frames
+        """
+        return self._api.getReceiverPartialFramesPadding()
+
+    @file_padding.setter
+    @error_handling
+    def file_padding(self, value):
+        self._api.getReceiverPartialFramesPadding(value)
+
     @property
     @error_handling
     def firmware_version(self):
@@ -1098,6 +1126,22 @@ class Detector:
     def client_zmqip(self, ip):
         self._api.setNetworkParameter('client_zmqip', ip, -1)
 
+
+
+    @property
+    @error_handling
+    def rx_fifodepth(self):
+        """
+        Fifo depth of receiver in number of frames
+        """
+        return self._api.getReceiverFifoDepth()
+
+    @rx_fifodepth.setter
+    @error_handling
+    def rx_fifodepth(self, n_frames):
+        self._api.setReceiverFifoDepth(n_frames)
+
+
     @property
     @error_handling
     def rx_udpsocksize(self):
@@ -1182,7 +1226,7 @@ class Detector:
         """
         :py:obj:`int` On-board server version of the detector
         """
-        return self._api.getServerVersion()
+        return hex(self._api.getServerVersion())
 
     @property
     @error_handling

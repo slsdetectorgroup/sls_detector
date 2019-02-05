@@ -112,6 +112,19 @@ class Jungfrau(Detector):
         self._api.setNumberOfProbes(n)
 
     @property
+    @error_handling
+    def storagecell_start(self):
+        """
+        First storage cell
+        """
+        return self._api.getStoragecellStart()
+
+    @storagecell_start.setter
+    @error_handling
+    def storagecell_start(self, value):
+        self._api.setStoragecellStart(value)
+
+    @property
     def temp(self):
         """
         An instance of DetectorAdcs used to read the temperature
@@ -185,24 +198,6 @@ class Jungfrau(Detector):
     def reset_temperature_event(self):
         """Reset the temperature_event. After reset temperature_event is False"""
         self._api.resetTemperatureEvent()
-
-    # @property
-    # @error_handling
-    # def register(self):
-    #     """Directly manipulate registers on the readout board
-    #
-    #     Examples
-    #     ---------
-    #
-    #     ::
-    #
-    #         d.register[0x5d] = 0xf00
-    #
-    #     """
-    #
-    #
-    #     return self._register
-
 
     @property
     @error_handling
