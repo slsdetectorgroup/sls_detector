@@ -10,7 +10,11 @@ def detector():
 @pytest.fixture
 def eiger():
     from sls_detector import Eiger
-    return Eiger()
+    d = Eiger()
+    d.n_frames = 1
+    d.exposure_time = 1
+    d.file_write = False
+    return d
 
 
 @pytest.fixture

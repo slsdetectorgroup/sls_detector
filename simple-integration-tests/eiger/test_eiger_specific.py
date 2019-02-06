@@ -7,10 +7,7 @@ from fixtures import eiger, eigertest
 
 
 
-@eigertest
-def test_set_subexptime(eiger):
-    eiger.sub_exposure_time = 0.0025
-    assert eiger.sub_exposure_time == 0.0025
+
 
 @eigertest
 def test_set_matrix_reset(eiger):
@@ -109,13 +106,14 @@ def test_set_vcmp(eiger):
     assert eiger.vcmp[:] == [1000,1100,1200,1300,1400,1500,1600,1700]
     eiger.vthreshold = 1500
 
-@eigertest
-def test_setup500k():
-    from sls_detector import Eiger, free_shared_memory
-    free_shared_memory()
-    d = Eiger()
-    d.setup500k(config_test.known_hostnames)
-    d.acq()
-    assert d.rx_tcpport == [1954,1955]
-    assert d.frames_caught == 1
-    #could assert more setting but if the frame is caught it worked...
+#Disabled only works with receiver on the same pc
+# @eigertest
+# def test_setup500k():
+#     from sls_detector import Eiger, free_shared_memory
+#     free_shared_memory()
+#     d = Eiger()
+#     d.setup500k(config_test.known_hostnames)
+#     d.acq()
+#     assert d.rx_tcpport == [1954,1955]
+#     assert d.frames_caught == 1
+#     #could assert more setting but if the frame is caught it worked...

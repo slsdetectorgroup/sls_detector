@@ -7,7 +7,8 @@ Created on Wed Dec  6 11:51:18 2017
 """
 
 import socket
-from collections import Iterable, namedtuple
+from collections.abc import Iterable
+from collections import namedtuple
 from functools import partial
 
 from .adcs import Adc, DetectorAdcs
@@ -16,7 +17,7 @@ from .decorators import error_handling
 from .detector import Detector
 from .detector_property import DetectorProperty
 from .utils import element_if_equal
-
+from sls_detector.errors import DetectorValueError, DetectorError
 
 class EigerVcmp:
     """
@@ -497,6 +498,7 @@ class Eiger(Detector):
 
 
     @property
+    @error_handling
     def sub_exposure_time(self):
         """
         Sub frame exposure time in *seconds* for Eiger in 32bit autosumming mode
@@ -513,14 +515,17 @@ class Eiger(Detector):
 
     
     @sub_exposure_time.setter
+    @error_handling
     def sub_exposure_time(self, t):
+        #TODO! checking here or in the detector?
         ns_time = int(t * 1e9)
         if ns_time > 0:
             self._api.setSubExposureTime(ns_time)
         else:
-            raise ValueError('Sub exposure time must be larger than 0')
+            raise DetectorValueError('Sub exposure time must be larger than 0')
 
     @property
+    @error_handling
     def sub_deadtime(self):
         """
         Deadtime between subexposures. Used to mimize noise by delaying the start of the next
@@ -530,6 +535,7 @@ class Eiger(Detector):
 
     
     @sub_deadtime.setter
+    @error_handling
     def sub_deadtime(self, t):
         ns_time = int(t * 1e9)
         if ns_time >= 0:

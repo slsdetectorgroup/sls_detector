@@ -75,13 +75,7 @@ def test_set_cycles_frome_one_to_ten(detector):
 def test_get_detector_type(detector):
     assert detector.detector_type == config_test.detector_type
 
-def test_set_exposure_time(detector):
-    detector.exposure_time = 3.125
-    assert detector.exposure_time == 3.125
 
-def test_negative_exposure_time_raises_error(detector):
-    with pytest.raises(DetectorValueError):
-        detector.exposure_time = -15
 
 def test_set_file_index(detector):
     detector.file_index = 5

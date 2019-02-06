@@ -1,5 +1,6 @@
 from functools import partial
-from collections import namedtuple, Iterable
+from collections.abc import Iterable
+from collections import namedtuple
 import socket
 
 from .detector import Detector

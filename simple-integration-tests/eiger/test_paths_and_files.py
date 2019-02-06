@@ -7,6 +7,7 @@ from sls_detector.errors import DetectorValueError
 
 
 @eigertest
+@pytest.mark.local
 def test_set_path(eiger, tmpdir):
     import os
     path = os.path.join(tmpdir.dirname, tmpdir.basename)
@@ -14,6 +15,7 @@ def test_set_path(eiger, tmpdir):
     assert eiger.file_path == path
 
 @eigertest
+@pytest.mark.local
 def test_set_path_and_write_files(eiger, tmpdir):
     import os
     prefix = 'testprefix'

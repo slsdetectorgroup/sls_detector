@@ -6,7 +6,8 @@ Python - sls
 
 """
 import os
-from collections import Iterable, namedtuple
+from collections.abc import Iterable
+from collections import namedtuple
 
 from _sls_detector import DetectorApi
 from .decorators import error_handling
