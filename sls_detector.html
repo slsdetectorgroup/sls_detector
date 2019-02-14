@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python classes &mdash; sls_detector 3.2.0 documentation</title>
+  <title>Python classes &mdash; sls_detector 4.0.1 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                3.2.0
+                4.0.1
               </div>
             
           
@@ -179,6 +179,11 @@ more Pythonic interface</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.api_compatibility">
+<code class="descname">api_compatibility</code><a class="headerlink" href="#sls_detector.Detector.api_compatibility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.busy">
 <code class="descname">busy</code><a class="headerlink" href="#sls_detector.Detector.busy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks the detector is acquiring. Can also be set but should only be used if the acquire fails and
@@ -225,6 +230,12 @@ leaves the detector with busy == True</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.client_zmqip">
+<code class="descname">client_zmqip</code><a class="headerlink" href="#sls_detector.Detector.client_zmqip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ip address where the client listens to zmq stream</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.client_zmqport">
 <code class="descname">client_zmqport</code><a class="headerlink" href="#sls_detector.Detector.client_zmqport" title="Permalink to this definition">¶</a></dt>
 <dd><p>zmq port of the client</p>
@@ -235,6 +246,18 @@ leaves the detector with busy == True</p>
 <code class="descname">config_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/detector.html#Detector.config_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Detector.config_network" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configures the detector source and destination MAC addresses, IP addresses
 and UDP ports, and computes the IP header checksum for such parameters</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.detector_ip">
+<code class="descname">detector_ip</code><a class="headerlink" href="#sls_detector.Detector.detector_ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read detector ip address</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.detector_mac">
+<code class="descname">detector_mac</code><a class="headerlink" href="#sls_detector.Detector.detector_mac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read detector mac address</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -272,7 +295,7 @@ correspond to the beb numbers.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.dynamic_range">
 <code class="descname">dynamic_range</code><a class="headerlink" href="#sls_detector.Detector.dynamic_range" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code> – Dynamic range of the detector.</p>
+<dd><p>Dynamic range of the detector.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="9%" />
@@ -309,6 +332,8 @@ correspond to the beb numbers.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the dynamic range is not available in the detector</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -358,7 +383,7 @@ correspond to the beb numbers.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_name">
 <code class="descname">file_name</code><a class="headerlink" href="#sls_detector.Detector.file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> – Base file name for writing images</p>
+<dd><p>Base file name for writing images</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">file_name</span>
 <span class="o">&gt;&gt;</span> <span class="s1">&#39;run&#39;</span>
@@ -373,12 +398,33 @@ correspond to the beb numbers.</p>
 <span class="c1"># myrun_d3_0.raw</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.file_overwrite">
+<code class="descname">file_overwrite</code><a class="headerlink" href="#sls_detector.Detector.file_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code> If true overwrite files on disk</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.file_padding">
+<code class="descname">file_padding</code><a class="headerlink" href="#sls_detector.Detector.file_padding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pad files in the receiver
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code> If true pads partial frames</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.file_path">
 <code class="descname">file_path</code><a class="headerlink" href="#sls_detector.Detector.file_path" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> – Path where images are written</p>
+<dd><p>Path where images are written</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -394,6 +440,14 @@ correspond to the beb numbers.</p>
 <span class="n">detector</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;/new/path/to/other/files&#39;</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -448,11 +502,31 @@ string or list of flags.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.frame_discard_policy">
+<code class="descname">frame_discard_policy</code><a class="headerlink" href="#sls_detector.Detector.frame_discard_policy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decides what the receiver does when packet loss occurs.
+nodiscard - keep all frames
+discardempty - discard only empty frames
+discardpartial - discard partial and empty frames</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.frame_padding">
+<code class="descname">frame_padding</code><a class="headerlink" href="#sls_detector.Detector.frame_padding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Padd partial frames in the receiver</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.frames_caught">
 <code class="descname">frames_caught</code><a class="headerlink" href="#sls_detector.Detector.frames_caught" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of frames caught by the receiver. Can be used to check for
 package loss.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.frames_per_file">
+<code class="descname">frames_per_file</code><a class="headerlink" href="#sls_detector.Detector.frames_per_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="sls_detector.Detector.free_shared_memory">
@@ -471,12 +545,20 @@ using the same object.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.hostname">
 <code class="descname">hostname</code><a class="headerlink" href="#sls_detector.Detector.hostname" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> – hostnames of all connected detectors</p>
+<dd><p>hostnames of all connected detectors</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">hostname</span>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;beb059&#39;</span><span class="p">,</span> <span class="s1">&#39;beb058&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -813,6 +895,18 @@ otherwise</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.rx_jsonaddheader">
+<code class="descname">rx_jsonaddheader</code><a class="headerlink" href="#sls_detector.Detector.rx_jsonaddheader" title="Permalink to this definition">¶</a></dt>
+<dd><p>UDP buffer size</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.rx_realudpsocksize">
+<code class="descname">rx_realudpsocksize</code><a class="headerlink" href="#sls_detector.Detector.rx_realudpsocksize" title="Permalink to this definition">¶</a></dt>
+<dd><p>UDP buffer size</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.rx_tcpport">
 <code class="descname">rx_tcpport</code><a class="headerlink" href="#sls_detector.Detector.rx_tcpport" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -829,12 +923,15 @@ otherwise</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="sls_detector.Detector.rx_udpsocksize">
+<code class="descname">rx_udpsocksize</code><a class="headerlink" href="#sls_detector.Detector.rx_udpsocksize" title="Permalink to this definition">¶</a></dt>
+<dd><p>UDP buffer size</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="sls_detector.Detector.rx_zmqip">
 <code class="descname">rx_zmqip</code><a class="headerlink" href="#sls_detector.Detector.rx_zmqip" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition-todo admonition" id="index-1">
-<p class="first admonition-title">Todo</p>
-<p class="last">also set</p>
-</div>
+<dd><p>ip where the receiver streams data</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -886,11 +983,19 @@ with receiver start.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.status">
 <code class="descname">status</code><a class="headerlink" href="#sls_detector.Detector.status" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Status of the detector – idle, running,</p>
-<div class="admonition-todo admonition" id="index-2">
+<dd><p>idle, running,</p>
+<div class="admonition-todo admonition" id="index-1">
 <p class="first admonition-title">Todo</p>
 <p class="last">Check possible values</p>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> Status of the detector</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -954,7 +1059,7 @@ with receiver start.</p>
 <dl class="attribute">
 <dt id="sls_detector.Detector.trimmed_energies">
 <code class="descname">trimmed_energies</code><a class="headerlink" href="#sls_detector.Detector.trimmed_energies" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>EIGER</em> – the energies at which the detector was trimmed. This also sets
+<dd><p>the energies at which the detector was trimmed. This also sets
 the range for which the calibration of the detector is valid.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span><span class="o">.</span><span class="n">trimmed_energies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5400</span><span class="p">,</span> <span class="mi">6400</span><span class="p">,</span> <span class="mi">8000</span><span class="p">]</span>
 
@@ -962,7 +1067,20 @@ the range for which the calibration of the detector is valid.</p>
 <span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">5400</span><span class="p">,</span> <span class="mi">6400</span><span class="p">,</span> <span class="mi">8000</span><span class="p">]</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">EIGER</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Detector.user">
+<code class="descname">user</code><a class="headerlink" href="#sls_detector.Detector.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Detector.vthreshold">
@@ -993,6 +1111,19 @@ module</p>
 
 <span class="n">d</span><span class="o">.</span><span class="n">active</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="o">&gt;&gt;</span> <span class="n">active</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.add_gappixels">
+<code class="descname">add_gappixels</code><a class="headerlink" href="#sls_detector.Eiger.add_gappixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable or disable the (virual) pixels between ASICs</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">add_gappixels</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">d</span><span class="o">.</span><span class="n">add_gappixels</span>
+<span class="o">&gt;&gt;</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1076,6 +1207,16 @@ Sets for all moduels, if for some reason access to a single module is needed
 this can be done trough the C++ API.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="sls_detector.Eiger.measured_period">
+<code class="descname">measured_period</code><a class="headerlink" href="#sls_detector.Eiger.measured_period" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.measured_subperiod">
+<code class="descname">measured_subperiod</code><a class="headerlink" href="#sls_detector.Eiger.measured_subperiod" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="sls_detector.Eiger.pulse_all_pixels">
 <code class="descname">pulse_all_pixels</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.pulse_all_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.pulse_all_pixels" title="Permalink to this definition">¶</a></dt>
@@ -1146,6 +1287,13 @@ here they are grouped for each detector</p>
 <dt id="sls_detector.Eiger.setup500k">
 <code class="descname">setup500k</code><span class="sig-paren">(</span><em>hostnames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sls_detector/eiger.html#Eiger.setup500k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sls_detector.Eiger.setup500k" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup the Eiger detector to run on the local machine</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sls_detector.Eiger.sub_deadtime">
+<code class="descname">sub_deadtime</code><a class="headerlink" href="#sls_detector.Eiger.sub_deadtime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deadtime between subexposures. Used to mimize noise by delaying the start of the next
+subexposure.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1242,11 +1390,6 @@ Used mainly in the calibration code.</p>
 <p>Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized
 class is needed to provide the correct dacs and unique functions.</p>
 <dl class="attribute">
-<dt id="sls_detector.Jungfrau.adc_phase">
-<code class="descname">adc_phase</code><a class="headerlink" href="#sls_detector.Jungfrau.adc_phase" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="sls_detector.Jungfrau.dacs">
 <code class="descname">dacs</code><a class="headerlink" href="#sls_detector.Jungfrau.dacs" title="Permalink to this definition">¶</a></dt>
 <dd><p>An instance of DetectorDacs used for accessing the dacs of a single
@@ -1266,12 +1409,14 @@ or multi detector.</p>
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.detector_ip">
 <code class="descname">detector_ip</code><a class="headerlink" href="#sls_detector.Jungfrau.detector_ip" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read detector ip address</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.detector_mac">
 <code class="descname">detector_mac</code><a class="headerlink" href="#sls_detector.Jungfrau.detector_mac" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read detector mac address</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="sls_detector.Jungfrau.n_gates">
@@ -1393,7 +1538,7 @@ crossed</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, SLS Detector Group.
+        &copy; Copyright 2019, Sls Detector Group
 
     </p>
   </div>
@@ -1412,21 +1557,13 @@ crossed</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'3.2.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
 
   
 

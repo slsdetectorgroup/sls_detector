@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sls_detector.detector &mdash; sls_detector 3.2.0 documentation</title>
+  <title>sls_detector.detector &mdash; sls_detector 4.0.1 documentation</title>
   
 
   
@@ -56,7 +56,7 @@
             
             
               <div class="version">
-                3.2.0
+                4.0.1
               </div>
             
           
@@ -492,6 +492,34 @@
     <span class="k">def</span> <span class="nf">file_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fwrite</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFileWrite</span><span class="p">(</span><span class="n">fwrite</span><span class="p">)</span>
 
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">file_overwrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :obj:`bool` If true overwrite files on disk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFileOverWrite</span><span class="p">()</span>
+
+    <span class="nd">@file_overwrite</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">file_overwrite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setFileOverWrite</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">file_padding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pad files in the receiver</span>
+<span class="sd">        :obj:`bool` If true pads partial frames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverPartialFramesPadding</span><span class="p">()</span>
+
+    <span class="nd">@file_padding</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">file_padding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverPartialFramesPadding</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">firmware_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -545,6 +573,41 @@
 <span class="sd">        package loss.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getFramesCaughtByReceiver</span><span class="p">()</span>
+
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">frame_discard_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decides what the receiver does when packet loss occurs.</span>
+<span class="sd">        nodiscard - keep all frames </span>
+<span class="sd">        discardempty - discard only empty frames</span>
+<span class="sd">        discardpartial - discard partial and empty frames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverFrameDiscardPolicy</span><span class="p">()</span>
+
+    <span class="nd">@frame_discard_policy</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">frame_discard_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReceiverFramesDiscardPolicy</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">api_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Compatibility</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Compatibility&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;client_detector&#39;</span><span class="p">,</span> <span class="s1">&#39;client_receiver&#39;</span><span class="p">])</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">Compatibility</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">isClientAndDetecorCompatible</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">isClientAndReceiverCompatible</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">c</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">frame_padding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Padd partial frames in the receiver</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverPartialFramesPadding</span><span class="p">()</span>
+    
+    <span class="nd">@frame_padding</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">frame_padding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReceiverPartialFramesPadding</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Detector.free_shared_memory"><a class="viewcode-back" href="../../sls_detector.html#sls_detector.Detector.free_shared_memory">[docs]</a>    <span class="k">def</span> <span class="nf">free_shared_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -794,15 +857,15 @@
             <span class="k">raise</span> <span class="n">DetectorValueError</span><span class="p">(</span><span class="s1">&#39;Invalid value for n_frames: </span><span class="si">{:d}</span><span class="s1">. Number of&#39;</span>\
                              <span class="s1">&#39; frames should be an integer greater than 0&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
-    <span class="c1"># @property</span>
-    <span class="c1"># @error_handling</span>
-    <span class="c1"># def n_frames_per_file(self):</span>
-    <span class="c1">#     return self._api.getReceiverFramesPerFile()</span>
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">frames_per_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getReceiverFramesPerFile</span><span class="p">()</span>
 
-    <span class="c1"># @n_frames_per_file.setter</span>
-    <span class="c1"># @error_handling</span>
-    <span class="c1"># def n_frames_per_file(self, n):</span>
-    <span class="c1">#     self._api.setReceiverFramesPerFile(n)</span>
+    <span class="nd">@frames_per_file</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">frames_per_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setReceiverFramesPerFile</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1176,12 +1239,88 @@
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">rx_zmqip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. todo ::</span>
-
-<span class="sd">            also set</span>
+<span class="sd">        ip where the receiver streams data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqip&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+
+    <span class="nd">@rx_zmqip</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rx_zmqip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_zmqip&#39;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">detector_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read detector mac address</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;detectormac&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">mac</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">detector_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read detector ip address</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;detectorip&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">client_zmqip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ip address where the client listens to zmq stream</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;client_zmqip&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+
+    <span class="nd">@client_zmqip</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">client_zmqip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;client_zmqip&#39;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_udpsocksize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        UDP buffer size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">buffer_size</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpsocksize&#39;</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">)</span>       
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_jsonaddheader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        UDP buffer size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_jsonaddheader&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>  
+
+    <span class="nd">@rx_jsonaddheader</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_jsonaddheader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_jsonaddheader&#39;</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+
+    <span class="nd">@rx_udpsocksize</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_udpsocksize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_udpsocksize&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">rx_realudpsocksize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        UDP buffer size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">buffer_size</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getNetworkParameter</span><span class="p">(</span><span class="s1">&#39;rx_realudpsocksize&#39;</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">element_if_equal</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">)</span> 
+
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1215,13 +1354,18 @@
 <span class="c1">#    def software_version(self):</span>
 <span class="c1">#        return self._api.getSoftwareVersion();</span>
 
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getUserDetails</span><span class="p">()</span>
+
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
     <span class="k">def</span> <span class="nf">server_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :py:obj:`int` On-board server version of the detector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getServerVersion</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getServerVersion</span><span class="p">())</span>
 
     <span class="nd">@property</span>
     <span class="nd">@error_handling</span>
@@ -1454,7 +1598,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, SLS Detector Group.
+        &copy; Copyright 2019, Sls Detector Group
 
     </p>
   </div>
@@ -1473,21 +1617,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'3.2.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
 
   
 

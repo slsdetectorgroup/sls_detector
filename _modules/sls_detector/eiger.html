@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sls_detector.eiger &mdash; sls_detector 3.2.0 documentation</title>
+  <title>sls_detector.eiger &mdash; sls_detector 4.0.1 documentation</title>
   
 
   
@@ -56,7 +56,7 @@
             
             
               <div class="version">
-                3.2.0
+                4.0.1
               </div>
             
           
@@ -347,29 +347,36 @@
     <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">value</span>
     
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">measured_period</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getMeasuredPeriod</span><span class="p">()</span>
 
-    <span class="c1"># @property</span>
-    <span class="c1"># @error_handling</span>
-    <span class="c1"># def add_gappixels(self):</span>
-    <span class="c1">#    &quot;&quot;&quot;Enable or disable the (virual) pixels between ASICs</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">measured_subperiod</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getMeasuredSubPeriod</span><span class="p">()</span>
 
-    <span class="c1">#    Examples</span>
-    <span class="c1">#    ----------</span>
+    <span class="nd">@property</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">add_gappixels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;Enable or disable the (virual) pixels between ASICs</span>
 
-    <span class="c1">#    ::</span>
+<span class="sd">       Examples</span>
+<span class="sd">       ----------</span>
 
-    <span class="c1">#        d.add_gappixels = True</span>
+<span class="sd">       ::</span>
 
-    <span class="c1">#        d.add_gappixels</span>
-    <span class="c1">#        &gt;&gt; True</span>
+<span class="sd">           d.add_gappixels = True</span>
 
-    <span class="c1">#    &quot;&quot;&quot;</span>
-    <span class="c1">#    return self._api.getGapPixels()</span>
+<span class="sd">           d.add_gappixels</span>
+<span class="sd">           &gt;&gt; True</span>
 
-    <span class="c1"># @add_gappixels.setter</span>
-    <span class="c1"># @error_handling</span>
-    <span class="c1"># def add_gappixels(self, value):</span>
-    <span class="c1">#    self._api.setGapPixels(value)</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getGapPixels</span><span class="p">()</span>
+
+    <span class="nd">@add_gappixels</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@error_handling</span>
+    <span class="k">def</span> <span class="nf">add_gappixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setGapPixels</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dacs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -668,22 +675,22 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Sub exposure time must be larger than 0&#39;</span><span class="p">)</span>
 
-    <span class="c1"># @property</span>
-    <span class="c1"># def sub_period(self):</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     Period for subexposures. Used to mimize noise by delaying the start of the next</span>
-    <span class="c1">#     subexposure.</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     return self._api.getSubPeriod() / 1e9</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sub_deadtime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deadtime between subexposures. Used to mimize noise by delaying the start of the next</span>
+<span class="sd">        subexposure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">getSubExposureDeadTime</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
 
     
-    <span class="c1"># @sub_period.setter</span>
-    <span class="c1"># def sub_period(self, t):</span>
-    <span class="c1">#     ns_time = int(t * 1e9)</span>
-    <span class="c1">#     if ns_time &gt; 0:</span>
-    <span class="c1">#         self._api.setSubPeriod(ns_time)</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         raise ValueError(&#39;Sub period time must be larger than 0&#39;)</span>
+    <span class="nd">@sub_deadtime</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sub_deadtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">ns_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ns_time</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_api</span><span class="o">.</span><span class="n">setSubExposureDeadTime</span><span class="p">(</span><span class="n">ns_time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Sub deadtime time must be larger or equal to 0&#39;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -770,7 +777,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, SLS Detector Group.
+        &copy; Copyright 2019, Sls Detector Group
 
     </p>
   </div>
@@ -789,21 +796,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'3.2.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
 
   
 

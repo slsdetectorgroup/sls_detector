@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; sls_detector 3.2.0 documentation</title>
+  <title>Index &mdash; sls_detector 4.0.1 documentation</title>
   
 
   
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                3.2.0
+                4.0.1
               </div>
             
           
@@ -175,6 +175,7 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
@@ -192,7 +193,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Eiger.active">active (sls_detector.Eiger attribute)</a>
 </li>
-      <li><a href="sls_detector.html#sls_detector.Jungfrau.adc_phase">adc_phase (sls_detector.Jungfrau attribute)</a>
+      <li><a href="sls_detector.html#sls_detector.Eiger.add_gappixels">add_gappixels (sls_detector.Eiger attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Detector.api_compatibility">api_compatibility (sls_detector.Detector attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -220,6 +223,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Detector.client_version">client_version (sls_detector.Detector attribute)</a>
 </li>
+      <li><a href="sls_detector.html#sls_detector.Detector.client_zmqip">client_zmqip (sls_detector.Detector attribute)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Detector.client_zmqport">client_zmqport (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.config_network">config_network() (sls_detector.Detector method)</a>
@@ -244,12 +249,20 @@
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector">Detector (class in sls_detector)</a>
 </li>
+      <li><a href="sls_detector.html#sls_detector.Detector.detector_ip">detector_ip (sls_detector.Detector attribute)</a>
+
+      <ul>
+        <li><a href="sls_detector.html#sls_detector.Jungfrau.detector_ip">(sls_detector.Jungfrau attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sls_detector.html#sls_detector.Jungfrau.detector_ip">detector_ip (sls_detector.Jungfrau attribute)</a>
+      <li><a href="sls_detector.html#sls_detector.Detector.detector_mac">detector_mac (sls_detector.Detector attribute)</a>
+
+      <ul>
+        <li><a href="sls_detector.html#sls_detector.Jungfrau.detector_mac">(sls_detector.Jungfrau attribute)</a>
 </li>
-      <li><a href="sls_detector.html#sls_detector.Jungfrau.detector_mac">detector_mac (sls_detector.Jungfrau attribute)</a>
-</li>
+      </ul></li>
       <li><a href="sls_detector.html#sls_detector.Detector.detector_number">detector_number (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.detector_type">detector_type (sls_detector.Detector attribute)</a>
@@ -286,6 +299,10 @@
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.file_name">file_name (sls_detector.Detector attribute)</a>
 </li>
+      <li><a href="sls_detector.html#sls_detector.Detector.file_overwrite">file_overwrite (sls_detector.Detector attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Detector.file_padding">file_padding (sls_detector.Detector attribute)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Detector.file_path">file_path (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.file_write">file_write (sls_detector.Detector attribute)</a>
@@ -302,7 +319,13 @@
 </li>
       <li><a href="sls_detector.html#sls_detector.Eiger.flowcontrol_10g">flowcontrol_10g (sls_detector.Eiger attribute)</a>
 </li>
+      <li><a href="sls_detector.html#sls_detector.Detector.frame_discard_policy">frame_discard_policy (sls_detector.Detector attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Detector.frame_padding">frame_padding (sls_detector.Detector attribute)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Detector.frames_caught">frames_caught (sls_detector.Detector attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Detector.frames_per_file">frames_per_file (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.free_shared_memory">free_shared_memory() (sls_detector.Detector method)</a>
 </li>
@@ -319,8 +342,6 @@
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getActive">getActive() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getAdc">getAdc() (_sls_detector.DetectorApi method)</a>
-</li>
-      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getAdcPhase">getAdcPhase() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getAllTrimbits">getAllTrimbits() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -372,6 +393,8 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getFileName">getFileName() (_sls_detector.DetectorApi method)</a>
 </li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getFileOverWrite">getFileOverWrite() (_sls_detector.DetectorApi method)</a>
+</li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getFilePath">getFilePath() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getFileWrite">getFileWrite() (_sls_detector.DetectorApi method)</a>
@@ -384,15 +407,21 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getFramesCaughtByReceiver">getFramesCaughtByReceiver() (_sls_detector.DetectorApi method)</a>
 </li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getGapPixels">getGapPixels() (_sls_detector.DetectorApi method)</a>
+</li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getHostname">getHostname() (_sls_detector.DetectorApi method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getImageSize">getImageSize() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getJCTBSamples">getJCTBSamples() (_sls_detector.DetectorApi method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getLastClientIP">getLastClientIP() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getMeasuredPeriod">getMeasuredPeriod() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getMeasuredSubPeriod">getMeasuredSubPeriod() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getMultiDetectorId">getMultiDetectorId() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -410,8 +439,6 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getPeriod">getPeriod() (_sls_detector.DetectorApi method)</a>
 </li>
-      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getPowerChip">getPowerChip() (_sls_detector.DetectorApi method)</a>
-</li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getRateCorrection">getRateCorrection() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReadoutClockSpeed">getReadoutClockSpeed() (_sls_detector.DetectorApi method)</a>
@@ -420,11 +447,17 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverCurrentFrameIndex">getReceiverCurrentFrameIndex() (_sls_detector.DetectorApi method)</a>
 </li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverFrameDiscardPolicy">getReceiverFrameDiscardPolicy() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverFramesPerFile">getReceiverFramesPerFile() (_sls_detector.DetectorApi method)</a>
+</li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverLastClientIP">getReceiverLastClientIP() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverLock">getReceiverLock() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverOnline">getReceiverOnline() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverPartialFramesPadding">getReceiverPartialFramesPadding() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getReceiverVersion">getReceiverVersion() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -441,6 +474,8 @@
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getSettings">getSettings() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getSettingsDir">getSettingsDir() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getSubExposureDeadTime">getSubExposureDeadTime() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getSubExposureTime">getSubExposureTime() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -459,6 +494,8 @@
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getTimingMode">getTimingMode() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.getTrimEnergies">getTrimEnergies() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.getUserDetails">getUserDetails() (_sls_detector.DetectorApi method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -480,9 +517,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sls_detector.html#sls_detector.Detector.image_size">image_size (sls_detector.Detector attribute)</a>
 </li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.isChipPowered">isChipPowered() (_sls_detector.DetectorApi method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cpp_api.html#_sls_detector.DetectorApi.isChipPowered">isChipPowered() (_sls_detector.DetectorApi method)</a>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.isClientAndDetecorCompatible">isClientAndDetecorCompatible() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.isClientAndReceiverCompatible">isClientAndReceiverCompatible() (_sls_detector.DetectorApi method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -520,6 +561,12 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sls_detector.html#sls_detector.Eiger.measured_period">measured_period (sls_detector.Eiger attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sls_detector.html#sls_detector.Eiger.measured_subperiod">measured_subperiod (sls_detector.Eiger attribute)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Detector.module_geometry">module_geometry (sls_detector.Detector attribute)</a>
 </li>
   </ul></td>
@@ -606,15 +653,19 @@
 </li>
       <li><a href="sls_detector.html#sls_detector.Jungfrau.reset_temperature_event">reset_temperature_event() (sls_detector.Jungfrau method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.resetFramesCaught">resetFramesCaught() (_sls_detector.DetectorApi method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.resetTemperatureEvent">resetTemperatureEvent() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_datastream">rx_datastream (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_hostname">rx_hostname (sls_detector.Detector attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Detector.rx_jsonaddheader">rx_jsonaddheader (sls_detector.Detector attribute)</a>
+</li>
+      <li><a href="sls_detector.html#sls_detector.Detector.rx_realudpsocksize">rx_realudpsocksize (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_tcpport">rx_tcpport (sls_detector.Detector attribute)</a>
 </li>
@@ -628,6 +679,8 @@
         <li><a href="sls_detector.html#sls_detector.Jungfrau.rx_udpport">(sls_detector.Jungfrau attribute)</a>
 </li>
       </ul></li>
+      <li><a href="sls_detector.html#sls_detector.Detector.rx_udpsocksize">rx_udpsocksize (sls_detector.Detector attribute)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_zmqip">rx_zmqip (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Detector.rx_zmqport">rx_zmqport (sls_detector.Detector attribute)</a>
@@ -649,8 +702,6 @@
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setAcquiringFlag">setAcquiringFlag() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setActive">setActive() (_sls_detector.DetectorApi method)</a>
-</li>
-      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setAdcPhase">setAdcPhase() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setAllTrimbits">setAllTrimbits() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -688,9 +739,13 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setExposureTime">setExposureTime() (_sls_detector.DetectorApi method)</a>
 </li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setFileFormat">setFileFormat() (_sls_detector.DetectorApi method)</a>
+</li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setFileIndex">setFileIndex() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setFileName">setFileName() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setFileOverWrite">setFileOverWrite() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setFilePath">setFilePath() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -699,6 +754,8 @@
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setFlippedDataX">setFlippedDataX() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setFlippedDataY">setFlippedDataY() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setGapPixels">setGapPixels() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setHostname">setHostname() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -712,15 +769,13 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setNumberOfGates">setNumberOfGates() (_sls_detector.DetectorApi method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setNumberOfMeasurements">setNumberOfMeasurements() (_sls_detector.DetectorApi method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setOnline">setOnline() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setPeriod">setPeriod() (_sls_detector.DetectorApi method)</a>
-</li>
-      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setPowerChip">setPowerChip() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setRateCorrection">setRateCorrection() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -728,9 +783,15 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setReadoutFlag">setReadoutFlag() (_sls_detector.DetectorApi method)</a>
 </li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setReceiverFramesDiscardPolicy">setReceiverFramesDiscardPolicy() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setReceiverFramesPerFile">setReceiverFramesPerFile() (_sls_detector.DetectorApi method)</a>
+</li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setReceiverLock">setReceiverLock() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setReceiverOnline">setReceiverOnline() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setReceiverPartialFramesPadding">setReceiverPartialFramesPadding() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setRxDataStreamStatus">setRxDataStreamStatus() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -741,6 +802,8 @@
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setSettings">setSettings() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setSettingsDir">setSettingsDir() (_sls_detector.DetectorApi method)</a>
+</li>
+      <li><a href="cpp_api.html#_sls_detector.DetectorApi.setSubExposureDeadTime">setSubExposureDeadTime() (_sls_detector.DetectorApi method)</a>
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.setSubExposureTime">setSubExposureTime() (_sls_detector.DetectorApi method)</a>
 </li>
@@ -782,6 +845,8 @@
 </li>
       <li><a href="cpp_api.html#_sls_detector.DetectorApi.stopReceiver">stopReceiver() (_sls_detector.DetectorApi method)</a>
 </li>
+      <li><a href="sls_detector.html#sls_detector.Eiger.sub_deadtime">sub_deadtime (sls_detector.Eiger attribute)</a>
+</li>
       <li><a href="sls_detector.html#sls_detector.Eiger.sub_exposure_time">sub_exposure_time (sls_detector.Eiger attribute)</a>
 </li>
   </ul></td>
@@ -817,6 +882,14 @@
       <li><a href="sls_detector.html#sls_detector.Detector.trimmed_energies">trimmed_energies (sls_detector.Detector attribute)</a>
 </li>
       <li><a href="sls_detector.html#sls_detector.Eiger.tx_delay">tx_delay (sls_detector.Eiger attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sls_detector.html#sls_detector.Detector.user">user (sls_detector.Detector attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -857,7 +930,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, SLS Detector Group.
+        &copy; Copyright 2019, Sls Detector Group
 
     </p>
   </div>
@@ -876,21 +949,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'3.2.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
 
   
 
