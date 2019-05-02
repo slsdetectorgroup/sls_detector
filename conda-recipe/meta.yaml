@@ -1,6 +1,6 @@
 package:
     name: sls_detector
-    version: "test"
+    version: 4.0.1
 
 build:
   number: 1
