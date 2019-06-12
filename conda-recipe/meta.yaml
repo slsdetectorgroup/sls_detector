@@ -1,6 +1,6 @@
 package:
     name: sls_detector
-    version: 4.0.1
+    version: 4.0.2
 
 build:
   number: 1
@@ -16,7 +16,7 @@ requirements:
         - python {{ python }}
         - libpng >=1.6.32,<1.6.35
         - setuptools
-        - sls_detector_lib 4.0.1
+        - sls_detector_lib 4.0.2
         - pyzmq
         - pybind11
 
@@ -27,7 +27,7 @@ requirements:
     run:
         - python
         - numpy
-        - sls_detector_lib 4.0.1
+        - sls_detector_lib 4.0.2
         - pyzmq
         - libstdcxx-ng
         - libgcc-ng
