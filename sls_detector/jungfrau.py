@@ -81,6 +81,17 @@ class Jungfrau(Detector):
 
     @property
     @error_handling
+    def powerchip(self):
+        """Power on or off the ASICs, True for on False for off"""
+        return self._api.isChipPowered()
+
+    @powerchip.setter
+    @error_handling
+    def powerchip(self, value):
+        self._api.powerChip(value)
+
+    @property
+    @error_handling
     def delay(self):
         """Delay after trigger [s]"""
         return self._api.getDelay()/1e9
