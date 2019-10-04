@@ -6,7 +6,7 @@ Inherits from Detector.
 """
 from .adcs import Adc, DetectorAdcs
 from .decorators import error_handling
-from .detector import Detector
+from .detector import Detector, freeze
 from .dacs import DetectorDacs
 from .utils import element_if_equal
 
@@ -23,6 +23,7 @@ class JungfrauDacs(DetectorDacs):
             ]
     _dacnames = [_d[0] for _d in _dacs]
 
+@freeze
 class Jungfrau(Detector):
     """
     Class used to control a Jungfrau detector. Inherits from the Detector class but a specialized

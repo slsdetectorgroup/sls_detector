@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from collections import namedtuple
 import socket
 
-from .detector import Detector
+from .detector import Detector, freeze
 from .utils import element_if_equal
 from .adcs import DetectorAdcs, Adc
 from .dacs import DetectorDacs
@@ -34,7 +34,7 @@ class JungfrauCTBDacs(DetectorDacs):
     _dacnames = [_d[0] for _d in _dacs]
 
 
-
+@freeze
 class JungfrauCTB(Detector):
     def __init__(self, id = 0):
         super().__init__(id)

@@ -14,7 +14,7 @@ from functools import partial
 from .adcs import Adc, DetectorAdcs
 from .dacs import DetectorDacs
 from .decorators import error_handling
-from .detector import Detector
+from .detector import Detector, freeze
 from .detector_property import DetectorProperty
 from .utils import element_if_equal
 from sls_detector.errors import DetectorValueError, DetectorError
@@ -132,7 +132,7 @@ class DetectorDelays:
             r_str.append('{:2d}:{:8s}{:>8d}{:>8d}{:>8d}'.format(i, hn[i], self.left[i], self.right[i], self.frame[i]))
         return '\n'.join(r_str)
 
-
+@freeze
 class Eiger(Detector):
     """
     Subclassing Detector to set up correct dacs and detector specific 
