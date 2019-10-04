@@ -600,6 +600,21 @@ class Eiger(Detector):
         self.tx_delay.left = [delta*(i*2) for i in range(self.n_modules)]
         self.tx_delay.right = [delta*(i*2+1) for i in range(self.n_modules)]
 
+    @property
+    def quad(self):
+        return self._api.getQuad()
+
+    @quad.setter
+    def quad(self, value):
+        self._api.setQuad(value)
+
+    @property
+    def interrupt_subframe(self):
+        return self._api.getInterruptSubframe()
+    
+    @interrupt_subframe.setter
+    def interrupt_subframe(self, value):
+        return self._api.getInterruptSubframe(value)
 
     def setup500k(self, hostnames):
         """

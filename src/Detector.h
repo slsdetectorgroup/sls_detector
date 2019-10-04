@@ -729,6 +729,19 @@ class Detector {
         det.enableGapPixels(val);
     }
 
+    void setQuad(int i){
+        det.setQuad(i);
+    }
+    int getQuad(){
+        return det.setQuad(-1);
+    }
+    void setInterruptSubframe(int i){
+        det.setInterruptSubframe(i);
+    }
+    int getInterruptSubframe(){
+        return det.setInterruptSubframe();
+    }
+
     slsDetectorDefs::networkParameter networkNameToEnum(std::string par_name);
 
   private:
